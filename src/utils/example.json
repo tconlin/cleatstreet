@@ -1,0 +1,593 @@
+{
+    "id": "19c4ee6a-c1e5-4346-9ef8-1361f81e6716",
+    "year": 2019,
+    "type": "REG",
+    "name": "REG",
+    "week": {
+        "id": "c1cc90c8-75a7-49b0-833f-2377408c163a",
+        "sequence": 1,
+        "title": "1",
+        "games": [{
+            "id": "06d50f40-10ca-4918-bda7-7df773a771f0",
+            "status": "scheduled",
+            "reference": "57902",
+            "number": 3,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001343",
+            "venue": {
+                "id": "90c38d91-3774-4f5d-82ca-1c806828219f",
+                "name": "FirstEnergy Stadium",
+                "city": "Cleveland",
+                "state": "OH",
+                "country": "USA",
+                "zip": "44114",
+                "address": "100 Alfred Lerner Way",
+                "capacity": 67895,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:8177"
+            },
+            "home": {
+                "id": "d5a2eb42-8065-4174-ab79-0a6fa820e35e",
+                "name": "Cleveland Browns",
+                "alias": "CLE",
+                "sr_id": "sr:competitor:4417"
+            },
+            "away": {
+                "id": "d26a1ca5-722d-4274-8f97-c92e49c96315",
+                "name": "Tennessee Titans",
+                "alias": "TEN",
+                "sr_id": "sr:competitor:367364"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "26c758eb-ebf1-46aa-9fa8-6934a8a74b23",
+            "status": "scheduled",
+            "reference": "57904",
+            "number": 5,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001335",
+            "venue": {
+                "id": "50a5c833-1570-4c38-abc7-7914cf87dbde",
+                "name": "Hard Rock Stadium",
+                "city": "Miami Gardens",
+                "state": "FL",
+                "country": "USA",
+                "zip": "33056",
+                "address": "2269 Northwest 199th Street",
+                "capacity": 65326,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:20269"
+            },
+            "home": {
+                "id": "4809ecb0-abd3-451d-9c4a-92a90b83ca06",
+                "name": "Miami Dolphins",
+                "alias": "MIA",
+                "sr_id": "sr:competitor:4287"
+            },
+            "away": {
+                "id": "ebd87119-b331-4469-9ea6-d51fe3ce2f1c",
+                "name": "Baltimore Ravens",
+                "alias": "BAL",
+                "sr_id": "sr:competitor:4413"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "31c88647-6e15-47c5-b196-e03a7991a75b",
+            "status": "scheduled",
+            "reference": "57915",
+            "number": 16,
+            "scheduled": "2019-09-10T02:20:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001393",
+            "venue": {
+                "id": "ba1ad00f-9130-462c-93f9-5612a0015117",
+                "name": "RingCentral Coliseum",
+                "city": "Oakland",
+                "state": "CA",
+                "country": "USA",
+                "zip": "94621",
+                "address": "7000 Coliseum Way",
+                "capacity": 53286,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:8095"
+            },
+            "home": {
+                "id": "1c1cec48-6352-4556-b789-35304c1a6ae1",
+                "name": "Oakland Raiders",
+                "alias": "OAK",
+                "sr_id": "sr:competitor:4390"
+            },
+            "away": {
+                "id": "ce92bd47-93d5-4fe9-ada4-0fc681e6caa0",
+                "name": "Denver Broncos",
+                "alias": "DEN",
+                "sr_id": "sr:competitor:4418"
+            },
+            "broadcast": {
+                "network": "ESPN",
+                "satellite": "206",
+                "internet": "WatchESPN"
+            }
+        }, {
+            "id": "3242f9ee-37c7-4508-aac9-6fb98259d673",
+            "status": "scheduled",
+            "reference": "57914",
+            "number": 15,
+            "scheduled": "2019-09-09T23:10:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001387",
+            "venue": {
+                "id": "3c85d89a-ec66-4983-acd5-1381d6c8673a",
+                "name": "Mercedes-Benz Superdome",
+                "city": "New Orleans",
+                "state": "LA",
+                "country": "USA",
+                "zip": "70112",
+                "address": "1500 Sugar Bowl Drive",
+                "capacity": 73208,
+                "surface": "artificial",
+                "roof_type": "dome",
+                "sr_id": "sr:venue:8195"
+            },
+            "home": {
+                "id": "0d855753-ea21-4953-89f9-0e20aff9eb73",
+                "name": "New Orleans Saints",
+                "alias": "NO",
+                "sr_id": "sr:competitor:4425"
+            },
+            "away": {
+                "id": "82d2d380-3834-4938-835f-aec541e5ece7",
+                "name": "Houston Texans",
+                "alias": "HOU",
+                "sr_id": "sr:competitor:4324"
+            },
+            "broadcast": {
+                "network": "ESPN",
+                "satellite": "206",
+                "internet": "WatchESPN"
+            }
+        }, {
+            "id": "388f432f-f522-4552-9d81-55d64e804066",
+            "status": "scheduled",
+            "reference": "57909",
+            "number": 10,
+            "scheduled": "2019-09-08T20:05:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001357",
+            "venue": {
+                "id": "c6b9e5df-c9e4-434c-b3e6-83928f11cbda",
+                "name": "CenturyLink Field",
+                "city": "Seattle",
+                "state": "WA",
+                "country": "USA",
+                "zip": "98134",
+                "address": "800 Occidental Avenue South",
+                "capacity": 68000,
+                "surface": "artificial",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:2291"
+            },
+            "home": {
+                "id": "3d08af9e-c767-4f88-a7dc-b920c6d2b4a8",
+                "name": "Seattle Seahawks",
+                "alias": "SEA",
+                "sr_id": "sr:competitor:4430"
+            },
+            "away": {
+                "id": "ad4ae08f-d808-42d5-a1e6-e9bc4e34d123",
+                "name": "Cincinnati Bengals",
+                "alias": "CIN",
+                "sr_id": "sr:competitor:4416"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "3d3c2bda-e7b9-409a-9702-7ebaa0c7b5a3",
+            "status": "scheduled",
+            "reference": "57913",
+            "number": 14,
+            "scheduled": "2019-09-09T00:20:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001381",
+            "venue": {
+                "id": "e43310b1-cb82-4df9-8be5-e9b39637031b",
+                "name": "Gillette Stadium",
+                "city": "Foxborough",
+                "state": "MA",
+                "country": "USA",
+                "zip": "02035",
+                "address": "One Patriot Place",
+                "capacity": 66829,
+                "surface": "artificial",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:2379"
+            },
+            "home": {
+                "id": "97354895-8c77-4fd4-a860-32e62ea7382a",
+                "name": "New England Patriots",
+                "alias": "NE",
+                "sr_id": "sr:competitor:4424"
+            },
+            "away": {
+                "id": "cb2f9f1f-ac67-424e-9e72-1475cb0ed398",
+                "name": "Pittsburgh Steelers",
+                "alias": "PIT",
+                "sr_id": "sr:competitor:4345"
+            },
+            "broadcast": {
+                "network": "NBC"
+            }
+        }, {
+            "id": "4b2875df-6f6b-4b33-9736-63e8637dcfef",
+            "status": "scheduled",
+            "reference": "57912",
+            "number": 13,
+            "scheduled": "2019-09-08T20:25:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001363",
+            "venue": {
+                "id": "6fccc39c-80bc-4c81-83d9-2d5a848c8c09",
+                "name": "Raymond James Stadium",
+                "city": "Tampa",
+                "state": "FL",
+                "country": "USA",
+                "zip": "33607",
+                "address": "4201 North Dale Mabry Highway",
+                "capacity": 65890,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:8205"
+            },
+            "home": {
+                "id": "4254d319-1bc7-4f81-b4ab-b5e6f3402b69",
+                "name": "Tampa Bay Buccaneers",
+                "alias": "TB",
+                "sr_id": "sr:competitor:4388"
+            },
+            "away": {
+                "id": "f0e724b0-4cbf-495a-be47-013907608da9",
+                "name": "San Francisco 49ers",
+                "alias": "SF",
+                "sr_id": "sr:competitor:4389"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }, {
+            "id": "75dce1db-65cb-42a7-a8ed-7bf5e9142f69",
+            "status": "scheduled",
+            "reference": "57906",
+            "number": 7,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001331",
+            "venue": {
+                "id": "5d4c85c7-d84e-4e10-bd6a-8a15ebecca5c",
+                "name": "MetLife Stadium",
+                "city": "East Rutherford",
+                "state": "NJ",
+                "country": "USA",
+                "zip": "07073",
+                "address": "One MetLife Stadium Drive",
+                "capacity": 82500,
+                "surface": "artificial",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:1981"
+            },
+            "home": {
+                "id": "5fee86ae-74ab-4bdd-8416-42a9dd9964f3",
+                "name": "New York Jets",
+                "alias": "NYJ",
+                "sr_id": "sr:competitor:4427"
+            },
+            "away": {
+                "id": "768c92aa-75ff-4a43-bcc0-f2798c2e1724",
+                "name": "Buffalo Bills",
+                "alias": "BUF",
+                "sr_id": "sr:competitor:4376"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "97af9f1a-cdae-40de-accc-080cb0d108bd",
+            "status": "scheduled",
+            "reference": "57908",
+            "number": 9,
+            "scheduled": "2019-09-08T20:05:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001351",
+            "venue": {
+                "id": "feebab00-4a3e-4123-8d7c-ed0dbdd96540",
+                "name": "Dignity Health Sports Park",
+                "city": "Carson",
+                "state": "CA",
+                "country": "USA",
+                "zip": "90746",
+                "address": "18400 Avalon Boulevard",
+                "capacity": 27000,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:2292"
+            },
+            "home": {
+                "id": "1f6dcffb-9823-43cd-9ff4-e7a8466749b5",
+                "name": "Los Angeles Chargers",
+                "alias": "LAC",
+                "sr_id": "sr:competitor:4429"
+            },
+            "away": {
+                "id": "82cf9565-6eb9-4f01-bdbd-5aa0d472fcd9",
+                "name": "Indianapolis Colts",
+                "alias": "IND",
+                "sr_id": "sr:competitor:4421"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "9b261925-6913-4027-8348-2f93cc340956",
+            "status": "scheduled",
+            "reference": "57907",
+            "number": 8,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001327",
+            "venue": {
+                "id": "4fa8c29c-6626-464c-8540-314ed7535e1b",
+                "name": "Lincoln Financial Field",
+                "city": "Philadelphia",
+                "state": "PA",
+                "country": "USA",
+                "zip": "19148",
+                "address": "1020 Pattison Avenue",
+                "capacity": 69596,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:1833"
+            },
+            "home": {
+                "id": "386bdbf9-9eea-4869-bb9a-274b0bc66e80",
+                "name": "Philadelphia Eagles",
+                "alias": "PHI",
+                "sr_id": "sr:competitor:4428"
+            },
+            "away": {
+                "id": "22052ff7-c065-42ee-bc8f-c4691c50e624",
+                "name": "Washington Redskins",
+                "alias": "WAS",
+                "sr_id": "sr:competitor:4432"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }, {
+            "id": "ac9c23dc-8628-4954-84d1-26818cb0ac74",
+            "status": "scheduled",
+            "reference": "57910",
+            "number": 11,
+            "scheduled": "2019-09-08T20:25:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001373",
+            "venue": {
+                "id": "f8e4d2ab-53f9-4e9f-8c4a-9bc278094a84",
+                "name": "State Farm Stadium",
+                "city": "Glendale",
+                "state": "AZ",
+                "country": "USA",
+                "zip": "85305",
+                "address": "One Cardinals Drive",
+                "capacity": 63400,
+                "surface": "turf",
+                "roof_type": "retractable_dome",
+                "sr_id": "sr:venue:8165"
+            },
+            "home": {
+                "id": "de760528-1dc0-416a-a978-b510d20692ff",
+                "name": "Arizona Cardinals",
+                "alias": "ARI",
+                "sr_id": "sr:competitor:4412"
+            },
+            "away": {
+                "id": "c5a59daa-53a7-4de0-851f-fb12be893e9e",
+                "name": "Detroit Lions",
+                "alias": "DET",
+                "sr_id": "sr:competitor:4419"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }, {
+            "id": "af36ccfd-98ee-4c93-827e-7384d67919f5",
+            "status": "scheduled",
+            "reference": "57903",
+            "number": 4,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001337",
+            "venue": {
+                "id": "4c5c036d-dd3d-4183-b595-71a43a97560f",
+                "name": "TIAA Bank Field",
+                "city": "Jacksonville",
+                "state": "FL",
+                "country": "USA",
+                "zip": "32202",
+                "address": "One EverBank Field Drive",
+                "capacity": 69132,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:8187"
+            },
+            "home": {
+                "id": "f7ddd7fa-0bae-4f90-bc8e-669e4d6cf2de",
+                "name": "Jacksonville Jaguars",
+                "alias": "JAC",
+                "sr_id": "sr:competitor:4386"
+            },
+            "away": {
+                "id": "6680d28d-d4d2-49f6-aace-5292d3ec02c2",
+                "name": "Kansas City Chiefs",
+                "alias": "KC",
+                "sr_id": "sr:competitor:4422"
+            },
+            "broadcast": {
+                "network": "CBS"
+            }
+        }, {
+            "id": "b71eb733-026a-49d1-a1a1-2d59893a2e44",
+            "status": "scheduled",
+            "reference": "57901",
+            "number": 2,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001325",
+            "venue": {
+                "id": "39be9ed4-3292-49ac-8699-a381de3a4969",
+                "name": "Bank of America Stadium",
+                "city": "Charlotte",
+                "state": "NC",
+                "country": "USA",
+                "zip": "28202",
+                "address": "800 South Mint Street",
+                "capacity": 75419,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:8173"
+            },
+            "home": {
+                "id": "f14bf5cc-9a82-4a38-bc15-d39f75ed5314",
+                "name": "Carolina Panthers",
+                "alias": "CAR",
+                "sr_id": "sr:competitor:4415"
+            },
+            "away": {
+                "id": "2eff2a03-54d4-46ba-890e-2bc3925548f3",
+                "name": "Los Angeles Rams",
+                "alias": "LA",
+                "sr_id": "sr:competitor:4387"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }, {
+            "id": "d40d7cb4-2b6b-4f44-b540-dfbaf0582456",
+            "status": "scheduled",
+            "reference": "57905",
+            "number": 6,
+            "scheduled": "2019-09-08T17:00:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001183",
+            "venue": {
+                "id": "f5ff00d4-1ed8-4918-bf73-13d66d510f98",
+                "name": "U.S. Bank Stadium",
+                "city": "Minneapolis",
+                "state": "MN",
+                "country": "USA",
+                "zip": "55415",
+                "address": "900 S 5th Street",
+                "capacity": 66655,
+                "surface": "artificial",
+                "roof_type": "dome",
+                "sr_id": "sr:venue:18423"
+            },
+            "home": {
+                "id": "33405046-04ee-4058-a950-d606f8c30852",
+                "name": "Minnesota Vikings",
+                "alias": "MIN",
+                "sr_id": "sr:competitor:4423"
+            },
+            "away": {
+                "id": "e6aa13a4-0055-48a9-bc41-be28dc106929",
+                "name": "Atlanta Falcons",
+                "alias": "ATL",
+                "sr_id": "sr:competitor:4393"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }, {
+            "id": "ebe4b2b3-cad3-42ca-9282-a8f44482d9a6",
+            "status": "scheduled",
+            "reference": "57900",
+            "number": 1,
+            "scheduled": "2019-09-06T00:20:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001319",
+            "venue": {
+                "id": "d7866605-5ac6-4b3a-90e8-760cc5a26b75",
+                "name": "Soldier Field",
+                "city": "Chicago",
+                "state": "IL",
+                "country": "USA",
+                "zip": "60605",
+                "address": "1410 South Museum Campus Drive",
+                "capacity": 61500,
+                "surface": "turf",
+                "roof_type": "outdoor",
+                "sr_id": "sr:venue:2109"
+            },
+            "home": {
+                "id": "7b112545-38e6-483c-a55c-96cf6ee49cb8",
+                "name": "Chicago Bears",
+                "alias": "CHI",
+                "sr_id": "sr:competitor:4391"
+            },
+            "away": {
+                "id": "a20471b4-a8d9-40c7-95ad-90cc30e46932",
+                "name": "Green Bay Packers",
+                "alias": "GB",
+                "sr_id": "sr:competitor:4420"
+            },
+            "broadcast": {
+                "network": "NBC"
+            }
+        }, {
+            "id": "f5d68421-c3a5-4c69-8617-a9ebe8a5c997",
+            "status": "scheduled",
+            "reference": "57911",
+            "number": 12,
+            "scheduled": "2019-09-08T20:25:00+00:00",
+            "entry_mode": "INGEST",
+            "sr_id": "sr:match:18001365",
+            "venue": {
+                "id": "1e84213a-ff1f-4c9d-a003-8ee782b25a40",
+                "name": "AT&T Stadium",
+                "city": "Arlington",
+                "state": "TX",
+                "country": "USA",
+                "zip": "76011",
+                "address": "One Legends Way",
+                "capacity": 80000,
+                "surface": "artificial",
+                "roof_type": "retractable_dome",
+                "sr_id": "sr:venue:6650"
+            },
+            "home": {
+                "id": "e627eec7-bbae-4fa4-8e73-8e1d6bc5c060",
+                "name": "Dallas Cowboys",
+                "alias": "DAL",
+                "sr_id": "sr:competitor:4392"
+            },
+            "away": {
+                "id": "04aa1c9d-66da-489d-b16a-1dee3f2eec4d",
+                "name": "New York Giants",
+                "alias": "NYG",
+                "sr_id": "sr:competitor:4426"
+            },
+            "broadcast": {
+                "network": "FOX"
+            }
+        }]
+    },
+    "_comment": "Generation started @ 2019-08-21 20:39:19 +0000 ended @ 2019-08-21 20:39:19 +0000"
+}
