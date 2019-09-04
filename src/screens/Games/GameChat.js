@@ -142,6 +142,7 @@ export default class GameChat extends Component {
       
         <SafeAreaView style={styles.container}>
           <GiftedChat
+          bottomOffset={54}
             messages={this.state.messages}
             onSend={this.addMessage.bind(this)}
             alwaysShowSend
@@ -163,11 +164,9 @@ export default class GameChat extends Component {
           />
         </SafeAreaView>
       </View>
-
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   chatHeader: {

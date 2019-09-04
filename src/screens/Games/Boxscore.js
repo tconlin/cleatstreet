@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import {
-  StatusBar,
   View,
   Text,
-  KeyboardAvoidingView,
-  AsyncStorage,
-  SafeAreaView,
   FlatList,
   StyleSheet,
-  ActivityIndicator
+  ScrollView
 } from 'react-native';
 import NavStyles from '../../constants/AppStyles';
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
+
 
 const TeamNames = require('../../utils/teamName')
 
@@ -29,8 +26,8 @@ export default class Boxscore extends Component {
     super(props);
     this.PBP = this.props.navigation.state.params.PBP;
     this.roomKey = this.props.navigation.state.params.roomKey;
-    this.gameTime = this.props.navigation.state.params.gameTime;
-    this.gameDate = this.props.navigation.state.params.gameTime;
+    this.GameTime = this.props.navigation.state.params.GameTime;
+    this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
     this.Clock = this.props.navigation.state.params.Clock;
@@ -94,13 +91,7 @@ export default class Boxscore extends Component {
     ); 
   }
 
-  
-
-
-
-
   render() {
-    console.log(this.state.pbp)
     if(this.is_live) {
       header = 
       <View style={RowStyles.chatTeamRow}>
@@ -125,6 +116,7 @@ export default class Boxscore extends Component {
         <View style={styles.chatHeader}>
           {header}
         </View>
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.BoxScoreContainer}>
                 <View>
@@ -218,10 +210,8 @@ export default class Boxscore extends Component {
             }
             </View>
         </View>
-
-
+        </ScrollView>
       </View>
-
     );
   }
 }

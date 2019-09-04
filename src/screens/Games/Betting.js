@@ -5,7 +5,6 @@ import {
   Text,
   KeyboardAvoidingView,
   AsyncStorage,
-  SafeAreaView,
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
@@ -32,9 +31,8 @@ export default class Boxscore extends Component {
     this.week = nfl_week[1];
     this.year = nfl_week[2];
     this.roomKey = this.props.navigation.state.params.roomKey;
-    const gameTime = this.props.navigation.state.params.gameTime;
-    this.gameTime_local = findDates.convertDayOfWeek(gameTime);
-    this.gameDate_local = findDates.convertTime(gameTime);
+    this.GameTime = this.props.navigation.state.params.GameTime;
+    this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
     this.Clock = this.props.navigation.state.params.Clock;

@@ -195,13 +195,13 @@ const Navigation = createBottomTabNavigator({
     style: {
       backgroundColor: NavStyles.colors.background,
     },
-    tabStyle: {
+    /*tabStyle: {
       height: 62
     },
     iconStyle: {
       flexGrow: 0,
       marginTop: 1.5
-    }
+    }*/
   }
 }
 );

@@ -11,6 +11,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <Firebase.h>
+#import "RNSplashScreen.h"
 
 @implementation AppDelegate
 
@@ -29,6 +30,11 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  // added for react-native-splash-screen
+  [RNSplashScreen show];
+  
+  
   return YES;
 }
 

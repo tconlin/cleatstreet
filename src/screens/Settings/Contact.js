@@ -4,10 +4,8 @@ import React from 'react';
 import { 
   StyleSheet, 
   View, 
-  Image, 
   Text,
-  Alert,
-  TouchableOpacity
+  ScrollView
 } from 'react-native';
 import NavStyles from '../../constants/AppStyles'
 
@@ -25,11 +23,13 @@ export default class Contact extends React.Component {
   render() {
     
 		return (
+      <ScrollView>
         <View style={styles.heroContainer}>
-            <Text style={styles.heroTitle}>
+          <Text style={styles.heroTitle}>
             If you have any questions or feedback, please reach out to us at info@cleat-street.com.
-            </Text>
+          </Text>
         </View>
+      </ScrollView>
 				
 		)
 	}

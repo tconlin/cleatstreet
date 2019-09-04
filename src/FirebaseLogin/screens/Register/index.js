@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import { w, h, totalSize } from '../../../components/Dimensions';
 import InputField from '../../../components/InputField';
 import Continue from './Continue';
@@ -8,7 +8,6 @@ import Firebase from "../../api/Firebase";
 import Terms from './Terms';
 
 import { CheckBox } from 'react-native-elements'
-
 
 
 const email = require('../../assets/email.png');
@@ -40,10 +39,10 @@ export default class Register extends Component {
       isPasswordCorrect: password === '',
       isRepeatCorrect: repeat === '' || repeat !== password,
     }, () => {
-      if(name !== '' && email !== '' && password !== '' && (repeat !== '' && repeat === password && this.state.ageCheck && this.state.termsCheck )){
+      if(name !== '' && email !== '' && password !== '' && (repeat !== '' && repeat === password) && this.state.ageCheck && this.state.termsCheck){
         this.createFireBaseAccount(name, email, password);
       } else {
-        console.warn('Fill up all fields correctly');
+        console.warn('Fill up all fields correctly and Agree to Terms');
       }
     })
     
@@ -101,6 +100,7 @@ export default class Register extends Component {
 
   render() {
     return(
+      <ScrollView>
       <View style={styles.container}>
         <Image style={styles.icon} resizeMode="contain" source={companyLogo}/>
         <InputField
@@ -143,7 +143,7 @@ export default class Register extends Component {
         />
         <View style={{
     justifyContent: 'flex-start'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: -20}}>
         <CheckBox
           center
           containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
@@ -155,7 +155,7 @@ export default class Register extends Component {
             <Text style={{color: 'blue'}} >Terms and Conditions</Text>
           </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: -20}}>
         <CheckBox
           containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
           checked={this.state.ageCheck}
@@ -169,6 +169,7 @@ export default class Register extends Component {
           <Text style={styles.signIn}>{'<'} Sign In</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     )
   }
 }
@@ -207,9 +208,9 @@ const styles = StyleSheet.create({
     marginVertical: h(2),
   },
   icon: {
-    width: w(70),
+    width: w(50),
     //height: h(30),
-    marginTop: h(2),
+    marginTop: h(5),
     //marginBottom: h(7),
   }
 });

@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactNativeSettingsPage, { 
-	NavigateRow,
-} from 'react-native-settings-page';
 import { 
   Share, 
   StyleSheet, 
@@ -10,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   Keyboard,
-  Alert
+  Alert,
+  ScrollView
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import NavStyles from '../../constants/AppStyles'
@@ -230,6 +228,8 @@ export default class Settings extends React.Component {
     }
 
 		return (
+     
+        <ScrollView>
         <View style={styles.pageContainer}>
           <View style={styles.heroContainer}>
             {profilePic}
@@ -287,52 +287,78 @@ export default class Settings extends React.Component {
               <Save isCreating={this.state.isCreatingAccount2} click={this.changePassword}/>
             </View>
           </View>
-          <ReactNativeSettingsPage>
-            <View style={styles.section}>
-              <NavigateRow
-                style={styles.item}
-                text='Share with Friends'
-                onPressCallback={this.onShare} />
+          <View style={styles.BottomContainer}>
+          <TouchableOpacity
+            style={styles.bottomItem}
+            onPress={this.onShare}
+          >
+            <View style={styles.bottomItemContainer}>
+              
+              <Text style={styles.bottomText}>Share Cleat Street With Friends</Text>
+              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
             </View>
-          </ReactNativeSettingsPage>
-          <ReactNativeSettingsPage>
-            <View style={styles.section}>
-              <NavigateRow
-                style={styles.item}
-                text='Terms and Conditions'
-                onPressCallback={() => this.props.navigation.navigate('Terms')} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomItem}
+            onPress={() => this.props.navigation.navigate('Terms')}
+          >
+            <View style={styles.bottomItemContainer}>
+              
+              <Text style={styles.bottomText}>Terms and Conditions</Text>
+              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+            </View >
+          </TouchableOpacity>
+          <TouchableOpacity
+              style={styles.bottomItem}
+                onPress={() => this.props.navigation.navigate('PP')}
+                >
+            <View style={styles.bottomItemContainer}>
+              <Text style={styles.bottomText}>Privacy Policy</Text>
+              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
             </View>
-          </ReactNativeSettingsPage>
-          <ReactNativeSettingsPage>
-            <View style={styles.section}>
-              <NavigateRow
-                style={styles.item}
-                text='Privacy Policy'
-                onPressCallback={() => this.props.navigation.navigate('PP')} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomItem}
+            onPress={() => this.props.navigation.navigate('Contact')}
+            >
+            <View style={styles.bottomItemContainer}>
+              <Text style={styles.bottomText}>Contact Us</Text>
+              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
             </View>
-          </ReactNativeSettingsPage>
-          <ReactNativeSettingsPage>
-            <View style={styles.section}>
-              <NavigateRow
-                style={styles.item}
-                text='Contact Us'
-                onPressCallback={() => this.props.navigation.navigate('Contact')} />
-            </View>
-          </ReactNativeSettingsPage>
+          </TouchableOpacity>
+          </View>
         </View>
+        </ScrollView>
+       
 		)
 	}
 }
 
 
 const styles = StyleSheet.create({
+  bottomItem: {
+    
+    backgroundColor: '#ffffff',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ccc',
+    width: '100%',
+    //flex: 1,
+    //flexDirection: 'row',
+    //justifyContent: 'flex-end',
+      
+  },
   mainContainer: {
     marginTop: 20,
     marginBottom: 40,
   },
+  BottomContainer: {
+    flex: 1,
+    marginBottom: 60
+  },
   pageContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5' 
+    backgroundColor: '#f5f5f5',
+    
   },
   settingsHeader: {
     fontSize: 14,
@@ -344,6 +370,20 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: '#fff',
   },
+  bottomText: {
+    position: 'absolute',
+    left: 0,
+  },
+  arrow: {
+    tintColor: '#000',
+    flex: 1,
+    resizeMode: 'contain',
+    width: 35,
+    height: 20,
+    position: 'absolute',
+    right: 0,
+
+  },
   input: {
     fontSize: 16,
     fontWeight: '300'
@@ -354,18 +394,25 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   itemContainer: {
-      paddingVertical: w(5),
+    paddingVertical: w(5),
       backgroundColor: '#ffffff',
       flexDirection: 'row',
-      paddingVertical: w(3.4),
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#ccc',
       width: '100%',
+  },
+  bottomItemContainer: {
+    margin: 25,
+    paddingBottom: 10,
 
+    //flex: 1,
+    //flexDirection: 'row',
+     
+      
   },
   heroContainer: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 40,
     paddingVertical: 20,
     justifyContent: 'center',
     alignItems: 'center',
