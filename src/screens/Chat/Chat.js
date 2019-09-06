@@ -116,15 +116,6 @@ export default class Chat extends Component {
     );
   }
   
-  renderRow(item) {
-    return (
-        <View style={RowStyles.teamRow}>
-          <TeamIcon name={navigation.state.params.awayTeam}/>
-          <Text>VS</Text>
-          <TeamIcon name={navigation.state.params.homeTeam} />
-        </View>
-    )
-  }
 
 
   render() {

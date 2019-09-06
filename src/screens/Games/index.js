@@ -37,8 +37,7 @@ export default class GameRooms extends Component {
     this.state = {
       loading: true,
       rooms: [],
-      newRoom: '',
-      is_live: true
+      newRoom: ''
     }
   }
 
@@ -47,11 +46,15 @@ export default class GameRooms extends Component {
   }
 
   listenForRooms(roomsRef) {
+    
     roomsRef.on('value', (dataSnapshot) => {
+      this.setState({ loading: false });
       var roomsFB = [];
       dataSnapshot.forEach((child) => {
+        console.log(child.key)
         firebase.database()
         .ref(`NFL/${this.year}/${this.type}/${this.week}/${child.key}/Live`).on("value", snapshot => {
+          this.setState({ loading: false });
           if (snapshot.exists()){
             const quarter = child.val().Live.Quarter;
 
@@ -69,6 +72,7 @@ export default class GameRooms extends Component {
             }
             
             roomsFB.push({
+              Active: true,
               PBP: child.val().PBP,
               AwayAlias: child.val().AwayTeam.Alias,
               AwayWins: child.val().AwayTeam.Wins,
@@ -90,9 +94,14 @@ export default class GameRooms extends Component {
               AwayTotal: child.val().Live.Total.AwayTotal,
               Clock: child.val().Live.Clock,
               QuarterText: quarter_text,
+              MoneyLineAway: child.val().Odds.MoneyLineAway,
+              MoneyLineHome: child.val().Odds.MoneyLineHome,
+              SpreadAway: child.val().Odds.SpreadAway,
+              SpreadHome: child.val().Odds.SpreadHome,
+              TotalHome: child.val().Odds.TotalHome,
+              TotalAway: child.val().Odds.TotalAway,
               key: child.key
             });
-            this.setState({ is_live: true });
           }
           else {
             const gameTime = child.val().Schedule.GameTime;
@@ -100,6 +109,7 @@ export default class GameRooms extends Component {
             var gameDate_local = findDates.convertTime(gameTime);
             
             roomsFB.push({
+              Active: false,
               AwayAlias: child.val().AwayTeam.Alias,
               AwayWins: child.val().AwayTeam.Wins,
               AwayLosses: child.val().AwayTeam.Losses,
@@ -110,29 +120,45 @@ export default class GameRooms extends Component {
               HomeTies: child.val().HomeTeam.Ties,
               GameDate: gameDate_local,
               GameTime: gameTime_local,
+              MoneyLineAway: child.val().Odds.MoneyLineAway,
+              MoneyLineHome: child.val().Odds.MoneyLineHome,
+              SpreadAway: child.val().Odds.SpreadAway,
+              SpreadHome: child.val().Odds.SpreadHome,
+              TotalHome: child.val().Odds.TotalHome,
+              TotalAway: child.val().Odds.TotalAway,
               key: child.key
             });
-            this.setState({ is_live: false });
           }
-          this.setState({ rooms: roomsFB, loading: false }); 
-        });  
-          
+          console.log(roomsFB)  
+          this.setState({ rooms: roomsFB });
+        });
+        //console.log(roomsFB)  
+        
     });
     
   });
+  this.setState({loading: false})
   }
 
 
   openMessages(room) {
+    console.log(room.Active)
     var away = room.AwayAlias
     var vs = ' vs '
     var home = room.HomeAlias
     var name = home.concat(vs, away)
-    if (this.state.is_live) {
+    if (room.Active) {
+      console.log(room.Clock)
       this.props.navigation.navigate('HomeNav', 
       {
+        MoneyLineAway: room.MoneyLineAway,
+        MoneyLineHome: room.MoneyLineHome,
+        SpreadAway: room.SpreadAway,
+        SpreadHome: room.SpreadHome,
+        TotalHome: room.TotalHome,
+        TotalAway: room.TotalAway,
         PBP: room.PBP,
-        is_live: this.state.is_live,
+        is_live: true,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -161,7 +187,7 @@ export default class GameRooms extends Component {
     else {
       this.props.navigation.navigate('HomeNav', 
       {
-        is_live: this.state.is_live,
+        is_live: false,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -174,6 +200,12 @@ export default class GameRooms extends Component {
         HomeWins: room.HomeWins,
         HomeLosses: room.HomeLosses,
         HomeTies: room.HomeTies,
+        MoneyLineAway: room.MoneyLineAway,
+        MoneyLineHome: room.MoneyLineHome,
+        SpreadAway: room.SpreadAway,
+        SpreadHome: room.SpreadHome,
+        TotalHome: room.TotalHome,
+        TotalAway: room.TotalAway,
 
       });
     }
@@ -186,7 +218,7 @@ export default class GameRooms extends Component {
         underlayColor="#fff"
         onPress={() => this.openMessages(item)}
       >
-        {this.state.is_live ? 
+        {item.Active ? 
           <View style={RowStyles.chatTeamRow}>
             <TeamIcon name={item.AwayAlias}/>
             <Text>{item.AwayTotal}</Text>

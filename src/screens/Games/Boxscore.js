@@ -61,6 +61,10 @@ export default class Boxscore extends Component {
 
   componentDidMount() {
     this.parsePBP(this.PBP);
+    console.log(this.Clock)
+    console.log(this.QuarterText)
+    console.log(this.GameDate)
+    console.log(this.GameTime)
   }
 
   parsePBP(PBP) {
@@ -81,10 +85,11 @@ export default class Boxscore extends Component {
     }
     this.setState({ pbp: pbp_arr });
   }
+
   renderPBP(item) {
     //{ backgroundColor: index % 2 === 0 ? '#e6e6e6' : '#fff'
     return (
-      <View style={{ backgroundColor: '#fff', textAlign: "left" }}>
+      <View style={{backgroundColor: '#fff', textAlign: "left" }}>
         <Text style={styles.PBPText1}>{item.Time} {item.Team}</Text>
         <Text style={styles.PBPText2}>{item.Summary}</Text>
       </View>
@@ -181,21 +186,20 @@ export default class Boxscore extends Component {
                     
                 </View>
                 <View>
-                  <View style={styles.BoxScoreEntry}  >
+                  <View style={styles.BoxScoreEntry2}  >
                     <Text style={styles.BoxScoreHeader}>Final</Text>
                   </View>
-                  <View style={styles.BoxScoreEntry}  >
+                  <View style={styles.BoxScoreEntry2}  >
                   {this.is_live ? <Text style={styles.BoxScoreNum}>{this.HomeTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
-                  <View style={styles.BoxScoreEntry}  >
+                  <View style={styles.BoxScoreEntry2}  >
                   {this.is_live ? <Text style={styles.BoxScoreNum}>{this.AwayTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                     
                 </View>
             </View>
-        </View>
-        <View style={styles.container}>
-            <View style={styles.PBPContainer}>
+        
+          <View style={styles.PBPContainer}>
             <View style={styles.PBPHeader}>
               <Text style={styles.PBPHeaderText}>Play-by-Play</Text>
             </View>
@@ -208,8 +212,8 @@ export default class Boxscore extends Component {
             :
             <Text style={styles.PBPText1}>Game not active.</Text>
             }
-            </View>
-        </View>
+          </View>
+          </View>
         </ScrollView>
       </View>
     );
@@ -234,11 +238,27 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5
   },
+  PBPContainer: {
+    flex: 1,
+    //justifyContent: 'space-between',
+    //alignSelf: 'flex-end',
+    //flexDirection: 'column',
+    //flexWrap: 'wrap',
+    backgroundColor: '#fff',
+    marginTop: 30,
+    paddingBottom: 30
+    //width: '100%'
+  },
   PBPHeader: {
-    borderBottomColor: '#8a8a8a',
-    borderBottomWidth: 1,
-    padding: 15,
+    borderBottomColor: '#dbdbdb',
+    borderBottomWidth: 1.5,
+    paddingLeft: 15,
+    paddingBottom: 10,
+    paddingTop: 10,
     marginBottom: 12.5,
+    //marginTop: 30,
+    //padding: 20,
+    //flex: 1,
     //width: '100%'
   },
   PBPHeaderText: {
@@ -247,15 +267,20 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   BoxScoreTitle: {
-    width: 100,
-    height: 30,
+    //width: 100,
+    //height: 30,
     flexDirection: 'row', 
     //justifyContent: 'flex-end',
-    textAlign: "left"
+    textAlign: 'left',
+    padding: 6
   },
   BoxScoreEntry: {
-    width: 40,
-    height: 30
+    padding: 6
+  },
+  BoxScoreEntry2: {
+    padding: 6
+    //width: 40,
+    //height: 30
   },
   BoxScoreNum: {
     fontSize: 11,
@@ -280,30 +305,18 @@ const styles = StyleSheet.create({
   BoxScoreContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    alignSelf: 'flex-end',
+    //alignSelf: 'flex-end',
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: '#fff',
-    position: 'absolute',
-    top: 90,
+    //position: 'absolute',
+    //top: 90,
     paddingTop: 20,
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 20,
-    width: '100%'
   },
-  PBPContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-    //alignSelf: 'flex-end',
-    flexDirection: 'column',
-    //flexWrap: 'wrap',
-    backgroundColor: '#fff',
-    position: 'absolute',
-    top: -55,
-    
-    width: '100%'
-  },
+  
   chatHeader: {
     position: 'absolute',
     top: 0,
@@ -319,10 +332,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   headerContainer: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
+    
+    marginTop: 90
   }
 });

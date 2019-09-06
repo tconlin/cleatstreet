@@ -32,7 +32,7 @@
   [self.window makeKeyAndVisible];
   
   // added for react-native-splash-screen
-  [RNSplashScreen show];
+  //[RNSplashScreen show];
   
   
   return YES;

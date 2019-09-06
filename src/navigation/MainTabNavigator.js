@@ -1,9 +1,7 @@
 import React from 'react';
-import { Platform, View, Button } from 'react-native';
 import {
   createStackNavigator,
-  createBottomTabNavigator,
-  createMaterialTopTabNavigator
+  createBottomTabNavigator
 } from 'react-navigation';
 
 import Icon from '../components/Icon';
@@ -14,14 +12,14 @@ import PPScreen from '../screens/Settings/PP';
 import TermsScreen from '../screens/Settings/Terms';
 import UploadScreen from '../screens/Settings/Upload';
 import ChatScreen from '../screens/Chat/Chat';
-import GameChatScreen from '../screens/Games/GameChat';
 import RoomsScreen from '../screens/Chat/Rooms';
 import NavStyles from '../constants/AppStyles';
 import GameRooms from '../screens/Games/index';
 import HomeNavigation from './HomeNavigator';
-
-
-
+import MakePicksScreen from '../screens/Picks/MakePicks';
+import MakePicksGameScreen from '../screens/Picks/MakePicksGame';
+import AnalystBioScreen from '../screens/Picks/AnalystBio';
+import GameChatScreen from '../screens/Games/GameChat';
 
 
 const GameStack = createStackNavigator({
@@ -30,8 +28,7 @@ const GameStack = createStackNavigator({
     headerBackTitle: null,
     headerTitleStyle: { color: NavStyles.colors.headerText},
   }) 
- },
-  Chat: {name: 'Chat', screen: GameChatScreen },
+  },
   HomeNav: {name: 'HomeNav', screen: HomeNavigation, navigationOptions: ({navigation}) =>
   ({
     headerTitle: navigation.state.params.roomName,
@@ -39,7 +36,7 @@ const GameStack = createStackNavigator({
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint, 
   })  
-}
+  }
 });
 
 GameStack.navigationOptions = {
@@ -143,7 +140,10 @@ HomeStack.navigationOptions = {
 };*/
 
 const PicksStack = createStackNavigator({
-  Games: PicksScreen,
+  Picks: PicksScreen,
+  MakePicks: MakePicksScreen,
+  MakePicksGame: MakePicksGameScreen,
+  AnalystBio: AnalystBioScreen
 });
 
 PicksStack.navigationOptions = {
@@ -195,13 +195,13 @@ const Navigation = createBottomTabNavigator({
     style: {
       backgroundColor: NavStyles.colors.background,
     },
-    /*tabStyle: {
+    tabStyle: {
       height: 62
     },
     iconStyle: {
-      flexGrow: 0,
-      marginTop: 1.5
-    }*/
+      flexGrow: 1,
+      marginTop: 1
+    }
   }
 }
 );

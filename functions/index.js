@@ -19,14 +19,14 @@ const nfl_getGameIDs_helper = async (url) => {
                 */
 
 
-                if(status === 'active'){
+                if(status === 'active' || status === 'inprogress'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
                         HomeAlias: games[i].home,
                         Scheduled: games[i].scheduled,
                         Active: true,
-                        Status: games[i].status
+                        Status: 'active'
                     })
                 }
                 else {
@@ -49,47 +49,103 @@ const nfl_getGameIDs_helper = async (url) => {
     return gameIDs;  
 };
 
+const nfl_updateOdds = async (url, year, type, week) => {
+    try {
+        let res = await request(url, {json: true});
+        var events = res.sport_events;
+        for (var indx_ev in events) {
+            if (events.hasOwnProperty(indx_ev)) {
+                var sport_type = events[indx_ev].tournament.uuids;
+                if(sport_type === 'NFL') {
+                    var curr_id = events[indx_ev].uuids;
+                    var consensus_lines = events[indx_ev].consensus.lines;
+                    var moneyline_current_home = consensus_lines[0].outcomes[0].odds;
+                    var moneyline_current_away = consensus_lines[0].outcomes[1].odds;
+
+                    var spread_current_home = consensus_lines[2].spread;
+                    var spread_current_away = parseInt(consensus_lines[2].spread) * -1;
+
+                    var total_current_home = consensus_lines[4].total;
+                    var total_current_away = consensus_lines[4].total;
+
+                    admin.database()
+                    .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
+                    .set({ 
+                        MoneyLineHome: moneyline_current_home,
+                        MoneyLineAway: moneyline_current_away,
+                        SpreadHome: spread_current_home,
+                        SpreadAway: spread_current_away,
+                        TotalHome: total_current_home,
+                        TotalAway: total_current_away
+                    })
+
+                }
+            }
+        }
+    }
+    catch(error) {
+        console.warn(error)
+    }
+}
+
+
 const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
     try {
-        let res = await request(url, {json: true})
+        let res = await request(url, {json: true});
         const clock = res.clock;
         const quarter = res.quarter;
         const home_scoring = res.home_team.scoring;
         const away_scoring = res.away_team.scoring;
+
+
         const home_total = res.home_team.points;
         const away_total = res.away_team.points;
-        for (var indx_hscr in home_scoring) {
-            if (home_scoring.hasOwnProperty(indx_hscr)) {
-                if( indx_hscr === 0 ) {
-                    var qtr1score_home = home_scoring[indx_hscr].points;
-                }
-                else if (indx_hscr === 1) {
-                    var qtr2score_home = home_scoring[indx_hscr].points;
-                }
-                else if (indx_hscr === 2) {
-                    var qtr3score_home = home_scoring[indx_hscr].points;
-                }
-                else if (indx_hscr === 3) {
-                    var qtr4score_home = home_scoring[indx_hscr].points;
-                }
-            }
+        
+        /* eslint-disable no-redeclare */
+        var home_scr_length = home_scoring.length;
+        if(home_scr_length === 1) {
+            var qtr1score_home = home_scoring[0].points;        
+            var qtr2score_home = 0;
+            var qtr3score_home = 0;
+            var qtr4score_home = 0;
+            var qtr1score_away = away_scoring[0].points;
+            var qtr2score_away = 0;
+            var qtr3score_away = 0;
+            var qtr4score_away = 0;
         }
-        for (var indx_ascr in away_scoring) {
-            if (away_scoring.hasOwnProperty(indx_ascr)) {
-                if( indx_ascr === 0 ) {
-                    var qtr1score_away = away_scoring[indx_ascr].points;
-                }
-                else if (indx_ascr === 1) {
-                    var qtr2score_away = away_scoring[indx_ascr].points;
-                }
-                else if (indx_ascr === 2) {
-                    var qtr3score_away = away_scoring[indx_ascr].points;
-                }
-                else if (indx_ascr === 3) {
-                    var qtr4score_away = away_scoring[indx_ascr].points;
-                }
-            }
+        else if(home_scr_length === 2) {
+            var qtr1score_home = home_scoring[0].points;        
+            var qtr2score_home = home_scoring[1].points;
+            var qtr3score_home = 0;
+            var qtr4score_home = 0;
+            var qtr1score_away = away_scoring[0].points;
+            var qtr2score_away = away_scoring[1].points;
+            var qtr3score_away = 0;
+            var qtr4score_away = 0;
         }
+        else if(home_scr_length === 3) {
+            var qtr1score_home = home_scoring[0].points;        
+            var qtr2score_home = home_scoring[1].points;
+            var qtr3score_home = home_scoring[2].points;
+            var qtr4score_home = 0;
+            var qtr1score_away = away_scoring[0].points;
+            var qtr2score_away = away_scoring[1].points;
+            var qtr3score_away = away_scoring[2].points;
+            var qtr4score_away = 0;
+        }
+        else if(home_scr_length === 4) {
+            var qtr1score_home = home_scoring[0].points;        
+            var qtr2score_home = home_scoring[1].points;
+            var qtr3score_home = home_scoring[2].points;
+            var qtr4score_home = home_scoring[3].points;
+            var qtr1score_away = away_scoring[0].points;
+            var qtr2score_away = away_scoring[1].points;
+            var qtr3score_away = away_scoring[2].points;
+            var qtr4score_away = away_scoring[3].points;
+            
+        }
+        /* eslint-disable no-redeclare */
+
         const drives = res.scoring_drives;
         for (var indx_dr in drives) {
             if (drives.hasOwnProperty(indx_dr)) {
@@ -101,7 +157,7 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
                         for ( var indx_ev in events) {
                             if (events.hasOwnProperty(indx_ev)) {
                                 admin.database()
-                                .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${sequence}/`)
+                                .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${sequence}`)
                                 .push({
                                     Quarter: events[indx_ev].quarter,
                                     Time: events[indx_ev].clock,
@@ -114,32 +170,29 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
                  });
             }  
         }
-        if (qtr1score_home === null) {
-            qtr1score_home = 0;
-        }
-        if (qtr2score_home === null) {
-            qtr2score_home = 0;
-        }
-        if (qtr3score_home === null) {
-            qtr3score_home = 0;
-        }
-        if (qtr4score_home === null) {
-            qtr4score_home = 0;
-        }
-        if (qtr1score_away === null) {
-            qtr1score_away = 0;
-        }
-        if (qtr2score_away === null) {
-            qtr2score_away = 0;
-        }
-        if (qtr3score_away === null) {
-            qtr3score_away = 0;
-        }
-        if (qtr4score_away === null) {
-            qtr4score_away = 0;
-        }
+        
+
+        
+        console.log(qtr1score_home);
+    
+        console.log(qtr2score_home);
+    
+        console.log(qtr3score_home);
+    
+        console.log(qtr4score_home);
+        
+        console.log(qtr1score_away);
+    
+        console.log(qtr2score_away);
+    
+        console.log(qtr3score_away);
+    
+        console.log(qtr4score_away);
+        
+
+
         admin.database()
-        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Live/`)
+        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Live`)
         .set({
             Clock: clock,
             Quarter: quarter,
@@ -289,12 +342,11 @@ const nfl_LiveGameData = async () => {
     var week = nfl_week[1];
     var year = nfl_week[2];
     
-    var SP_API_KEY = functions.config().sportradar_nfl.key
+    var SP_API_KEY = functions.config().sportradar_nfl.key;
     const schedule_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/schedule.json?api_key=${SP_API_KEY}`;
     
     let gameIDs = await nfl_getGameIDs_helper(schedule_url);
     
-    const gamesToRun = [];
     /* eslint-disable no-await-in-loop */
     for (var indx_ids in gameIDs ) {
         if (gameIDs.hasOwnProperty(indx_ids)) {
@@ -309,9 +361,39 @@ const nfl_LiveGameData = async () => {
         }
     }
     /* eslint-disable no-await-in-loop */
-    
 }
 
+const nfl_OddsData = async () => {
+    var nfl_week = findDates.findNFLWeek_2019();
+    var type = nfl_week[0];
+    var week = nfl_week[1];
+    var year = nfl_week[2];
+    
+    var SP_API_KEY = functions.config().sportradar_nfl.key;
+    const schedule_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/schedule.json?api_key=${SP_API_KEY}`;
+    
+    let gameIDs = await nfl_getGameIDs_helper(schedule_url);
+
+    /* eslint-disable no-await-in-loop */
+    for (var indx_ids2 in gameIDs ) {
+        if (gameIDs.hasOwnProperty(indx_ids2)) {
+            const SP_ODDS_KEY = functions.config().sportradar_nfl_odds.key;
+            const scheduled_date = gameIDs[indx_ids2].Scheduled;
+            const game_date = findDates.extractDate(scheduled_date);
+            const odds_url = `https://api.sportradar.us/oddscomparison-usp1/en/us/sports/sr:sport:16/${game_date}/schedule.json?api_key=${SP_ODDS_KEY}`;
+            
+            let liveOdds = await nfl_updateOdds(odds_url, year, type, week);
+        }
+    }
+    /* eslint-disable no-await-in-loop */
+}
+
+
+
+exports.updateOdds = functions.pubsub.schedule('every 2 minutes').timeZone('America/New_York').onRun((context) => {
+    nfl_OddsData();
+    return null;
+});
 
 exports.updateScore = functions.pubsub.schedule('* * * * *').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();

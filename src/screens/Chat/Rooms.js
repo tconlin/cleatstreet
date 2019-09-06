@@ -9,11 +9,13 @@ import {
   View
 } from 'react-native';
 import firebase from 'react-native-firebase';
-import styles from './styles.js';
 import NavStyles from '../../constants/AppStyles'
 const findDates = require('../../utils/dates')
 import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
+import styles from './styles.js';
+
+
 
 export default class Rooms extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -34,8 +36,7 @@ export default class Rooms extends Component {
     this.state = {
       loading: true,
       rooms: [],
-      newRoom: '',
-      is_live: true
+      newRoom: ''
     }
   }
 
@@ -66,30 +67,28 @@ export default class Rooms extends Component {
               var quarter_text = '4th Quarter'
             }
             roomsFB.push({
+              Active: true,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,
               QuarterText: quarter_text,
               HomeTotal: child.val().Live.Total.HomeTotal,
               AwayTotal: child.val().Live.Total.AwayTotal,
               Clock: child.val().Live.Clock,
-              QuarterText: quarter_text,
               key: child.key
             });
-            
-            this.setState({ is_live: true });
           }
           else {
             const gameTime = child.val().Schedule.GameTime;
             var gameTime_local = findDates.convertDayOfWeek(gameTime);
             var gameDate_local = findDates.convertTime(gameTime);
             roomsFB.push({
+              Active: false,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,
               GameDate: gameDate_local,
               GameTime: gameTime_local,
               key: child.key
-            });
-            this.setState({ is_live: false });
+            }); 
           }
           this.setState({ rooms: roomsFB, loading: false }); 
         });  
@@ -106,10 +105,10 @@ export default class Rooms extends Component {
     var vs = ' vs '
     var home = room.HomeAlias
     var name = home.concat(vs, away)
-    if (this.state.is_live) {
+    if (room.Active) {
       this.props.navigation.navigate('Chat', 
       {
-        is_live: this.state.is_live,
+        is_live: room.Active,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -124,7 +123,7 @@ export default class Rooms extends Component {
     else {
       this.props.navigation.navigate('Chat', 
       {
-        is_live: this.state.is_live,
+        is_live: room.Active,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -143,7 +142,7 @@ export default class Rooms extends Component {
         underlayColor='#fff'
         onPress={() => this.openMessages(item)}
       >
-        {this.state.is_live ? 
+        {item.Active ? 
           <View style={RowStyles.teamRow}>
             <TeamIcon name={item.AwayAlias}/>
             <Text>{item.AwayTotal}</Text>

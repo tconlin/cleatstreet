@@ -6,17 +6,18 @@ import {
   KeyboardAvoidingView,
   AsyncStorage,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native';
-
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
-const findDates = require('../../utils/dates')
-import RowStyles from '../../utils/styles'
+import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
+const TeamNames = require('../../utils/teamName');
+const findDates = require('../../utils/dates');
 
 
-export default class Boxscore extends Component {
+export default class Betting extends Component {
   static navigationOptions = ({ navigation }) => ({
     //title: navigation.state.params.roomName,
     headerStyle: { backgroundColor: NavStyles.colors.background },
@@ -40,6 +41,14 @@ export default class Boxscore extends Component {
     this.HomeTotal = this.props.navigation.state.params.HomeTotal;
     this.AwayTotal = this.props.navigation.state.params.AwayTotal;
     this.is_live = this.props.navigation.state.params.is_live;
+    this.MoneyLineAway = this.props.navigation.state.params.MoneyLineAway;
+    this.MoneyLineHome = this.props.navigation.state.params.MoneyLineHome;
+    this.SpreadAway = this.props.navigation.state.params.SpreadAway;
+    this.SpreadHome = this.props.navigation.state.params.SpreadHome;
+    this.TotalAway = this.props.navigation.state.params.TotalAway;
+    this.TotalHome = this.props.navigation.state.params.TotalHome;
+    this.HomeName = TeamNames.convertAlias(this.HomeTeam);
+    this.AwayName = TeamNames.convertAlias(this.AwayTeam);
     this.state = {
       loading: true,
       user: '',
@@ -51,6 +60,29 @@ export default class Boxscore extends Component {
     this.setState({ user: firebase.auth().currentUser });
     
   }
+
+renderPicks(item) {
+  return (
+    <View style={styles.BettingContainer}>
+      <View>
+        <View style={styles.BettingTitle} >
+          <Text style={styles.BettingHeader}></Text>
+        </View>
+      </View>
+      <View>
+        <View style={styles.BettingEntry} >
+          <Text style={styles.BettingHeader}>Bet</Text>
+        </View>
+      </View>
+      <View>
+        <View style={styles.BettingEntry} >
+          <Text style={styles.BettingHeader}>Allocation</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 
   render() {
     if(this.is_live) {
@@ -77,93 +109,191 @@ export default class Boxscore extends Component {
         <View style={styles.chatHeader}>
           {header}
         </View>
+        <ScrollView>
         <View style={styles.container}>
-            <View style={styles.BoxScoreContainer}>
+        <View style={styles.Header}>
+                <Text style={styles.HeaderText}>Odds</Text>
+              </View>
+            <View style={styles.BettingContainer}>
+              
                 <View>
-                    <View style={{width: 100, height: 30, backgroundColor: 'blue'}} >
+                    <View style={styles.BettingTitle} >
+                      <Text style={styles.BettingHeader}>Teams</Text>
                     </View>
-                    <View style={{width: 100, height: 30, backgroundColor: 'black'}} >
+                    <View style={styles.BettingTitle}>
+                      <Text style={styles.BettingName}>{this.HomeName} </Text>
                     </View>
-                    <View style={{width: 100, height: 30, backgroundColor: 'green'}} >
+                    <View style={styles.BettingTitle}>
+                      <Text style={styles.BettingName}>{this.AwayName} </Text>
                     </View>
                     
                 </View>
                 <View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'powderblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'skyblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'steelblue'}} >
-                    </View>
-                    
+                  <View style={styles.BettingEntry} >
+                    <Text style={styles.BettingHeader}>Spread</Text>
+                  </View>
+                  <View style={styles.BettingEntry}>
+                    <Text style={styles.BettingNum}>{this.SpreadHome}</Text>
+                  </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingNum}>{this.SpreadAway}</Text>
+                  </View>
                 </View>
-
                 <View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'black'}}>
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'grey'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'blue'}} >
-                    </View>
+                  <View style={styles.BettingEntry} >
+                    <Text style={styles.BettingHeader}>Moneyline</Text>
+                  </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingNum}>{this.MoneyLineHome}</Text>
+                  </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingNum}>{this.MoneyLineAway}</Text>
+                  </View>
                 
                 </View>
                 <View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'powderblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'skyblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'steelblue'}} >
-                    </View>
-                    
-                </View>
-                <View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'blue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'red'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'green'}} >
-                    </View>
-                    
-                </View>
-                <View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'powderblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'skyblue'}} >
-                    </View>
-                    <View style={{width: 50, height: 30, backgroundColor: 'steelblue'}} >
-                    </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingHeader}>O/U</Text>
+                  </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingNum}>{this.TotalHome}</Text>
+                  </View>
+                  <View style={styles.BettingEntry}  >
+                    <Text style={styles.BettingNum}>{this.TotalAway}</Text>
+                  </View>
                     
                 </View>
             </View>
-        </View>
+        
+          
+          </View>
+          <View style={styles.container2}>
+          <View style={styles.Header}>
+                <Text style={styles.HeaderText}>Our Picks</Text>
+              </View>
+            <View style={styles.BettingContainer}>
+              
+                <View>
+                  <View style={styles.BettingTitle} >
+                    <Text style={styles.BettingHeader}>Analyst</Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.BettingEntry} >
+                    <Text style={styles.BettingHeader}>Bet</Text>
+                  </View>
+                </View>
+                <View>
+                  <View style={styles.BettingEntry} >
+                    <Text style={styles.BettingHeader}>Allocation</Text>
+                  </View>
+                </View>
+                </View>
+               
+            
+          </View>
+        </ScrollView>
       </View>
-
     );
   }
 }
 
 
 const styles = StyleSheet.create({
-Score: {
-    width: 25,
-    height: 25
-},
-BoxScoreContainer: {
+  PBPText1: {
+    fontSize: 11,
+    color: '#3b3b3b',
+    fontWeight: '700',
+    padding: 2.5,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  PBPText2: {
+    fontSize: 11,
+    color: '#757575',
+    fontWeight: '600',
+    padding: 10,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  ContentContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    //justifyContent: 'space-between',
+    //alignSelf: 'flex-end',
+    //flexDirection: 'column',
+    //flexWrap: 'wrap',
     backgroundColor: '#fff',
-    position: 'absolute',
-    top: 100,
-    paddingTop: 20,
+    marginTop: 30,
+    padding: 20,
+    width: '100%'
+  },
+  Header: {
+    borderBottomColor: '#dbdbdb',
+    borderBottomWidth: 1.5,
+    paddingLeft: 15,
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginBottom: 12.5,
+  },
+  HeaderText: {
+    fontSize: 11,
+    color: '#3b3b3b',
+    fontWeight: '700'
+  },
+  BettingTitle: {
+    //width: 100,
+    //height: 30,
+    flexDirection: 'row', 
+    //justifyContent: 'flex-end',
+    textAlign: 'left',
+    padding: 6
+  },
+  BettingEntry: {
+    //width: 20,
+    //height: 30
+    padding: 6
+  },
+  BettingEntry2: {
+    //width: 40,
+    //height: 30
+    padding: 6
+  },
+  BettingNum: {
+    fontSize: 11,
+    color: '#3b3b3b',
+    fontWeight: '700'
+  },
+  BettingName: {
+    fontSize: 11,
+    color: '#3b3b3b',
+    fontWeight: '700'
+  },
+  BettingRecord: {
+    fontSize: 10,
+    color: '#8a8a8a',
+    fontWeight: '400'
+  },
+  BettingHeader: {
+    fontSize: 10,
+    color: '#8a8a8a',
+    fontWeight: '400'
+  },
+  BettingContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    //alignSelf: 'flex-end',
+    flexDirection: 'row',
+    //flexWrap: 'wrap',
+    backgroundColor: '#fff',
+    //position: 'absolute',
+    //top: 90,
+    //paddingTop: 20,
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 20,
-    width: '100%'
-    
-},
+    //width: '100%'
+  },
+  
   chatHeader: {
     position: 'absolute',
     top: 0,
@@ -179,42 +309,17 @@ BoxScoreContainer: {
     backgroundColor: '#ffffff'
   },
   headerContainer: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
   container: {
-      flex: 1,
-    backgroundColor: 'black',
-    
-    
-    
+    flex: 1,
+    backgroundColor: '#ffffff',
+    marginTop: 90
   },
-  left: {
-      //backgroundColor: '#e5e6ea',
-  },
-  right: {
-      //backgroundColor: '#d1b624',
-  },
-  inputContainer: {
-      //backgroundColor: 'rgba(0, 0, 0, 0.9)',
-      minHeight: 44,
-  },
-  inputPrimary: {
-      //backgroundColor: '#f9f9f9',
-      marginVertical: 4,
-      marginHorizontal: 16,
-      borderRadius: 24,
-      alignItems: 'center',
-  },
-  sendContainer: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      //backgroundColor: '#f9f9f9',
-      alignItems: 'center',
-      justifyContent: 'center',
-  },
-  send: {
-      width: 20,
-      height: 20,
+  container2: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    marginTop: 45
   }
 });

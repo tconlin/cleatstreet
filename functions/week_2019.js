@@ -10,6 +10,18 @@ module.exports = {
 
         return date_formatted;
     },
+    extractDate: function extractDate(datetime) {
+        var date = new Date(datetime),
+        month = '' + (date.getMonth() + 1),
+        day = '' + date.getDate(),
+        year = date.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+
+    },
     convertTime: function convertTime(datetime, timezone) {
         var options = {
             hour: 'numeric',

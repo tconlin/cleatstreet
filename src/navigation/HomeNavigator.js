@@ -21,7 +21,7 @@ export default HomeNavigation = createMaterialTopTabNavigator( {
         screen: BettingScreen,
         navigationOptions: { title: 'Betting' }
     },
-    Chat2: {name: 'Chat', screen: GameChatScreen, navigationOptions: { title: 'Chat' } },
+    Chat: {name: 'Chat', screen: GameChatScreen, navigationOptions: { title: 'Chat' } },
     },
     {
     headerBackground: NavStyles.colors.background,
@@ -29,7 +29,7 @@ export default HomeNavigation = createMaterialTopTabNavigator( {
     headerMode: 'screen',
     tabBarPosition: 'top',
     tabBarOptions: {
-        activeTintColor: NavStyles.colors.accentColor,
+        //activeTintColor: NavStyles.colors.accentColor,
         inactiveTintColor: NavStyles.colors.white,
         pressColor: NavStyles.colors.white,
         labelStyle: {
@@ -37,7 +37,8 @@ export default HomeNavigation = createMaterialTopTabNavigator( {
             fontSize: 11,
         },
         indicatorStyle: {
-            backgroundColor: NavStyles.colors.accentColor
+            backgroundColor: '#377855',
+            height: 5
         },
         style: {
             color: NavStyles.colors.background,
