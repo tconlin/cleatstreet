@@ -13,13 +13,7 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
-                
-                /*
-                *    CHANGE TO ACTIVE
-                */
-
-
-                if(status === 'active' || status === 'inprogress'){
+                if(status === 'created' || status === 'inprogress' || status === 'complete' || status === 'closed'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -103,6 +97,16 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
         
         /* eslint-disable no-redeclare */
         var home_scr_length = home_scoring.length;
+        if(home_scr_length === 0) {
+            var qtr1score_home = 0;        
+            var qtr2score_home = 0;
+            var qtr3score_home = 0;
+            var qtr4score_home = 0;
+            var qtr1score_away = 0;
+            var qtr2score_away = 0;
+            var qtr3score_away = 0;
+            var qtr4score_away = 0;
+        }
         if(home_scr_length === 1) {
             var qtr1score_home = home_scoring[0].points;        
             var qtr2score_home = 0;
@@ -170,27 +174,6 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
                  });
             }  
         }
-        
-
-        
-        console.log(qtr1score_home);
-    
-        console.log(qtr2score_home);
-    
-        console.log(qtr3score_home);
-    
-        console.log(qtr4score_home);
-        
-        console.log(qtr1score_away);
-    
-        console.log(qtr2score_away);
-    
-        console.log(qtr3score_away);
-    
-        console.log(qtr4score_away);
-        
-
-
         admin.database()
         .ref(`NFL/${year}/${type}/${week}/${curr_id}/Live`)
         .set({
@@ -390,7 +373,7 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 2 minutes').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
