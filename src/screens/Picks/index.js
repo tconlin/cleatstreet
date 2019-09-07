@@ -92,29 +92,49 @@ export default class Picks extends Component {
     this.props.navigation.navigate('AnalystBio', 
     {
       AnalystId: Analyst.Id,
-      Analyst: Analyst,
+      AnalystName: Analyst.Name,
       Avatar: Analyst.avatar
     });
   }
 
-  renderPicks(item) {
-    return (
-      <View style={styles.roomLi}>
-        <TouchableHighlight 
+//<Image source={item.Analyst.Avatar} />
+
+  renderAnalyst(item, index) {
+    return ( 
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+        <TouchableHighlight
+          
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          <Image source={item.Analyst.Avatar} />
+          
+          <Text style={styles.BettingEntry}>{item.Analyst.Name}</Text>
         </TouchableHighlight>
-        <View style={RowStyles.chatTeamRow}>
-          <Text> {item.Analyst.Name}</Text>
-          <Text> {item.AwayTeam} vs {item.HomeTeam}</Text>
-          <Text> {item.Bet}</Text>
-          <Text> {item.Allocation}</Text>
         </View>
+    );
+  }
+
+  renderGame(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingEntry}>{item.AwayTeam} vs {item.HomeTeam}</Text>
       </View>
-        
-      
+    ); 
+  }
+
+
+  renderBet(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingEntry}>{item.Bet}</Text>
+      </View>
+    ); 
+  }
+  renderAllocation(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingEntry}>{item.Allocation}</Text>
+      </View>
     ); 
   }
 
@@ -144,15 +164,58 @@ export default class Picks extends Component {
         
           <View style={styles.container}>
             
-              <View style={styles.roomsContainer}>
-                <View style={styles.roomsListContainer}>
-                  <FlatList
+              
+              <View style={styles.RowStyle}>
+              <View style={styles.ColumnItem}>
+              <View style={styles.rowContainer}>
+                  <Text style={styles.BettingHeader}>Analyst</Text>
+                </View>
+                <FlatList
                     data={this.state.picks}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item}) => (this.renderPicks(item))}
+                    renderItem={({item, index}) => (this.renderAnalyst(item, index))}
+                  />
+              </View>
+             
+                <View style={styles.ColumnItem}>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.BettingHeader}>Game</Text>
+                  </View>
+                <FlatList
+                    data={this.state.picks}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item, index}) => (this.renderGame(item, index))}
+                  />
+              
+              </View>
+                  <View style={styles.ColumnItem2}>
+                  <View style={styles.rowContainer}>
+                  <Text style={styles.BettingHeader}>Bet</Text>
+                  </View>
+                <FlatList
+                    data={this.state.picks}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item, index}) => (this.renderBet(item, index))}
+                  />
+          </View>
+              
+                <View style={styles.ColumnItem2}>
+                  <View style={styles.rowContainer}>
+                    <Text style={styles.BettingHeader}>Allocation</Text>
+                  </View>
+                <FlatList
+                    data={this.state.picks}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item, index}) => (this.renderAllocation(item, index))}
                   />
                 </View>
+
+
               </View>
+
+              
+                  
+                
               <View style={styles.buttonContainer}>
             {AnalystButton}
           </View>
@@ -166,25 +229,31 @@ export default class Picks extends Component {
 
 
 const styles = StyleSheet.create({
-  roomLi: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderBottomColor: '#eee',
-    borderColor: 'transparent',
-    borderWidth: 1,
-    paddingLeft: 16,
-    paddingTop: 14,
-    paddingBottom: 16,
+  RowStyle: {
+    //flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    //alignItems: 'stretch',
+    //alignContent: 'center',
+    //flexWrap: 'wrap'
+        
   },
-  picksEntry: {
-    width: 100,
-    height: 20
+  ColumnItem: {
+    width: '30%',
   },
-  picksHeader: {
-
+  ColumnItem2: {
+    width: '20%',
   },
-  picksList: {
-
+  rowContainer: {
+    /*flex: 1,
+    flexDirection: 'row',
+    borderBottomColor: '#dbdbdb',
+    borderBottomWidth: 1.5,
+    alignSelf: 'stretch',
+    width: '100%',*/
+    //width: '1000pt',
+    borderBottomColor: '#dbdbdb',
+    borderBottomWidth: 1.5,
   },
   buttonContainer: {
     flex: 1,
@@ -209,124 +278,63 @@ const styles = StyleSheet.create({
     paddingVertical: h(1),
     fontSize: totalSize(2.1),
   },
-  Score: {
-      width: 25,
-      height: 25
-  },
-  BettingContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    backgroundColor: '#fff',
-    position: 'absolute',
-    top: 100,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 20,
-    width: '100%'
-    
-  },
-  chatHeader: {
-    position: 'absolute',
-    top: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 22,
-    paddingVertical: 16,
-    borderBottomColor: '#b8b8b8',
-    borderBottomWidth: 1,
-    zIndex: 1,
-    backgroundColor: '#ffffff'
-  },
-  headerContainer: {
-    flex: 1
-  },
+  
   container: {
     flex: 1,
   },
-  inputContainer: {
-    //backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    minHeight: 44,
+  BettingEntry: {
+    fontSize: 12,
+    color: '#000',
+    fontWeight: '500',
+    paddingRight: 8,
+    paddingLeft: 8,
+    paddingBottom: 12,
+    paddingTop: 12,
+    textAlign: 'center'
   },
-  inputPrimary: {
-    //backgroundColor: '#f9f9f9',
-    marginVertical: 4,
-    marginHorizontal: 16,
-    borderRadius: 24,
+  BettingHeader: {
+    fontSize: 11,
+    color: '#8a8a8a',
+    fontWeight: '400',
+    padding: 8,
+    textAlign: 'center'
+  },
+  BettingContainer: {
+    flex: 1,
+    //justifyContent: 'space-around',
+    //alignContent: 'stretch',
+    flexDirection: 'row',
+    //flexWrap: 'wrap',
+    backgroundColor: '#fff',
+    //padding: 10,
+    //width:'100%'
+    flexWrap:'wrap',
+    
+  },
+  BettingTitle: {
+    //flex: 1,
+    //flexDirection: 'row', 
+    justifyContent: 'center',
+    //textAlign: 'left',
     alignItems: 'center',
-},
-  sendContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    //backgroundColor: '#f9f9f9',
+    //padding: 6
+    
+    //paddingLeft: '10%',
+    //paddingRight: '10%',
+    
+  },
+  BettingTitle2: {
+    //flex: 1,
+    //flexDirection: 'column', 
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  send: {
-    width: 20,
-    height: 20,
-  },
-  roomsContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  roomsHeader: {
-    color: '#fff',
-    fontSize: 28,
-    top: 20
-  },
-  roomsInputContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderBottomColor: '#f9f9f9',
-    borderBottomWidth: 2,
-  },
-  roomsInput: {
-    flex: 1,
-    height: 40,
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#1E90FF',
-    borderColor: '#f9f9f9',
-    borderWidth: 2,
-    borderRadius: 4,
-    margin: 10
-  },
-  roomsNewButton: {
-    alignItems: 'center',
-    marginRight: 20
-  },
-  roomsNewButtonText: {
-    color: '#1E90FF',
-    fontSize: 18
-  },
-  roomsListContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#fff'
-  },
-  roomLi: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderBottomColor: '#eee',
-    borderColor: 'transparent',
-    borderWidth: 1,
-    paddingLeft: 16,
-    paddingTop: 14,
-    paddingBottom: 16,
-  },
-  roomLiText: {
-    color: '#1E90FF',
-    fontSize: 22,
+    //padding: 6,
+    //textAlign: 'center',
+    //paddingLeft: '10%',
+    //paddingRight: '10%',
+
+   
+    
+
   },
 })

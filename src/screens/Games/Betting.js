@@ -179,12 +179,12 @@ renderPicks(item) {
                   </View>
                 </View>
                 <View>
-                  <View style={styles.BettingEntry} >
+                  <View style={styles.BettingTitle} >
                     <Text style={styles.BettingHeader}>Bet</Text>
                   </View>
                 </View>
                 <View>
-                  <View style={styles.BettingEntry} >
+                  <View style={styles.BettingTitle} >
                     <Text style={styles.BettingHeader}>Allocation</Text>
                   </View>
                 </View>
