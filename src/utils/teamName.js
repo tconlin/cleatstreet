@@ -14,10 +14,9 @@ module.exports = {
         else if(Alias === 'GB') {return 'Packers'}
         else if(Alias === 'HOU') {return 'Texans'}
         else if(Alias === 'IND') {return 'Colts'}
-        else if(Alias === 'JAX') {return 'Jaguars'}
+        else if(Alias === 'JAC') {return 'Jaguars'}
         else if(Alias === 'KC') {return 'Chiefs'}
         else if(Alias === 'LAC') {return 'Chargers'}
-        else if(Alias === 'LAR') {return 'Rams'}
         else if(Alias === 'LA') {return 'Rams'}
         else if(Alias === 'MIA') {return 'Dolphins'}
         else if(Alias === 'MIN') {return 'Vikings'}

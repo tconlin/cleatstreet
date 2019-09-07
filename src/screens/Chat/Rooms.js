@@ -44,58 +44,72 @@ export default class Rooms extends Component {
     this.listenForRooms(this.roomsRef);
   }
 
+  organizeGamesByActivity(a, b) {
+    const activityA = a.Active;
+    const activityB = b.Active;
+
+    let comparison = 0;
+    if (activityA === true && activityB === false) {
+      comparison = -1;
+    } else if (activityA === false && activityB === true) {
+      comparison = 1;
+    }
+
+    return comparison;
+  }
+
   listenForRooms(roomsRef) {
     roomsRef.on('value', (dataSnapshot) => {
-
+      this.setState({ loading: true });
       var roomsFB = [];
       dataSnapshot.forEach((child) => {
-        firebase.database()
-        .ref(`NFL/${this.year}/${this.type}/${this.week}/${child.key}/Live`).on('value', snapshot => {
-          if (snapshot.exists()){
-            const quarter = child.val().Live.Quarter
+        var live_check = child.val().Live;
+        if (typeof live_check !== 'undefined' ){
+          const quarter = child.val().Live.Quarter
 
-            if (quarter == 1) {
-              var quarter_text = '1st Quarter'
-            }
-            else if (quarter == 2) {
-              var quarter_text = '2nd Quarter'
-            }
-            else if (quarter == 3) {
-              var quarter_text = '3rd Quarter'
-            }
-            else if (quarter == 4) {
-              var quarter_text = '4th Quarter'
-            }
-            roomsFB.push({
-              Active: true,
-              AwayAlias: child.val().AwayTeam.Alias,
-              HomeAlias: child.val().HomeTeam.Alias,
-              QuarterText: quarter_text,
-              HomeTotal: child.val().Live.Total.HomeTotal,
-              AwayTotal: child.val().Live.Total.AwayTotal,
-              Clock: child.val().Live.Clock,
-              key: child.key
-            });
+          if (quarter == 1) {
+            var quarter_text = '1st Quarter'
           }
-          else {
-            const gameTime = child.val().Schedule.GameTime;
-            var gameTime_local = findDates.convertDayOfWeek(gameTime);
-            var gameDate_local = findDates.convertTime(gameTime);
-            roomsFB.push({
-              Active: false,
-              AwayAlias: child.val().AwayTeam.Alias,
-              HomeAlias: child.val().HomeTeam.Alias,
-              GameDate: gameDate_local,
-              GameTime: gameTime_local,
-              key: child.key
-            }); 
+          else if (quarter == 2) {
+            var quarter_text = '2nd Quarter'
           }
-          this.setState({ rooms: roomsFB, loading: false }); 
-        });  
-          
+          else if (quarter == 3) {
+            var quarter_text = '3rd Quarter'
+          }
+          else if (quarter == 4) {
+            var quarter_text = '4th Quarter'
+          }
+          roomsFB.push({
+            Active: true,
+            AwayAlias: child.val().AwayTeam.Alias,
+            HomeAlias: child.val().HomeTeam.Alias,
+            QuarterText: quarter_text,
+            HomeTotal: child.val().Live.Total.HomeTotal,
+            AwayTotal: child.val().Live.Total.AwayTotal,
+            Clock: child.val().Live.Clock,
+            key: child.key
+          });
+        }
+        else {
+          const gameTime = child.val().Schedule.GameTime;
+          var gameTime_local = findDates.convertDayOfWeek(gameTime);
+          var gameDate_local = findDates.convertTime(gameTime);
+          roomsFB.push({
+            Active: false,
+            AwayAlias: child.val().AwayTeam.Alias,
+            HomeAlias: child.val().HomeTeam.Alias,
+            GameDate: gameDate_local,
+            GameTime: gameTime_local,
+            key: child.key
+          }); 
+        }
+        
+      });  
+      roomsFB = roomsFB.sort(this.organizeGamesByActivity)
+      this.setState({ rooms: roomsFB, loading: false })
     });
     
-  });
+ 
   }
 
   

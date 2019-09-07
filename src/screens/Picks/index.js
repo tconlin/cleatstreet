@@ -8,7 +8,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  FlatList
+  TouchableHighlight,
+  FlatList,
+  Image
 } from 'react-native';
 import { w, h, totalSize } from '../../components/Dimensions';
 
@@ -17,6 +19,7 @@ import NavStyles from '../../constants/AppStyles';
 const findDates = require('../../utils/dates')
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
+
 
 
 export default class Picks extends Component {
@@ -46,41 +49,43 @@ export default class Picks extends Component {
     var currentUserEmail = firebase.auth().currentUser.email
     var domain = currentUserEmail.replace(/.*@/, "");
   
-    if (domain == 'cleat-street.com') {
+    if (domain === 'cleat-street.com') {
       this.setState({ currentUserAnalyst: true });
     }
-    this.getOdds(this.roomsRef);
+    this.getPicks(this.roomsRef);
   }
 
 
   getPicks(roomsRef) {
     roomsRef.on('value', (dataSnapshot) => {
+      this.setState({ loading: true });
       var picksFB = [];
       dataSnapshot.forEach((child) => {
-        var AwayAlias = child.val().AwayTeam.Alias;
-        var HomeAlias = child.val().HomeTeam.Alias;
-        console.l
-        firebase.database()
-        .ref(`NFL/${this.year}/${this.type}/${this.week}/${child.key}/Picks`).on('value', snapshot => {
-          snapshot.forEach((child) => {
-            picksFB.push({
-              HomeTeam: HomeAlias,
-              AwayTeam: AwayAlias,
-              Bet: child.val().Bet,
-              Allocation: child.val().Allocation,
-              Analyst: {
-                Id: child.val().user.Id,
-                name: child.val().user.name,
-                avatar: child.val().user.avatar
-              }
-            })
-          });
-          this.setState({ picks: picksFB, loading: false }); 
-        });  
-          
+        var exist_check = child.val().Picks;
+        var homeTeam = child.val().HomeTeam.Alias;
+        var awayTeam = child.val().AwayTeam.Alias;
+        if (typeof exist_check !== 'undefined' ){
+          var picks = child.val().Picks;
+          for (var indx_pk in picks) {
+            if (picks.hasOwnProperty(indx_pk)) {
+              console.log(picks[indx_pk].Bet)
+              picksFB.push({
+                HomeTeam: homeTeam,
+                AwayTeam: awayTeam,
+                Bet: picks[indx_pk].Bet,
+                Allocation: picks[indx_pk].Allocation,
+                Analyst: {
+                  Id: picks[indx_pk].Analyst.Id,
+                  Name: picks[indx_pk].Analyst.Name,
+                  Avatar: picks[indx_pk].Analyst.Avatar
+                }
+              })
+            }
+          }
+        }
+      });
+      this.setState({ picks: picksFB, loading: false }); 
     });
-    
-  });
   }
 
   openAnalystBio(Analyst) {
@@ -99,11 +104,13 @@ export default class Picks extends Component {
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          <Image source={item.Analyst.avatar} />
+          <Image source={item.Analyst.Avatar} />
         </TouchableHighlight>
         <View style={RowStyles.chatTeamRow}>
-          <TeamIcon name={item.AwayAlias}/>
-          <TeamIcon name={item.HomeAlias} />
+          <Text> {item.Analyst.Name}</Text>
+          <Text> {item.AwayTeam} vs {item.HomeTeam}</Text>
+          <Text> {item.Bet}</Text>
+          <Text> {item.Allocation}</Text>
         </View>
       </View>
         
@@ -112,7 +119,7 @@ export default class Picks extends Component {
   }
 
   render() {
-    if(this.currentUserAnalyst) {
+    if(this.state.currentUserAnalyst) {
       AnalystButton = 
       <TouchableOpacity 
         style={styles.button}
@@ -136,19 +143,19 @@ export default class Picks extends Component {
       return (
         
           <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-            {AnalystButton}
-          </View>
+            
               <View style={styles.roomsContainer}>
                 <View style={styles.roomsListContainer}>
                   <FlatList
                     data={this.state.picks}
+                    keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => (this.renderPicks(item))}
                   />
                 </View>
               </View>
-            
-          
+              <View style={styles.buttonContainer}>
+            {AnalystButton}
+          </View>
         </View>
     
       );
@@ -190,14 +197,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: w(2),
-    backgroundColor: '#fff',
-    borderRadius: w(2.5),
+    backgroundColor: '#377855',
+    borderRadius: w(1),
     marginTop: h(8),
-    borderColor: '#757575',
+    borderColor: '#377855',
     borderWidth: 1
   },
   buttonText: {
-    color: '#757575',
+    color: '#fff',
     fontWeight: '700',
     paddingVertical: h(1),
     fontSize: totalSize(2.1),

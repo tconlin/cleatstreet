@@ -393,11 +393,11 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     paddingVertical: w(5),
-      backgroundColor: '#ffffff',
-      flexDirection: 'row',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: '#ccc',
-      width: '100%',
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ccc',
+    width: '100%',
   },
   bottomItemContainer: {
     margin: 25,

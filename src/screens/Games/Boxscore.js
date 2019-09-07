@@ -61,10 +61,6 @@ export default class Boxscore extends Component {
 
   componentDidMount() {
     this.parsePBP(this.PBP);
-    console.log(this.Clock)
-    console.log(this.QuarterText)
-    console.log(this.GameDate)
-    console.log(this.GameTime)
   }
 
   parsePBP(PBP) {
@@ -87,10 +83,24 @@ export default class Boxscore extends Component {
   }
 
   renderPBP(item) {
+    const quarter = item.Quarter;
+
+    if (quarter == 1) {
+      var quarter_text = '1st Quarter'
+    }
+    else if (quarter == 2) {
+      var quarter_text = '2nd Quarter'
+    }
+    else if (quarter == 3) {
+      var quarter_text = '3rd Quarter'
+    }
+    else if (quarter == 4) {
+      var quarter_text = '4th Quarter'
+    }
     //{ backgroundColor: index % 2 === 0 ? '#e6e6e6' : '#fff'
     return (
       <View style={{backgroundColor: '#fff', textAlign: "left" }}>
-        <Text style={styles.PBPText1}>{item.Time} {item.Team}</Text>
+        <Text style={styles.PBPText1}>{quarter_text} -- {item.Time} {item.Team}</Text>
         <Text style={styles.PBPText2}>{item.Summary}</Text>
       </View>
     ); 

@@ -42,38 +42,38 @@ export default class MakePicks extends Component {
   }
 
   componentDidMount() {
-    this.listenForRooms(this.roomsRef);
+    this.listenForGames(this.gamesRef);
   }
 
 
 
-  getGames(gamesRef) {
-    var gamesFB = [];
+  listenForGames(gamesRef) {
     gamesRef.on('value', (dataSnapshot) => {
-        dataSnapshot.forEach((child) => {
-            firebase.database()
-            .ref(`NFL/${this.year}/${this.type}/${this.week}/${child.key}/Live`).on('value', snapshot => {
-                if (snapshot.exists()){
-                    gamesFB.push({
-                        AwayAlias: child.val().AwayTeam.Alias,
-                        HomeAlias: child.val().HomeTeam.Alias,
-                        key: child.key
-                    });
-                    this.setState({ is_live: true });
-                }
-                else {
-                    gamesFB.push({
-                        AwayAlias: child.val().AwayTeam.Alias,
-                        HomeAlias: child.val().HomeTeam.Alias,
-                        key: child.key
-                    });
-                    this.setState({ is_live: false });
-                }     
-            });    
-        });
+      this.setState({ loading: true });
+      var gamesFB = [];
+      dataSnapshot.forEach((child) => {
+        var live_check = child.val().Live;
+        if (typeof live_check === 'undefined' ){
+          const gameTime = child.val().Schedule.GameTime;
+          var gameTime_local = findDates.convertDayOfWeek(gameTime);
+          var gameDate_local = findDates.convertTime(gameTime);
+          
+          gamesFB.push({
+            Active: false,
+            AwayAlias: child.val().AwayTeam.Alias,
+            HomeAlias: child.val().HomeTeam.Alias,
+            GameDate: gameDate_local,
+            GameTime: gameTime_local,
+            key: child.key
+          }); 
+        }
+        
+      });  
+      this.setState({ games: gamesFB, loading: false })
     });
-    this.setState({ games: gamesFB, loading: false }); 
-}
+    
+ 
+  }
 
   
 
@@ -84,7 +84,6 @@ export default class MakePicks extends Component {
     var name = home.concat(vs, away)
     this.props.navigation.navigate('MakePicksGame', 
     {
-        is_live: this.state.is_live,
         roomKey: game.key, 
         roomName: name, 
         homeTeam: game.HomeAlias,
@@ -101,9 +100,9 @@ export default class MakePicks extends Component {
         onPress={() => this.makePicks(game)}
       >
         <View style={RowStyles.teamRow}>
-            <TeamIcon name={item.AwayAlias}/>
-            <Text>VS</Text>
-            <TeamIcon name={item.HomeAlias} />
+            <TeamIcon name={game.AwayAlias}/>
+            <GameDate time={game.GameTime} date={game.GameDate}/>
+            <TeamIcon name={game.HomeAlias} />
         </View>   
       </TouchableHighlight>
     ); 
