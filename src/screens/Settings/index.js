@@ -50,10 +50,6 @@ export default class Settings extends React.Component {
     }
   }
 
-  onSelect= data => {
-    this.setState(data);
-  }
-
   componentDidMount() {
     const { currentUser } = firebase.auth()
     this.setState( {
@@ -200,7 +196,7 @@ export default class Settings extends React.Component {
     if (this.state.avatar) {
       profilePic = 
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('Upload', { onSelect: this.onSelect })}
+      onPress={() => this.props.navigation.navigate('Upload')}
       disabled={uploading}
       >   
         <Image

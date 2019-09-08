@@ -123,7 +123,6 @@ export default class MakePicksGame extends Component {
 
 
   render() {
-    console.log(this.state.HomeMoneyLine)
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>

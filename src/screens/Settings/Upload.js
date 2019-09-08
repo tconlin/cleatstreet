@@ -19,7 +19,7 @@ var options = {
   ],
   storageOptions: {
     skipBackup: true,
-    path: 'images'
+    path: 'images',
   }
 };
 

@@ -2,6 +2,16 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+const { Storage } = require('@google-cloud/storage');
+const projectId = 'cleat-street-5';
+let gcs = new Storage ({
+  projectId
+});
+const spawn = require('child-process-promise').spawn;
+const sharp = require('sharp');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const request = require('request-promise');
 const findDates = require('./week_2019');
 
@@ -38,7 +48,7 @@ const nfl_getGameIDs_helper = async (url) => {
         }
     }
     catch(error){
-        console.warn(error);
+        console.error(error);
     }
     return gameIDs;  
 };
@@ -78,7 +88,7 @@ const nfl_updateOdds = async (url, year, type, week) => {
         }
     }
     catch(error) {
-        console.warn(error)
+        console.error(error)
     }
 }
 
@@ -203,7 +213,7 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
         })
     }
     catch(error) {
-        console.warn(error)
+        console.error(error)
     }
 }
 
@@ -222,7 +232,6 @@ const nfl_loadWeeklyInfo = async (gameIDs, url, year, type, week) => {
                             for (var indx_divs in divs ) {
                                 if (divs.hasOwnProperty(indx_divs)) {
                                     var teams = divs[indx_divs].teams
-                                    console.log(teams);
                                     for (var indx_teams in teams ) {
                                         if (confs.hasOwnProperty(indx_confs)) {    
                                             console.log(gameIDs[indx_ids].HomeAlias);
@@ -301,7 +310,7 @@ const nfl_loadWeeklyInfo = async (gameIDs, url, year, type, week) => {
         }
     }
     catch(error) {
-        console.warn(error)
+        console.error(error)
     }
 }
 
@@ -378,7 +387,7 @@ exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('Ame
     return null;
 });
 
-exports.updateScore = functions.pubsub.schedule('* * * * *').timeZone('America/New_York').onRun((context) => {
+exports.updateScore = functions.pubsub.schedule('every 2 minutes').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
@@ -387,4 +396,130 @@ exports.updateScore = functions.pubsub.schedule('* * * * *').timeZone('America/N
 exports.weeklyUpdateGameInfo = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_WeeklyGameInfo();
     return null;
+});
+
+
+
+
+/*export const generateThumbs = functions.storage
+  .object()
+  .onFinalize(async object => {
+    const bucket = gcs.bucket(object.bucket);
+    const filePath = object.name;
+    const fileName = filePath.split('/').pop();
+    const bucketDir = dirname(filePath);
+
+    const workingDir = join(tmpdir(), 'thumbs');
+    const tmpFilePath = join(workingDir, 'source.png');
+
+    if (fileName.includes('thumb@') || !object.contentType.includes('image')) {
+      console.log('exiting function');
+      return false;
+    }
+
+    // 1. Ensure thumbnail dir exists
+    await fs.ensureDir(workingDir);
+
+    // 2. Download Source File
+    await bucket.file(filePath).download({
+      destination: tmpFilePath
+    });
+
+    // 3. Resize the images and define an array of upload promises
+    const sizes = [64, 128, 256];
+
+    const uploadPromises = sizes.map(async size => {
+      const thumbName = `thumb@${size}_${fileName}`;
+      const thumbPath = join(workingDir, thumbName);
+
+      // Resize source image
+      await sharp(tmpFilePath)
+        .resize(size, size)
+        .toFile(thumbPath);
+
+      // Upload to GCS
+      return bucket.upload(thumbPath, {
+        destination: join(bucketDir, thumbName)
+      });
+    });
+
+    // 4. Run the upload operations
+    await Promise.all(uploadPromises);
+
+    // 5. Cleanup remove the tmp/thumbs from the filesystem
+    return fs.remove(workingDir);
+  });
+*/
+
+
+
+/*exports.onFileChange = functions.storage.object().onFinalize( async object => {
+    
+    const filePath = object.name;
+    const fileName = filePath.split('/').pop();
+    const bucketDir = path.dirname(filePath);
+    const fileSize = object.size;
+    const contentType = object.contentType;
+
+    //size: '141689',
+    if(fileSize < 500000){
+        console.log('already resized this file')
+        return false;
+    }
+  
+
+
+
+    console.log('resizing image...')
+    const destBucket = gcs.bucket(object.bucket);
+    const tmpFilePath = path.join(os.tmpdir(), path.basename(filePath));
+    const metadata = { contentType : contentType }
+    
+    
+    await destBucket.file(filePath).download({
+      destination: tmpFilePath
+    })
+    
+    await sharp(tmpFilePath).resize(250, 250).toFile(filePath);
+    
+
+    return destBucket.upload(filePath, {
+        destination: path.join(bucketDir, fileName),
+        metadata: metadata
+    })
+
+
+    //return fs.remove(tmpFilePath);
+
+
+});*/
+
+
+exports.onFileChange= functions.storage.object().onFinalize(event => {
+    const bucket = event.bucket;
+    const contentType = event.contentType;
+    const filePath = event.name;
+    const fileSize = event.size;
+    console.log('File change detected, function execution started');
+
+    if(fileSize < 500000){
+        console.log('already resized this file')
+        return false;
+    }
+
+    const destBucket = gcs.bucket(bucket);
+    const tmpFilePath = path.join(os.tmpdir(), path.basename(filePath));
+    const metadata = { contentType: contentType };
+    return destBucket.file(filePath).download({
+        destination: tmpFilePath
+    }).then(() => {
+        return spawn('convert', [tmpFilePath, '-resize', '200x200', tmpFilePath]);
+    }).then(() => {
+        return destBucket.upload(tmpFilePath, {
+            destination: path.basename(filePath),
+            metadata: metadata
+        })
+    }).catch(error => {
+        console.error(error);
+      });
 });

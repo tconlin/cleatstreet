@@ -46,6 +46,11 @@ export default class Picks extends Component {
   
   
   componentDidMount() {
+
+    var currentUserPhoto = firebase.auth().currentUser.photoURL;
+    console.log(currentUserPhoto);
+
+
     var currentUserEmail = firebase.auth().currentUser.email
     var domain = currentUserEmail.replace(/.*@/, "");
   
@@ -68,7 +73,6 @@ export default class Picks extends Component {
           var picks = child.val().Picks;
           for (var indx_pk in picks) {
             if (picks.hasOwnProperty(indx_pk)) {
-              console.log(picks[indx_pk].Bet)
               picksFB.push({
                 HomeTeam: homeTeam,
                 AwayTeam: awayTeam,
@@ -97,11 +101,12 @@ export default class Picks extends Component {
     });
   }
 
-//<Image source={item.Analyst.Avatar} />
+
 
   renderAnalyst(item, index) {
     return ( 
-      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer2]}>
+        <Image style={styles.avatarImage} source={item.Analyst.Avatar} />
         <TouchableHighlight
           
           underlayColor="#fff"
@@ -161,62 +166,51 @@ export default class Picks extends Component {
     }
     else {
       return (
-        
-          <View style={styles.container}>
-            
-              
-              <View style={styles.RowStyle}>
-              <View style={styles.ColumnItem}>
+        <View style={styles.container}>
+          <View style={styles.RowStyle}>
+            <View style={styles.ColumnItem1}>
               <View style={styles.rowContainer}>
-                  <Text style={styles.BettingHeader}>Analyst</Text>
-                </View>
-                <FlatList
-                    data={this.state.picks}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, index}) => (this.renderAnalyst(item, index))}
-                  />
+                <Text style={styles.BettingHeader}>Analyst</Text>
               </View>
-             
-                <View style={styles.ColumnItem}>
+              
+              <FlatList
+                data={this.state.picks}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (this.renderAnalyst(item, index))}
+              />
+            </View>
+            <View style={styles.ColumnItem2}>
+              <View style={styles.rowContainer}>
+                <Text style={styles.BettingHeader}>Game</Text>
+              </View>
+              <FlatList
+                data={this.state.picks}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (this.renderGame(item, index))}
+              />
+            </View>
+              <View style={styles.ColumnItem3}>
                 <View style={styles.rowContainer}>
-                  <Text style={styles.BettingHeader}>Game</Text>
-                  </View>
-                <FlatList
-                    data={this.state.picks}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, index}) => (this.renderGame(item, index))}
-                  />
-              
-              </View>
-                  <View style={styles.ColumnItem2}>
-                  <View style={styles.rowContainer}>
                   <Text style={styles.BettingHeader}>Bet</Text>
-                  </View>
-                <FlatList
-                    data={this.state.picks}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, index}) => (this.renderBet(item, index))}
-                  />
-          </View>
-              
-                <View style={styles.ColumnItem2}>
-                  <View style={styles.rowContainer}>
-                    <Text style={styles.BettingHeader}>Allocation</Text>
-                  </View>
-                <FlatList
-                    data={this.state.picks}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, index}) => (this.renderAllocation(item, index))}
-                  />
                 </View>
-
-
+                <FlatList
+                  data={this.state.picks}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => (this.renderBet(item, index))}
+                />
               </View>
-
-              
-                  
-                
-              <View style={styles.buttonContainer}>
+              <View style={styles.ColumnItem3}>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.BettingHeader}>Allocation</Text>
+                </View>
+                <FlatList
+                  data={this.state.picks}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => (this.renderAllocation(item, index))}
+                />
+              </View>
+            </View>
+          <View style={styles.buttonContainer}>
             {AnalystButton}
           </View>
         </View>
@@ -230,28 +224,26 @@ export default class Picks extends Component {
 
 const styles = StyleSheet.create({
   RowStyle: {
-    //flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    //alignItems: 'stretch',
-    //alignContent: 'center',
-    //flexWrap: 'wrap'
         
   },
-  ColumnItem: {
-    width: '30%',
+  ColumnItem1: {
+    width: '35%',
   },
   ColumnItem2: {
+    width: '25%',
+  },
+  ColumnItem3: {
     width: '20%',
   },
-  rowContainer: {
-    /*flex: 1,
-    flexDirection: 'row',
+  rowContainer2: {
     borderBottomColor: '#dbdbdb',
     borderBottomWidth: 1.5,
-    alignSelf: 'stretch',
-    width: '100%',*/
-    //width: '1000pt',
+    flex: 1,
+    flexDirection: 'row'
+  },
+  rowContainer: {
     borderBottomColor: '#dbdbdb',
     borderBottomWidth: 1.5,
   },
@@ -283,11 +275,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   BettingEntry: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#000',
     fontWeight: '500',
-    paddingRight: 8,
-    paddingLeft: 8,
     paddingBottom: 12,
     paddingTop: 12,
     textAlign: 'center'
@@ -301,40 +291,18 @@ const styles = StyleSheet.create({
   },
   BettingContainer: {
     flex: 1,
-    //justifyContent: 'space-around',
-    //alignContent: 'stretch',
     flexDirection: 'row',
-    //flexWrap: 'wrap',
     backgroundColor: '#fff',
-    //padding: 10,
-    //width:'100%'
     flexWrap:'wrap',
     
   },
-  BettingTitle: {
-    //flex: 1,
-    //flexDirection: 'row', 
-    justifyContent: 'center',
-    //textAlign: 'left',
-    alignItems: 'center',
-    //padding: 6
-    
-    //paddingLeft: '10%',
-    //paddingRight: '10%',
-    
-  },
-  BettingTitle2: {
-    //flex: 1,
-    //flexDirection: 'column', 
-    alignItems: 'center',
-    justifyContent: 'center',
-    //padding: 6,
-    //textAlign: 'center',
-    //paddingLeft: '10%',
-    //paddingRight: '10%',
-
-   
-    
-
+  avatarImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#adadad',
+    margin: 10,
+    resizeMode: 'contain'
   },
 })
