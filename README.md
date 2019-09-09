@@ -1,6 +1,6 @@
-## Cleat Street iOS App V1
+# Cleat Street iOS App V1
 
-# Install
+## Install
 
 To run on new machine:
 
@@ -28,7 +28,7 @@ npm run ios
 ```
 
 
-# ToDo
+## ToDo
 
 - REDUX
 - Firebase Functions Error Log: Error serializing return value: TypeError: Converting circular structure to JSON

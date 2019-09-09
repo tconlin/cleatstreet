@@ -60,6 +60,8 @@ export default class Settings extends React.Component {
     var currentUserEmail = firebase.auth().currentUser.email;
     var domain = currentUserEmail.replace(/.*@/, "");
   
+    console.log(currentUser.photoURL)
+
     if (domain === 'cleat-street.com') {
       this.setState({ currentUserAnalyst: true });
     }
@@ -71,7 +73,6 @@ export default class Settings extends React.Component {
   }
 
 
-  
 
   onShare = async () => {
     try {
