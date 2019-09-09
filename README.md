@@ -30,6 +30,7 @@ npm run ios
 
 ## ToDo
 
+- DATABASE RULES
 - REDUX
 - Firebase Functions Error Log: Error serializing return value: TypeError: Converting circular structure to JSON
 - Async Storage of user avatar?
