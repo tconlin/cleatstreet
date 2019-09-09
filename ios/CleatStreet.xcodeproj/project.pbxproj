@@ -17,6 +17,7 @@
 		06B927B4231E1002006C2FC5 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06B927B3231E1002006C2FC5 /* libRNGestureHandler.a */; };
 		09AB02F9D6B64147A470A67A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2614F9EC3D134B6CBE4A8BA8 /* FontAwesome.ttf */; };
 		0E1F43C42322BF7A008DAB7F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E1F43C32322BF7A008DAB7F /* GoogleService-Info.plist */; };
+		0E2E7A3E2325CEA30058A3C5 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E2E7A3D2325CEA30058A3C5 /* NetworkExtension.framework */; };
 		11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -382,6 +383,8 @@
 		06B927B3231E1002006C2FC5 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		06B927B5231E101E006C2FC5 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		0E1F43C32322BF7A008DAB7F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0E2E7A3C2325CE9D0058A3C5 /* CleatStreet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CleatStreet.entitlements; path = CleatStreet/CleatStreet.entitlements; sourceTree = "<group>"; };
+		0E2E7A3D2325CEA30058A3C5 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		11B23455DE3C4D5673E7318E /* libPods-CleatStreet-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CleatStreet-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -458,6 +461,7 @@
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
+				0E2E7A3E2325CEA30058A3C5 /* NetworkExtension.framework in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				66F583A38C047519D1E18159 /* libPods-CleatStreet.a in Frameworks */,
 				8AEB10120B9847F8905B7DA1 /* libRNFirebase.a in Frameworks */,
@@ -606,6 +610,7 @@
 		13B07FAE1A68108700A75B9A /* CleatStreet */ = {
 			isa = PBXGroup;
 			children = (
+				0E2E7A3C2325CE9D0058A3C5 /* CleatStreet.entitlements */,
 				0E1F43C32322BF7A008DAB7F /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -661,6 +666,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0E2E7A3D2325CEA30058A3C5 /* NetworkExtension.framework */,
 				06B927B3231E1002006C2FC5 /* libRNGestureHandler.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
@@ -876,6 +882,17 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8K2H2N47WG;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 0;
+							};
+							com.apple.VPNLite = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1557,6 +1574,7 @@
 			baseConfigurationReference = D8E13BB553BB18534EEFFDDE /* Pods-CleatStreet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CleatStreet/CleatStreet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 8K2H2N47WG;
@@ -1572,7 +1590,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.invertase.CleatStreet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cleatstreetinc.CleatStreet;
 				PRODUCT_NAME = CleatStreet;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1583,6 +1601,7 @@
 			baseConfigurationReference = B2121FE3F0701D7C33F213D3 /* Pods-CleatStreet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CleatStreet/CleatStreet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8K2H2N47WG;
 				HEADER_SEARCH_PATHS = (
@@ -1597,7 +1616,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.invertase.CleatStreet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cleatstreetinc.CleatStreet;
 				PRODUCT_NAME = CleatStreet;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

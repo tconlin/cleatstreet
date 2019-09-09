@@ -7,7 +7,10 @@ import {
   AsyncStorage,
   StyleSheet,
   ActivityIndicator,
-  ScrollView
+  TouchableHighlight,
+  Image,
+  ScrollView,
+  FlatList
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
@@ -32,6 +35,8 @@ export default class Betting extends Component {
     this.week = nfl_week[1];
     this.year = nfl_week[2];
     this.roomKey = this.props.navigation.state.params.roomKey;
+    this.picksRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Picks`)
+    
     this.GameTime = this.props.navigation.state.params.GameTime;
     this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
@@ -52,36 +57,85 @@ export default class Betting extends Component {
     this.state = {
       loading: true,
       user: '',
-      messages: []
+      picks: []
     }
   }
 
   componentDidMount() {
     this.setState({ user: firebase.auth().currentUser });
-    
+    this.getPicks(this.picksRef);
   }
 
-renderPicks(item) {
-  return (
-    <View style={styles.BettingContainer}>
-      <View>
-        <View style={styles.BettingTitle} >
-          <Text style={styles.BettingHeader}></Text>
+
+  getPicks(picksRef) {
+    this.setState({ loading: true });
+    picksRef.on('value', (dataSnapshot) => {
+      var picksFB = [];
+      dataSnapshot.forEach((child) => {
+        picksFB.push({
+          Bet: child.val().Bet,
+          Allocation: child.val().Allocation,
+          Analyst: {
+            Id: child.val().Analyst.Id,
+            Name: child.val().Analyst.Name,
+            Avatar: child.val().Analyst.Avatar
+          }
+        })
+      });
+      this.setState({ picks: picksFB, loading: false }); 
+    });
+  }
+
+  openAnalystBio(Analyst) {
+    this.props.navigation.navigate('AnalystBio', 
+    {
+      AnalystId: Analyst.Id,
+      AnalystName: Analyst.Name,
+      Avatar: Analyst.avatar
+    });
+  }
+
+
+  renderAnalyst(item, index) {
+    if(item.Analyst.Avatar === null || item.Analyst.Avatar === '') {
+      var avatar_null = true;
+    }
+    else {
+      var avatar_null = false;
+    }
+    console.log(avatar_null)
+    return ( 
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>
+        <TouchableHighlight
+          underlayColor="#fff"
+          onPress={() => this.openAnalystBio(item.Analyst)}
+        >
+          {avatar_null ? <Image style={styles.avatarImage} source={item.Analyst.Avatar} /> : <Image style={styles.avatarNullImage} />}
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor="#fff"
+          onPress={() => this.openAnalystBio(item.Analyst)}
+        >
+          <Text style={styles.BettingName}>{item.Analyst.Name}</Text>
+        </TouchableHighlight>
         </View>
+    );
+  }
+
+  renderBet(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingNum}>{item.Bet}</Text>
       </View>
-      <View>
-        <View style={styles.BettingEntry} >
-          <Text style={styles.BettingHeader}>Bet</Text>
-        </View>
+    ); 
+  }
+  renderAllocation(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingNum}>{item.Allocation}</Text>
       </View>
-      <View>
-        <View style={styles.BettingEntry} >
-          <Text style={styles.BettingHeader}>Allocation</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+    ); 
+  }
 
 
   render() {
@@ -168,27 +222,42 @@ renderPicks(item) {
           
           </View>
           <View style={styles.container2}>
-          <View style={styles.Header}>
+            <View style={styles.Header}>
                 <Text style={styles.HeaderText}>Our Picks</Text>
               </View>
-            <View style={styles.BettingContainer}>
+              <View style={styles.RowStyle}>
+            <View style={styles.ColumnItem1}>
+              <View style={styles.rowContainer2}>
+                <Text style={styles.BettingHeader}>Analyst</Text>
+              </View>
               
-                <View>
-                  <View style={styles.BettingTitle} >
-                    <Text style={styles.BettingHeader}>Analyst</Text>
-                  </View>
+              <FlatList
+                data={this.state.picks}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (this.renderAnalyst(item, index))}
+              />
+            </View>
+              <View style={styles.ColumnItem3}>
+                <View style={styles.rowContainer2}>
+                  <Text style={styles.BettingHeader}>Bet</Text>
                 </View>
-                <View>
-                  <View style={styles.BettingTitle} >
-                    <Text style={styles.BettingHeader}>Bet</Text>
-                  </View>
+                <FlatList
+                  data={this.state.picks}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => (this.renderBet(item, index))}
+                />
+              </View>
+              <View style={styles.ColumnItem3}>
+                <View style={styles.rowContainer2}>
+                  <Text style={styles.BettingHeader}>Allocation</Text>
                 </View>
-                <View>
-                  <View style={styles.BettingTitle} >
-                    <Text style={styles.BettingHeader}>Allocation</Text>
-                  </View>
-                </View>
-                </View>
+                <FlatList
+                  data={this.state.picks}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => (this.renderAllocation(item, index))}
+                />
+              </View>
+            </View>
                
             
           </View>
@@ -200,6 +269,34 @@ renderPicks(item) {
 
 
 const styles = StyleSheet.create({
+  RowStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',   
+  },
+  ColumnItem1: {
+    
+    width: '50%',
+  },
+  
+  ColumnItem3: {
+    
+    width: '25%',
+  },
+  rowContainer2: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10
+    
+  },
+  rowContainer: {
+
+    flex: 1,
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    
+  },
   PBPText1: {
     fontSize: 11,
     color: '#3b3b3b',
@@ -246,17 +343,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     //justifyContent: 'flex-end',
     textAlign: 'left',
-    padding: 6
+    padding: 6,
+  
   },
   BettingEntry: {
     //width: 20,
     //height: 30
-    padding: 6
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   BettingEntry2: {
     //width: 40,
     //height: 30
-    padding: 6
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   BettingNum: {
     fontSize: 11,
@@ -320,6 +422,27 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     backgroundColor: '#ffffff',
-    marginTop: 45
-  }
+    marginTop: 45,
+    paddingBottom: 45
+  },
+  avatarImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#adadad',
+    margin: 10,
+    resizeMode: 'contain'
+  },
+  avatarNullImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#adadad',
+    backgroundColor: 'lightgrey',
+    margin: 10,
+    resizeMode: 'contain'
+  },
+  
 });

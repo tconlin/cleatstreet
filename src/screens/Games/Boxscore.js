@@ -285,12 +285,14 @@ const styles = StyleSheet.create({
     padding: 6
   },
   BoxScoreEntry: {
-    padding: 6
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   BoxScoreEntry2: {
-    padding: 6
-    //width: 40,
-    //height: 30
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   BoxScoreNum: {
     fontSize: 11,

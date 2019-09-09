@@ -46,11 +46,6 @@ export default class Picks extends Component {
   
   
   componentDidMount() {
-
-    var currentUserPhoto = firebase.auth().currentUser.photoURL;
-    console.log(currentUserPhoto);
-
-
     var currentUserEmail = firebase.auth().currentUser.email
     var domain = currentUserEmail.replace(/.*@/, "");
   
@@ -104,15 +99,24 @@ export default class Picks extends Component {
 
 
   renderAnalyst(item, index) {
+    if(item.Analyst.Avatar === null || item.Analyst.Avatar === '') {
+      var avatar_null = true;
+    }
+    else {
+      var avatar_null = false;
+    }
     return ( 
-      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer2]}>
-        <Image style={styles.avatarImage} source={item.Analyst.Avatar} />
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
         <TouchableHighlight
-          
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          
+          {avatar_null ? <Image style={styles.avatarImage} source={item.Analyst.Avatar} /> : <Image style={styles.avatarNullImage} />}
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor="#fff"
+          onPress={() => this.openAnalystBio(item.Analyst)}
+        >
           <Text style={styles.BettingEntry}>{item.Analyst.Name}</Text>
         </TouchableHighlight>
         </View>
@@ -169,7 +173,7 @@ export default class Picks extends Component {
         <View style={styles.container}>
           <View style={styles.RowStyle}>
             <View style={styles.ColumnItem1}>
-              <View style={styles.rowContainer}>
+              <View style={styles.rowContainer2}>
                 <Text style={styles.BettingHeader}>Analyst</Text>
               </View>
               
@@ -180,7 +184,7 @@ export default class Picks extends Component {
               />
             </View>
             <View style={styles.ColumnItem2}>
-              <View style={styles.rowContainer}>
+              <View style={styles.rowContainer2}>
                 <Text style={styles.BettingHeader}>Game</Text>
               </View>
               <FlatList
@@ -190,7 +194,7 @@ export default class Picks extends Component {
               />
             </View>
               <View style={styles.ColumnItem3}>
-                <View style={styles.rowContainer}>
+                <View style={styles.rowContainer2}>
                   <Text style={styles.BettingHeader}>Bet</Text>
                 </View>
                 <FlatList
@@ -200,7 +204,7 @@ export default class Picks extends Component {
                 />
               </View>
               <View style={styles.ColumnItem3}>
-                <View style={styles.rowContainer}>
+                <View style={styles.rowContainer2}>
                   <Text style={styles.BettingHeader}>Allocation</Text>
                 </View>
                 <FlatList
@@ -225,27 +229,34 @@ export default class Picks extends Component {
 const styles = StyleSheet.create({
   RowStyle: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-        
+    justifyContent: 'space-around',   
   },
   ColumnItem1: {
+    
     width: '35%',
   },
   ColumnItem2: {
+    
     width: '25%',
   },
   ColumnItem3: {
+    
     width: '20%',
   },
   rowContainer2: {
     borderBottomColor: '#dbdbdb',
     borderBottomWidth: 1.5,
-    flex: 1,
-    flexDirection: 'row'
+    
   },
   rowContainer: {
     borderBottomColor: '#dbdbdb',
     borderBottomWidth: 1.5,
+    flex: 1,
+    flexDirection: 'row',
+    height: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    
   },
   buttonContainer: {
     flex: 1,
@@ -265,6 +276,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   buttonText: {
+    
     color: '#fff',
     fontWeight: '700',
     paddingVertical: h(1),
@@ -275,6 +287,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   BettingEntry: {
+    height: 40,
     fontSize: 11,
     color: '#000',
     fontWeight: '500',
@@ -302,6 +315,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#adadad',
+    margin: 10,
+    resizeMode: 'contain'
+  },
+  avatarNullImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#adadad',
+    backgroundColor: 'lightgrey',
     margin: 10,
     resizeMode: 'contain'
   },

@@ -64,7 +64,7 @@ uploadImage = () => {
           }
           const { navigation } = this.props;
           navigation.goBack();
-          navigation.state.params.onSelect({ avatar: snapshot.downloadURL });
+          //navigation.state.params.onSelect({ avatar: snapshot.downloadURL });
         },
         error => {
           unsubscribe();

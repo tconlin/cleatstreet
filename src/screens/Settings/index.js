@@ -14,6 +14,7 @@ import firebase from 'react-native-firebase'
 import NavStyles from '../../constants/AppStyles'
 import Icon from '../../components/Icon'
 import SettingsInputField from '../../components/SettingsInputField';
+import LargeInputField from '../../components/LargeInputField';
 import { w, h, totalSize } from '../../components/Dimensions';
 import Save from './Save';
 
@@ -28,7 +29,7 @@ export default class Settings extends React.Component {
           <TouchableOpacity
             onPress={() => firebase.auth().signOut()} 
             > 
-            <Text style={styles.signOutText} >Logout</Text>
+            <Text style={styles.signOutText}>Logout</Text>
           </TouchableOpacity>
          </View> 
       )
@@ -37,6 +38,7 @@ export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     const { currentUser } = firebase.auth()
+    this.analystRef = firebase.database().ref(`/Analysts/Bios/${currentUser.uid}`);
     this.state = {
       uploading: false,
       progress: 0,
@@ -45,13 +47,22 @@ export default class Settings extends React.Component {
       isCreatingAccount: false,
       isCreatingAccount1: false,
       isCreatingAccount2: false,
+      isCreatingAccount3: false,
+      currentUserAnalyst: false,
       email: currentUser.email,
-      displayName: currentUser.displayName
+      displayName: currentUser.displayName,
+      bio: ''
     }
   }
 
   componentDidMount() {
-    const { currentUser } = firebase.auth()
+    const { currentUser } = firebase.auth();
+    var currentUserEmail = firebase.auth().currentUser.email;
+    var domain = currentUserEmail.replace(/.*@/, "");
+  
+    if (domain === 'cleat-street.com') {
+      this.setState({ currentUserAnalyst: true });
+    }
     this.setState( {
       avatar: currentUser.photoURL,
       email: currentUser.email,
@@ -89,7 +100,8 @@ export default class Settings extends React.Component {
   reauthenticate = (currentPassword) => {
     var user = firebase.auth().currentUser;
     var cred = firebase.auth.EmailAuthProvider.credential(
-      user.email, currentPassword);
+      user.email, currentPassword
+    );
     return user.reauthenticateWithCredential(cred);
   }
   
@@ -189,9 +201,49 @@ export default class Settings extends React.Component {
     }
   };
 
+  changeBio = () => {
+    Keyboard.dismiss();
+    const bio = this.bio.getInputValue();
+    this.setState({ isCreatingAccount3: true });
+    if (bio === null || bio === '' ) {
+      this.setState({ isCreatingAccount3: false });
+      Alert.alert('Bio info must not be empty');
+    }
+    else {
+      this.analystRef.set({
+        Bio: bio
+      })
+      this.setState({ isCreatingAccount3: false });
+      this.bio.input.clear();
+      Alert.alert('Bio was successfully updated.');
+    }
+  }
+
+
 
 	render() {
     const { uploading, currentUser } = this.state;
+
+
+    if(this.state.currentUserAnalyst) {
+      AnalystInput = 
+      <View style={styles.mainContainer}> 
+        <Text style={styles.settingsHeader}>Analyst Info</Text>
+        <View style={styles.itemContainer}>
+          <LargeInputField
+            placeholder="Bio:"
+            style={styles.input}
+            ref={ref => this.bio = ref}
+          />
+          <Save isCreating={this.state.isCreatingAccount3} click={this.changeBio}/>
+        </View>
+      </View>; 
+    }
+    else {
+      AnalystInput = <View></View>;
+    }
+
+
 
     if (this.state.avatar) {
       profilePic = 
@@ -281,6 +333,7 @@ export default class Settings extends React.Component {
               <Save isCreating={this.state.isCreatingAccount2} click={this.changePassword}/>
             </View>
           </View>
+          {AnalystInput}
           <View style={styles.BottomContainer}>
           <TouchableOpacity
             style={styles.bottomItem}
@@ -331,15 +384,10 @@ export default class Settings extends React.Component {
 
 const styles = StyleSheet.create({
   bottomItem: {
-    
     backgroundColor: '#ffffff',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#ccc',
     width: '100%',
-    //flex: 1,
-    //flexDirection: 'row',
-    //justifyContent: 'flex-end',
-      
   },
   mainContainer: {
     marginTop: 20,
@@ -351,7 +399,7 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fafafa',
     
   },
   settingsHeader: {

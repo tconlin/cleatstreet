@@ -114,6 +114,8 @@ export default class GameRooms extends Component {
             TotalHome: child.val().Odds.TotalHome,
             TotalAway: child.val().Odds.TotalAway,
             
+
+
           });
         }
         else {
