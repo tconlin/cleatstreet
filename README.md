@@ -38,3 +38,4 @@ npm run ios
 - Speed up real time services -- sockets?
     - current rate of 'every minute' seems to be fine because data from sportradar updates at about the same rate.
     (edit: we took it down to 'every 2 minutes' because of sportradar api call boundaries )
+- add verified marker to avatars for analysts

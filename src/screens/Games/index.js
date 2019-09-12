@@ -33,6 +33,7 @@ export default class GameRooms extends Component {
     this.type = nfl_week[0];
     this.week = nfl_week[1];
     this.year = nfl_week[2];
+    console.log(this.week)
     this.gamesRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}`)
     this.state = {
       loading: true,
@@ -66,6 +67,7 @@ export default class GameRooms extends Component {
       var gamesFB = [];
       dataSnapshot.forEach((child) => {
         var live_check = child.val().Live;
+        var odds_check = child.val().Odds;
         if (typeof live_check !== 'undefined' ){
           const quarter = child.val().Live.Quarter;
 
@@ -118,7 +120,7 @@ export default class GameRooms extends Component {
 
           });
         }
-        else {
+        else if (typeof odds_check !== 'undefined' ) { 
           const gameTime = child.val().Schedule.GameTime;
           var gameTime_local = findDates.convertDayOfWeek(gameTime);
           var gameDate_local = findDates.convertTime(gameTime);
@@ -143,6 +145,26 @@ export default class GameRooms extends Component {
             SpreadHome: child.val().Odds.SpreadHome,
             TotalHome: child.val().Odds.TotalHome,
             TotalAway: child.val().Odds.TotalAway,   
+          });
+        }
+        else {
+          const gameTime = child.val().Schedule.GameTime;
+          var gameTime_local = findDates.convertDayOfWeek(gameTime);
+          var gameDate_local = findDates.convertTime(gameTime);
+          
+          gamesFB.push({
+            Active: false,
+            AwayAlias: child.val().AwayTeam.Alias,
+            HomeAlias: child.val().HomeTeam.Alias,
+            AwayWins: child.val().AwayTeam.Wins,
+            AwayLosses: child.val().AwayTeam.Losses,
+            AwayTies: child.val().AwayTeam.Ties,
+            GameDate: gameDate_local,
+            GameTime: gameTime_local,
+            key: child.key,
+            HomeWins: child.val().HomeTeam.Wins,
+            HomeLosses: child.val().HomeTeam.Losses,
+            HomeTies: child.val().HomeTeam.Ties,
           });
         } 
       });

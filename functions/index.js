@@ -387,112 +387,43 @@ exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('Ame
     return null;
 });
 
-exports.updateScore = functions.pubsub.schedule('every 2 minutes').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('* 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
+
+exports.updateScore_LateThurs = functions.pubsub.schedule('* 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
+    nfl_LiveGameData();
+    return null;
+});
+
+exports.updateScore_Saturday = functions.pubsub.schedule('* 11 * * 6').timeZone('America/New_York').onRun((context) => {
+    nfl_LiveGameData();
+    return null;
+});
+
+exports.updateScore_Sunday = functions.pubsub.schedule('* 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+    nfl_LiveGameData();
+    return null;
+});
+
+
+exports.updateScore_Monday = functions.pubsub.schedule('* 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+    nfl_LiveGameData();
+    return null;
+});
+
+exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
+    nfl_LiveGameData();
+    return null;
+});
+
 
 //every tuesday morning
 exports.weeklyUpdateGameInfo = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_WeeklyGameInfo();
     return null;
 });
-
-
-
-
-/*export const generateThumbs = functions.storage
-  .object()
-  .onFinalize(async object => {
-    const bucket = gcs.bucket(object.bucket);
-    const filePath = object.name;
-    const fileName = filePath.split('/').pop();
-    const bucketDir = dirname(filePath);
-
-    const workingDir = join(tmpdir(), 'thumbs');
-    const tmpFilePath = join(workingDir, 'source.png');
-
-    if (fileName.includes('thumb@') || !object.contentType.includes('image')) {
-      console.log('exiting function');
-      return false;
-    }
-
-    // 1. Ensure thumbnail dir exists
-    await fs.ensureDir(workingDir);
-
-    // 2. Download Source File
-    await bucket.file(filePath).download({
-      destination: tmpFilePath
-    });
-
-    // 3. Resize the images and define an array of upload promises
-    const sizes = [64, 128, 256];
-
-    const uploadPromises = sizes.map(async size => {
-      const thumbName = `thumb@${size}_${fileName}`;
-      const thumbPath = join(workingDir, thumbName);
-
-      // Resize source image
-      await sharp(tmpFilePath)
-        .resize(size, size)
-        .toFile(thumbPath);
-
-      // Upload to GCS
-      return bucket.upload(thumbPath, {
-        destination: join(bucketDir, thumbName)
-      });
-    });
-
-    // 4. Run the upload operations
-    await Promise.all(uploadPromises);
-
-    // 5. Cleanup remove the tmp/thumbs from the filesystem
-    return fs.remove(workingDir);
-  });
-*/
-
-
-
-/*exports.onFileChange = functions.storage.object().onFinalize( async object => {
-    
-    const filePath = object.name;
-    const fileName = filePath.split('/').pop();
-    const bucketDir = path.dirname(filePath);
-    const fileSize = object.size;
-    const contentType = object.contentType;
-
-    //size: '141689',
-    if(fileSize < 500000){
-        console.log('already resized this file')
-        return false;
-    }
-  
-
-
-
-    console.log('resizing image...')
-    const destBucket = gcs.bucket(object.bucket);
-    const tmpFilePath = path.join(os.tmpdir(), path.basename(filePath));
-    const metadata = { contentType : contentType }
-    
-    
-    await destBucket.file(filePath).download({
-      destination: tmpFilePath
-    })
-    
-    await sharp(tmpFilePath).resize(250, 250).toFile(filePath);
-    
-
-    return destBucket.upload(filePath, {
-        destination: path.join(bucketDir, fileName),
-        metadata: metadata
-    })
-
-
-    //return fs.remove(tmpFilePath);
-
-
-});*/
 
 
 exports.onFileChange= functions.storage.object().onFinalize(event => {
@@ -513,7 +444,7 @@ exports.onFileChange= functions.storage.object().onFinalize(event => {
     return destBucket.file(filePath).download({
         destination: tmpFilePath
     }).then(() => {
-        return spawn('convert', [tmpFilePath, '-resize', '200x200', tmpFilePath]);
+        return spawn('convert', [tmpFilePath, '-resize', '100x100', tmpFilePath]);
     }).then(() => {
         return destBucket.upload(tmpFilePath, {
             destination: path.basename(filePath),
