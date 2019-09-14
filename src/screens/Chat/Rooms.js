@@ -6,23 +6,32 @@ import {
   StatusBar,
   ListView,
   FlatList,
-  View
+  View,
+  Image
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles'
-const findDates = require('../../utils/dates')
+const findDates = require('../../utils/Dates')
 import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
 import styles from './styles.js';
-
+import navLogo from '../../images/icons/CS-logo-white.png';
 
 
 export default class Rooms extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Channels',
+    //title: 'Channels',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,
+    headerTitle: (
+      <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
+          <Image
+              source={navLogo}
+              style={{width:110, height:30}}
+          />
+      </View>
+  ),
 });
 
 
@@ -79,16 +88,34 @@ export default class Rooms extends Component {
           else if (quarter == 4) {
             var quarter_text = '4th Quarter'
           }
-          roomsFB.push({
-            Active: true,
-            AwayAlias: child.val().AwayTeam.Alias,
-            HomeAlias: child.val().HomeTeam.Alias,
-            QuarterText: quarter_text,
-            HomeTotal: child.val().Live.Total.HomeTotal,
-            AwayTotal: child.val().Live.Total.AwayTotal,
-            Clock: child.val().Live.Clock,
-            key: child.key
-          });
+          
+          var clock = child.val().Live.Clock;
+          if (quarter_text === '4th Quarter' && clock === ':00') {
+            roomsFB.push({
+              Active: true,
+              Final: true,
+              AwayAlias: child.val().AwayTeam.Alias,
+              HomeAlias: child.val().HomeTeam.Alias,
+              QuarterText: quarter_text,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: clock,
+              key: child.key
+            });
+          }
+          else {
+            roomsFB.push({
+              Active: true,
+              Final: false,
+              AwayAlias: child.val().AwayTeam.Alias,
+              HomeAlias: child.val().HomeTeam.Alias,
+              QuarterText: quarter_text,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: clock,
+              key: child.key
+            });
+          }
         }
         else {
           const gameTime = child.val().Schedule.GameTime;
@@ -96,6 +123,7 @@ export default class Rooms extends Component {
           var gameDate_local = findDates.convertTime(gameTime);
           roomsFB.push({
             Active: false,
+            Final: false,
             AwayAlias: child.val().AwayTeam.Alias,
             HomeAlias: child.val().HomeTeam.Alias,
             GameDate: gameDate_local,
@@ -123,6 +151,7 @@ export default class Rooms extends Component {
       this.props.navigation.navigate('Chat', 
       {
         is_live: room.Active,
+        is_final: room.Final,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -138,6 +167,7 @@ export default class Rooms extends Component {
       this.props.navigation.navigate('Chat', 
       {
         is_live: room.Active,
+        is_final: room.Final,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,

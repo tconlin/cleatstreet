@@ -28,7 +28,7 @@ class Firebase {
     })
   };
 
-  createFirebaseAccount = (name, email, password) => {
+  createFirebaseAccount = (name, email, password, referral) => {
     return new Promise(resolve => {
       firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
         switch (error.code) {
@@ -49,10 +49,11 @@ class Firebase {
         if (info) {
           firebase.auth().currentUser.updateProfile({
             displayName: name
-        });
-        
-        
-        resolve(true);
+          });
+          firebase.database().ref(`/Referrals/`).push({
+            Code: referral
+          })
+          resolve(true);
         }
       });
     });

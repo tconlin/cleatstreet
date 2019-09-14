@@ -2,6 +2,9 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  headerImg: {
+    width: 30,
+  },
   keyboardView: {
     flex: 1,
     backgroundColor: '#1E90FF'

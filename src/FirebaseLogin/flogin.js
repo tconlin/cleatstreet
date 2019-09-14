@@ -8,7 +8,7 @@ export default class Flogin extends React.Component {
     render() {
         return (
             <FirebaseLogin 
-            login={user => console.warn(user)}
+            login={user => console.log(user)}
             background={backgroundImg}
             />
         )

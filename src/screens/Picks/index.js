@@ -10,24 +10,32 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   FlatList,
+  ScrollView,
   Image
 } from 'react-native';
 import { w, h, totalSize } from '../../components/Dimensions';
 
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
-const findDates = require('../../utils/dates')
-import RowStyles from '../../utils/styles'
-import { GameDate, TeamIcon } from '../../utils/index';
+const findDates = require('../../utils/Dates');
+import navLogo from '../../images/icons/CS-logo-white.png';
 
 
 
 export default class Picks extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Picks',
+    //title: 'Picks',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,
+    headerTitle: (
+      <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
+          <Image
+              source={navLogo}
+              style={{width:110, height:30}}
+          />
+      </View>
+  ),
   });
 
   constructor(props) {
@@ -68,6 +76,7 @@ export default class Picks extends Component {
           var picks = child.val().Picks;
           for (var indx_pk in picks) {
             if (picks.hasOwnProperty(indx_pk)) {
+              console.log(picks[indx_pk].Analyst.Avatar)
               picksFB.push({
                 HomeTeam: homeTeam,
                 AwayTeam: awayTeam,
@@ -88,11 +97,12 @@ export default class Picks extends Component {
   }
 
   openAnalystBio(Analyst) {
+    console.log(Analyst)
     this.props.navigation.navigate('AnalystBio', 
     {
       AnalystId: Analyst.Id,
       AnalystName: Analyst.Name,
-      Avatar: Analyst.avatar
+      AnalystAvatar: Analyst.Avatar
     });
   }
 
@@ -105,13 +115,15 @@ export default class Picks extends Component {
     else {
       var avatar_null = false;
     }
+    console.log(avatar_null)
+    console.log(item.Analyst.Avatar)
     return ( 
       <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
         <TouchableHighlight
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          {avatar_null ? <Image style={styles.avatarImage} source={item.Analyst.Avatar} /> : <Image style={styles.avatarNullImage} />}
+          {avatar_null ? <Image style={styles.avatarNullImage} /> : <Image style={styles.avatarImage} source={{uri: item.Analyst.Avatar}} />}
         </TouchableHighlight>
         <TouchableHighlight
           underlayColor="#fff"
@@ -171,6 +183,7 @@ export default class Picks extends Component {
     else {
       return (
         <View style={styles.container}>
+          <ScrollView>
           <View style={styles.RowStyle}>
             <View style={styles.ColumnItem1}>
               <View style={styles.rowContainer2}>
@@ -205,7 +218,7 @@ export default class Picks extends Component {
               </View>
               <View style={styles.ColumnItem3}>
                 <View style={styles.rowContainer2}>
-                  <Text style={styles.BettingHeader}>Allocation</Text>
+                  <Text style={styles.BettingHeader}>%</Text>
                 </View>
                 <FlatList
                   data={this.state.picks}
@@ -217,6 +230,7 @@ export default class Picks extends Component {
           <View style={styles.buttonContainer}>
             {AnalystButton}
           </View>
+          </ScrollView>
         </View>
     
       );
@@ -261,7 +275,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     width: '100%',
-    height: 50
+    height: 200
   },
   button: {
     width: '85%',
@@ -316,7 +330,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#adadad',
     margin: 10,
-    resizeMode: 'contain'
+    //resizeMode: 'contain'
+
   },
   avatarNullImage: {
     width: 40,

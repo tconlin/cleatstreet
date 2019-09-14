@@ -9,9 +9,9 @@ import {
   View
 } from 'react-native';
 import firebase from 'react-native-firebase';
-import styles from '../Chat/styles.js'
-import NavStyles from '../../constants/AppStyles'
-const findDates = require('../../utils/dates')
+import styles from '../Chat/styles.js';
+import NavStyles from '../../constants/AppStyles';
+const findDates = require('../../utils/Dates');
 import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
 import { w, h, totalSize } from '../../components/Dimensions';

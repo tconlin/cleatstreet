@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import { 
   Share, 
   StyleSheet, 
@@ -55,15 +55,35 @@ export default class Settings extends React.Component {
     }
   }
 
+  onSelect= data => {
+    console.log('here')
+    this.setState(data);
+  }
+
+  /*componentDidUpdate() {
+    const { currentUser } = firebase.auth();
+    this.setState( {
+      avatar: currentUser.photoURL,
+      email: currentUser.email,
+      displayName: currentUser.displayName
+    })
+  }*/
+
   componentDidMount() {
     const { currentUser } = firebase.auth();
     var currentUserEmail = firebase.auth().currentUser.email;
     var domain = currentUserEmail.replace(/.*@/, "");
-  
-    console.log(currentUser.photoURL)
 
     if (domain === 'cleat-street.com') {
       this.setState({ currentUserAnalyst: true });
+      this.analystRef.on('value', (dataSnapshot) => {
+        console.log('here')
+        if(dataSnapshot.exists()) {
+          dataSnapshot.forEach((child) => {
+            this.setState({bio: child.val()})
+          });
+        }
+      });
     }
     this.setState( {
       avatar: currentUser.photoURL,
@@ -78,9 +98,9 @@ export default class Settings extends React.Component {
     try {
       const result = await Share.share({
         message:
-          'Check out Cleat Street \
-          Never pay for picks again. \
-          Hear from expert analysts, follow the games, \
+          'Check out Cleat Street in the iOS App Store! \
+          Never pay for picks again.\
+          Hear from expert analysts, follow the games,\
           and chat with other bettors. Completely free.'
       });
       if (result.action === Share.sharedAction) {
@@ -98,109 +118,7 @@ export default class Settings extends React.Component {
   };
 
 
-  reauthenticate = (currentPassword) => {
-    var user = firebase.auth().currentUser;
-    var cred = firebase.auth.EmailAuthProvider.credential(
-      user.email, currentPassword
-    );
-    return user.reauthenticateWithCredential(cred);
-  }
   
-  
-  changeUsername = () => {
-    Keyboard.dismiss();
-    const name = this.name.getInputValue();
-    const currentPassword = this.currentPassword.getInputValue();
-    this.setState({ isCreatingAccount: true });
-    
-    if (currentPassword === null || currentPassword === '') {
-      this.setState({ isCreatingAccount: false });
-      Alert.alert('Enter current password to change username.');
-    }
-    else if(name !== '' && name.length < 13 && name.length > 2 ) {
-      this.reauthenticate(currentPassword).then(() => {
-        var user = firebase.auth().currentUser;
-        user.updateProfile({
-          displayName: name
-        }).then(() => {
-          this.setState({ 
-            isCreatingAccount: false,
-            displayName: firebase.auth().currentUser.displayName
-           });
-           this.currentPassword.input.clear();
-           this.name.input.clear();
-           Alert.alert('Username was changed successfully.');
-        }).catch((error) => { console.log(error.message); });
-      }).catch((error) => { console.log(error.message); });
-    }
-    else {
-      this.setState({ isCreatingAccount: false });
-      Alert.alert('Username must be between 3 and 12 characters.');
-    }
-  };
-
-
-  changeEmail = () => {
-    Keyboard.dismiss();
-    const email = this.email.getInputValue();
-    const currentPassword = this.currentPassword.getInputValue();
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
-    var valid = reg.test(email);
-    this.setState({ isCreatingAccount1: true });
-
-    if (currentPassword === null || currentPassword === '') {
-      this.setState({ isCreatingAccount1: false });
-      Alert.alert('Enter current password to change email.');
-    }
-    else if ( email !== '' && valid === true ) {
-      this.reauthenticate(currentPassword).then(() => {
-        var user = firebase.auth().currentUser;
-        user.updateEmail(email).then(() => {
-          this.setState({ 
-            isCreatingAccount1: false,
-            email: firebase.auth().currentUser.email
-           });
-           this.currentPassword.input.clear();
-           this.email.input.clear();
-           Alert.alert('Email was changed successfully.');
-        }).catch((error) => { console.log(error.message); });
-      }).catch((error) => { console.log(error.message); });
-    }
-    else {
-      this.setState({ isCreatingAccount1: false });
-      Alert.alert('The email address is badly formatted.');
-    }
-  };
-
-
-  changePassword = () => {
-    Keyboard.dismiss()
-    const currentPassword = this.currentPassword.getInputValue();
-    const newPassword = this.newPassword.getInputValue();
-    const repeat = this.repeat.getInputValue();
-    this.setState({ isCreatingAccount2: true });
-    
-    if (currentPassword === null || currentPassword === '') {
-      this.setState({ isCreatingAccount2: false });
-      Alert.alert('Enter current password to change password.');
-    }
-    else if ( newPassword !== '' && repeat !== '' && repeat === newPassword){ 
-      this.reauthenticate(currentPassword).then(() => {
-        var user = firebase.auth().currentUser;
-        user.updatePassword(newPassword).then(() => {
-          this.setState({ isCreatingAccount2: false });
-          this.currentPassword.input.clear();
-          this.newPassword.input.clear();
-          this.repeat.input.clear();
-          Alert.alert('Password was changed successfully.');
-        }).catch((error) => { console.log(error.message); });
-      }).catch((error) => { console.log(error.message) });
-    }  
-    else {
-      this.setState({ isCreatingAccount2: false });
-      Alert.alert('The password is badly formatted.');
-    }
-  };
 
   changeBio = () => {
     Keyboard.dismiss();
@@ -227,12 +145,18 @@ export default class Settings extends React.Component {
 
 
     if(this.state.currentUserAnalyst) {
+      if(this.state.bio === null || this.state.bio === '') {
+        var bio = 'Your Bio: '
+      }
+      else {
+        var bio = this.state.bio
+      }
       AnalystInput = 
       <View style={styles.mainContainer}> 
         <Text style={styles.settingsHeader}>Analyst Info</Text>
         <View style={styles.itemContainer}>
           <LargeInputField
-            placeholder="Bio:"
+            placeholder={bio}
             style={styles.input}
             ref={ref => this.bio = ref}
           />
@@ -275,63 +199,13 @@ export default class Settings extends React.Component {
     }
 
 		return (
-     
-        <ScrollView>
+      <ScrollView>
         <View style={styles.pageContainer}>
           <View style={styles.heroContainer}>
             {profilePic}
             <View style={{ flex: 1 }}>
               <Text style={styles.heroTitle}>{this.state.displayName}</Text>
               <Text style={styles.heroSubtitle}>{this.state.email}</Text>
-            </View>
-          </View>
-          <View style={styles.mainContainer}> 
-          <Text style={styles.settingsHeader}>Account</Text>
-            <View style={styles.itemContainer}>
-              <SettingsInputField
-                placeholder="CURRENT PASSWORD:"
-                secureTextEntry={true}
-                blurOnSubmit={true}
-                ref={ref => this.currentPassword = ref}
-                style={styles.input}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <SettingsInputField
-                placeholder="USERNAME:"
-                style={styles.input}
-                ref={ref => this.name = ref}
-              />
-              <Save isCreating={this.state.isCreatingAccount} click={this.changeUsername}/>
-            </View>
-            <View style={styles.itemContainer}>
-              <SettingsInputField
-                placeholder="EMAIL:"
-                keyboardType="email-address"
-                style={styles.input}
-                ref={ref => this.email = ref}
-              />
-              <Save isCreating={this.state.isCreatingAccount1} click={this.changeEmail}/>
-            </View>
-              
-            <View style={styles.itemContainer}>
-              <SettingsInputField
-                placeholder="NEW PASSWORD:"
-                secureTextEntry={true}
-                blurOnSubmit={true}
-                ref={ref => this.newPassword = ref}
-                style={styles.input}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <SettingsInputField
-                placeholder="REPEAT NEW PASSWORD:"
-                secureTextEntry={true}
-                blurOnSubmit={true}
-                ref={ref => this.repeat = ref}
-                style={styles.input}
-              />
-              <Save isCreating={this.state.isCreatingAccount2} click={this.changePassword}/>
             </View>
           </View>
           {AnalystInput}
@@ -345,6 +219,16 @@ export default class Settings extends React.Component {
               <Text style={styles.bottomText}>Share Cleat Street With Friends</Text>
               <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomItem}
+            onPress={() => this.props.navigation.navigate('Account')}
+          >
+            <View style={styles.bottomItemContainer}>
+              
+              <Text style={styles.bottomText}>Change Account Info</Text>
+              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+            </View >
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.bottomItem}

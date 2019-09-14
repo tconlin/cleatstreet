@@ -17,7 +17,7 @@ import emojiUtils from 'emoji-utils';
 import SlackMessage from '../Chat/SlackMessage';
 import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
-const findDates = require('../../utils/dates');
+const findDates = require('../../utils/Dates');
 
 
 
@@ -44,6 +44,7 @@ export default class GameChat extends Component {
     this.HomeTotal = this.props.navigation.state.params.HomeTotal;
     this.AwayTotal = this.props.navigation.state.params.AwayTotal;
     this.is_live = this.props.navigation.state.params.is_live;
+    this.is_final = this.props.navigation.state.params.is_final;
     this.GameTime = this.props.navigation.state.params.GameTime;
     this.GameDate = this.props.navigation.state.params.GameDate;
     this.messagesRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Messages`)
@@ -115,14 +116,26 @@ export default class GameChat extends Component {
 
   render() {  
     if(this.is_live) {
-      header = 
-      <View style={RowStyles.chatTeamRow}>
-        <TeamIcon name={this.AwayTeam}/>
-        <Text>{this.AwayTotal}</Text>
-        <GameDate time={this.Clock} date={this.QuarterText}/>
-        <Text>{this.HomeTotal}</Text>
-        <TeamIcon name={this.HomeTeam} />
-      </View>; 
+      if(this.is_final) {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
+      else {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <GameDate time={this.Clock} date={this.QuarterText}/>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
     }
     else {
       header = 
@@ -142,7 +155,7 @@ export default class GameChat extends Component {
       
         <SafeAreaView style={styles.container}>
           <GiftedChat
-          bottomOffset={54}
+            bottomOffset={50}
             messages={this.state.messages}
             onSend={this.addMessage.bind(this)}
             alwaysShowSend
@@ -162,6 +175,7 @@ export default class GameChat extends Component {
               autoCorrect: false,
           }}
           />
+          <KeyboardAvoidingView/>
         </SafeAreaView>
       </View>
     );

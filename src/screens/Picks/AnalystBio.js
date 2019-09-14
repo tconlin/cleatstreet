@@ -13,9 +13,7 @@ import {
 
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
-const findDates = require('../../utils/dates')
-import RowStyles from '../../utils/styles'
-import { GameDate, TeamIcon } from '../../utils/index';
+const findDates = require('../../utils/Dates')
 import { w, h, totalSize } from '../../components/Dimensions';
 
 
@@ -66,6 +64,7 @@ export default class Boxscore extends Component {
     else {
       var avatar_null = false;
     }
+    console.log(this.AnalystAvatar)
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -78,7 +77,7 @@ export default class Boxscore extends Component {
         <ScrollView>
         <View style={styles.pageContainer}>
           <View style={styles.heroContainer}>
-          {avatar_null ? <Image style={styles.avatarImage} source={this.AnalystAvatar } /> : <Image style={styles.avatarNullImage} />}
+          {avatar_null ? <Image style={styles.avatarNullImage} /> : <Image style={styles.avatarImage} source={{uri: this.AnalystAvatar}} />}
             <View style={{ flex: 1 }}>
               <Text style={styles.heroTitle}>{this.AnalystName}</Text>
               

@@ -14,13 +14,10 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
-
-const findDates = require('../../utils/dates')
+const findDates = require('../../utils/Dates');
 import { w, h, totalSize } from '../../components/Dimensions';
-
-import SettingsInputField from '../../components/SettingsInputField';
 import Save from './Save';
-import { Avatar } from 'react-native-gifted-chat';
+
 
 
 export default class MakePicksGame extends Component {
@@ -73,8 +70,8 @@ export default class MakePicksGame extends Component {
           AwayMoneyLine: this.AwayTeam + '  ' + dataSnapshot.val().MoneyLineAway,
           HomeSpread: this.HomeTeam + '  ' + dataSnapshot.val().SpreadHome,
           AwaySpread: this.AwayTeam + '  ' + dataSnapshot.val().SpreadAway,
-          HomeTotal: this.HomeTeam + '  ' + dataSnapshot.val().TotalHome,
-          AwayTotal: this.AwayTeam + '  ' + dataSnapshot.val().TotalAway,
+          HomeTotal: dataSnapshot.val().TotalHome,
+          AwayTotal: dataSnapshot.val().TotalAway,
         })
         
         this.setState({ loading: false });
@@ -157,57 +154,57 @@ export default class MakePicksGame extends Component {
             onValueChange={(itemValue, itemIndex) =>
               this.setState({Allocation: itemValue})
             }>
-              <Picker.Item label="0.0%" value="0.0%" />
-              <Picker.Item label="0.1%" value="0.1%" />
-              <Picker.Item label="0.2%" value="0.2%" />
-              <Picker.Item label="0.3%" value="0.3%" />
-              <Picker.Item label="0.4%" value="0.4%" />
-              <Picker.Item label="0.5%" value="0.5%" />
-              <Picker.Item label="0.6%" value="0.6%" />
-              <Picker.Item label="0.7%" value="0.7%" />
-              <Picker.Item label="0.8%" value="0.8%" />
-              <Picker.Item label="0.9%" value="0.9%" />
-              <Picker.Item label="1.0%" value="1.0%" />
-              <Picker.Item label="1.1%" value="1.1%" />
-              <Picker.Item label="1.2%" value="1.2%" />
-              <Picker.Item label="1.3%" value="1.3%" />
-              <Picker.Item label="1.4%" value="1.4%" />
-              <Picker.Item label="1.5%" value="1.5%" />
-              <Picker.Item label="1.6%" value="1.6%" />
-              <Picker.Item label="1.7%" value="1.7%" />
-              <Picker.Item label="1.8%" value="1.8%" />
-              <Picker.Item label="1.9%" value="1.9%" />
-              <Picker.Item label="2.0%" value="2.0%" />
-              <Picker.Item label="2.1%" value="2.1%" />
-              <Picker.Item label="2.2%" value="2.2%" />
-              <Picker.Item label="2.3%" value="2.3%" />
-              <Picker.Item label="2.4%" value="2.4%" />
-              <Picker.Item label="2.5%" value="2.5%" />
-              <Picker.Item label="2.6%" value="2.6%" />
-              <Picker.Item label="2.7%" value="2.7%" />
-              <Picker.Item label="2.8%" value="2.8%" />
-              <Picker.Item label="2.9%" value="2.9%" />
-              <Picker.Item label="3.0%" value="3.0%" />
-              <Picker.Item label="3.1%" value="3.1%" />
-              <Picker.Item label="3.2%" value="3.2%" />
-              <Picker.Item label="3.3%" value="3.3%" />
-              <Picker.Item label="3.4%" value="3.4%" />
-              <Picker.Item label="3.5%" value="3.5%" />
-              <Picker.Item label="3.6%" value="3.6%" />
-              <Picker.Item label="3.7%" value="3.7%" />
-              <Picker.Item label="3.8%" value="3.8%" />
-              <Picker.Item label="3.9%" value="3.9%" />
-              <Picker.Item label="4.0%" value="4.0%" />
-              <Picker.Item label="4.1%" value="4.1%" />
-              <Picker.Item label="4.2%" value="4.2%" />
-              <Picker.Item label="4.3%" value="4.3%" />
-              <Picker.Item label="4.4%" value="4.4%" />
-              <Picker.Item label="4.5%" value="4.5%" />
-              <Picker.Item label="4.6%" value="4.6%" />
-              <Picker.Item label="4.7%" value="4.7%" />
-              <Picker.Item label="4.8%" value="4.8%" />
-              <Picker.Item label="4.9%" value="4.9%" />
-              <Picker.Item label="5.0%" value="5.0%" />
+              <Picker.Item label="0.0%" value="0.0" />
+              <Picker.Item label="0.1%" value="0.1" />
+              <Picker.Item label="0.2%" value="0.2" />
+              <Picker.Item label="0.3%" value="0.3" />
+              <Picker.Item label="0.4%" value="0.4" />
+              <Picker.Item label="0.5%" value="0.5" />
+              <Picker.Item label="0.6%" value="0.6" />
+              <Picker.Item label="0.7%" value="0.7" />
+              <Picker.Item label="0.8%" value="0.8" />
+              <Picker.Item label="0.9%" value="0.9" />
+              <Picker.Item label="1.0%" value="1.0" />
+              <Picker.Item label="1.1%" value="1.1" />
+              <Picker.Item label="1.2%" value="1.2" />
+              <Picker.Item label="1.3%" value="1.3" />
+              <Picker.Item label="1.4%" value="1.4" />
+              <Picker.Item label="1.5%" value="1.5" />
+              <Picker.Item label="1.6%" value="1.6" />
+              <Picker.Item label="1.7%" value="1.7" />
+              <Picker.Item label="1.8%" value="1.8" />
+              <Picker.Item label="1.9%" value="1.9" />
+              <Picker.Item label="2.0%" value="2.0" />
+              <Picker.Item label="2.1%" value="2.1" />
+              <Picker.Item label="2.2%" value="2.2" />
+              <Picker.Item label="2.3%" value="2.3" />
+              <Picker.Item label="2.4%" value="2.4" />
+              <Picker.Item label="2.5%" value="2.5" />
+              <Picker.Item label="2.6%" value="2.6" />
+              <Picker.Item label="2.7%" value="2.7" />
+              <Picker.Item label="2.8%" value="2.8" />
+              <Picker.Item label="2.9%" value="2.9" />
+              <Picker.Item label="3.0%" value="3.0" />
+              <Picker.Item label="3.1%" value="3.1" />
+              <Picker.Item label="3.2%" value="3.2" />
+              <Picker.Item label="3.3%" value="3.3" />
+              <Picker.Item label="3.4%" value="3.4" />
+              <Picker.Item label="3.5%" value="3.5" />
+              <Picker.Item label="3.6%" value="3.6" />
+              <Picker.Item label="3.7%" value="3.7" />
+              <Picker.Item label="3.8%" value="3.8" />
+              <Picker.Item label="3.9%" value="3.9" />
+              <Picker.Item label="4.0%" value="4.0" />
+              <Picker.Item label="4.1%" value="4.1" />
+              <Picker.Item label="4.2%" value="4.2" />
+              <Picker.Item label="4.3%" value="4.3" />
+              <Picker.Item label="4.4%" value="4.4" />
+              <Picker.Item label="4.5%" value="4.5" />
+              <Picker.Item label="4.6%" value="4.6" />
+              <Picker.Item label="4.7%" value="4.7" />
+              <Picker.Item label="4.8%" value="4.8" />
+              <Picker.Item label="4.9%" value="4.9" />
+              <Picker.Item label="5.0%" value="5.0" />
           </Picker>
         <Save isCreating={this.state.isMakingPick} click={this.addPick}/>
       </ScrollView>

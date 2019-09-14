@@ -5,15 +5,13 @@ import { w, h, totalSize } from '../../../components/Dimensions';
 import InputField from '../../../components/InputField';
 import Continue from './Continue';
 import Firebase from "../../api/Firebase";
-import Terms from './Terms';
 
 import { CheckBox } from 'react-native-elements'
-
-
 const email = require('../../assets/email.png');
 const password = require('../../assets/password.png');
 const repeat = require('../../assets/repeat.png');
 const person = require('../../assets/person.png');
+const tag = require('../../assets/tag_label.png');
 const companyLogo = require('../../assets/CSLogoComplete.png');
 
 export default class Register extends Component {
@@ -32,6 +30,7 @@ export default class Register extends Component {
     const email = this.email.getInputValue();
     const password = this.password.getInputValue();
     const repeat = this.repeat.getInputValue();
+    const referral = this.referral.getInputValue();
 
     this.setState({
       isNameCorrect: name === '',
@@ -40,7 +39,7 @@ export default class Register extends Component {
       isRepeatCorrect: repeat === '' || repeat !== password,
     }, () => {
       if(name !== '' && email !== '' && password !== '' && (repeat !== '' && repeat === password) && this.state.ageCheck && this.state.termsCheck){
-        this.createFireBaseAccount(name, email, password);
+        this.createFireBaseAccount(name, email, password, referral);
       } else {
         console.warn('Fill up all fields correctly and Agree to Terms');
       }
@@ -67,9 +66,9 @@ export default class Register extends Component {
     
   }
 
-  createFireBaseAccount = (name, email, password) => {
+  createFireBaseAccount = (name, email, password, referral) => {
     this.setState({ isCreatingAccount: true });
-    Firebase.createFirebaseAccount(name, email, password)
+    Firebase.createFirebaseAccount(name, email, password, referral)
       .then(result => {
         if(result) this.props.change('login')();
         this.setState({ isCreatingAccount: false });
@@ -141,28 +140,36 @@ export default class Register extends Component {
           ref={ref => this.repeat = ref}
           icon={repeat}
         />
-        <View style={{
-    justifyContent: 'flex-start'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: -20}}>
-        <CheckBox
-          center
-          containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
-          checked={this.state.termsCheck}
-          onPress={() => this.onSelect2()}
-        /> 
-        <Text style={{color: '#757575'}}>I agree to the </Text>
-        <TouchableOpacity onPress={this.props.change('terms')} >
+        <InputField
+          placeholder="Referral Code"
+          error={this.state.isRepeatCorrect}
+          style={styles.input}
+          returnKeyType="done"
+          blurOnSubmit={true}
+          ref={ref => this.referral = ref}
+          icon={tag}
+        />
+        <View style={{justifyContent: 'flex-start'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: -20}}>
+            <CheckBox
+              center
+              containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
+              checked={this.state.termsCheck}
+              onPress={() => this.onSelect2()}
+            /> 
+            <Text style={{color: '#757575'}}>I agree to the </Text>
+            <TouchableOpacity onPress={this.props.change('terms')} >
             <Text style={{color: 'blue'}} >Terms and Conditions</Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: -20}}>
-        <CheckBox
-          containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
-          checked={this.state.ageCheck}
-          onPress={() => this.onSelect()}
-        />
-        <Text style={{color: '#757575'}}>I am over the age of 18.</Text>
-        </View>
+            <CheckBox
+              containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
+              checked={this.state.ageCheck}
+              onPress={() => this.onSelect()}
+            />
+            <Text style={{color: '#757575'}}>I am over the age of 18.</Text>
+          </View>
         </View>
         <Continue isCreating={this.state.isCreatingAccount} click={this.createUserAccount}/>
         <TouchableOpacity onPress={this.props.change('login')} style={styles.touchable}>
@@ -208,9 +215,9 @@ const styles = StyleSheet.create({
     marginVertical: h(2),
   },
   icon: {
-    width: w(50),
+    width: w(40),
     //height: h(30),
-    marginTop: h(5),
+    marginTop: h(4.5),
     //marginBottom: h(7),
   }
 });

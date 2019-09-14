@@ -20,6 +20,7 @@ import MakePicksScreen from '../screens/Picks/MakePicks';
 import MakePicksGameScreen from '../screens/Picks/MakePicksGame';
 import AnalystBioScreen from '../screens/Picks/AnalystBio';
 import GameChatScreen from '../screens/Games/GameChat';
+import AccountScreen from '../screens/Settings/Account';
 
 
 const GameStack = createStackNavigator({
@@ -163,7 +164,8 @@ const ProfileStack = createStackNavigator({
   Upload: UploadScreen,
   Terms: TermsScreen,
   PP: PPScreen,
-  Contact: ContactScreen
+  Contact: ContactScreen,
+  Account: AccountScreen
 });
 
 ProfileStack.navigationOptions = {
@@ -188,20 +190,22 @@ const Navigation = createBottomTabNavigator({
 {
   tabBarOptions: { 
     showLabel: true,
+    activeTintColor: '#1E2E43',
     labelStyle: {
       fontSize: 10
     },
-    tintColor: NavStyles.colors.black,
     style: {
-      backgroundColor: NavStyles.colors.background,
+      backgroundColor: '#ededed',
+      borderTopWidth: 2,
+      borderTopColor: '#dbdbdb'
     },
-    tabStyle: {
+    /*tabStyle: {
       height: 62
     },
     iconStyle: {
       flexGrow: 1,
       marginTop: 1
-    }
+    }*/
   }
 }
 );

@@ -426,7 +426,7 @@ exports.weeklyUpdateGameInfo = functions.pubsub.schedule('0 2 * * 2').timeZone('
 });
 
 
-exports.onFileChange= functions.storage.object().onFinalize(event => {
+exports.onFileChange = functions.storage.object().onFinalize(event => {
     const bucket = event.bucket;
     const contentType = event.contentType;
     const filePath = event.name;
@@ -444,7 +444,7 @@ exports.onFileChange= functions.storage.object().onFinalize(event => {
     return destBucket.file(filePath).download({
         destination: tmpFilePath
     }).then(() => {
-        return spawn('convert', [tmpFilePath, '-resize', '100x100', tmpFilePath]);
+        return spawn('convert', [tmpFilePath, '-resize', '200x200', tmpFilePath]);
     }).then(() => {
         return destBucket.upload(tmpFilePath, {
             destination: path.basename(filePath),

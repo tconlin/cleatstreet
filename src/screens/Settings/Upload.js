@@ -64,6 +64,7 @@ uploadImage = () => {
           }
           const { navigation } = this.props;
           navigation.goBack();
+          navigation.state.params.onSelect({ avatar: snapshot.downloadURL });
         },
         error => {
           unsubscribe();
@@ -79,7 +80,7 @@ uploadImage = () => {
   pickImage = () => {
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
-        Alert.alert('You cancelled image picker 😟');
+        console.log('Cancelled photo picker');
       } else if (response.error) {
         Alert.alert(response.error);
       } else {

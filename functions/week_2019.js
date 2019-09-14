@@ -67,14 +67,17 @@ module.exports = {
             }
             else if ( date >= 10 && date <= 16 && month === 9 && year === 2019) {
                 nfl_week = ['REG', '2', '2019']
+                if (date === 10 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 17 && date <= 23 && month === 9 && year === 2019) {
                 nfl_week = ['REG', '3', '2019']
+                if (date === 17 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 24 && date <= 30 && month === 9 && year === 2019 ) {
                 nfl_week = ['REG', '4', '2019']
+                if (date === 24 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date === 30 && month === 9 && year === 2019) {
@@ -83,22 +86,27 @@ module.exports = {
             }
             else if ( date >= 1 && date <= 7 && month === 10 && year === 2019) {
                 nfl_week = ['REG', '5', '2019']
+                if (date === 1 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 8 && date <= 14 && month === 10 && year === 2019 ) {
                 nfl_week = ['REG', '6', '2019']
+                if (date === 8 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 15 && date <= 21 && month === 10 && year === 2019 ) {
                 nfl_week = ['REG', '7', '2019']
+                if (date === 15 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 22 && date <= 28 && month === 10 && year === 2019 ) {
                 nfl_week = ['REG', '8', '2019']
+                if (date === 22 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 29 && date <= 31 && month === 10 && year === 2019 ) {
                 nfl_week = ['REG', '9', '2019']
+                if (date === 19 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 1 && date <= 4 && month === 11 && year === 2019 ) {
@@ -107,18 +115,22 @@ module.exports = {
             }
             else if ( date >= 5 && date <= 11 && month === 11 && year === 2019 ) {
                 nfl_week = ['REG', '10', '2019']
+                if (date === 15 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 12 && date <= 18 && month === 11 && year === 2019 ) {
                 nfl_week = ['REG', '11', '2019']
+                if (date === 12 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 19 && date <= 25 && month === 11 && year === 2019 ) {
                 nfl_week = ['REG', '12', '2019']
+                if (date === 19 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 26 && date <= 30 && month === 11 && year === 2019 ) {
                 nfl_week = ['REG', '13', '2019']
+                if (date === 26 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date <= 2 && month === 12 && year === 2019 ) {
@@ -127,18 +139,22 @@ module.exports = {
             }
             else if ( date >= 3 && date <= 9 && month === 12 && year === 2019 ) {
                 nfl_week = ['REG', '14', '2019']
+                if (date === 3 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 10 && date <= 16 && month === 12 && year === 2019 ) {
                 nfl_week = ['REG', '15', '2019']
+                if (date === 10 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 17 && date <= 23 && month === 12 && year === 2019 ) {
                 nfl_week = ['REG', '16', '2019']
+                if (date === 17 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date >= 24 && date <= 30 && month === 12 && year === 2019 ) {
                 nfl_week = ['REG', '17', '2019']
+                if (date === 24 && hour >=0 && hour <2) { nfl_week[1] = parseInt(nfl_week[1] - 1).toString(); }
                 return  nfl_week
             }
             else if ( date === 31 && month === 12 && year === 2019 ) {

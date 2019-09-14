@@ -8,22 +8,31 @@ import {
   StatusBar,
   ListView,
   FlatList,
-  View
+  View,
+  Image
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import styles from '../Chat/styles.js';
 import NavStyles from '../../constants/AppStyles'
-const findDates = require('../../utils/dates')
+const findDates = require('../../utils/Dates')
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
-
+import navLogo from '../../images/icons/CS-logo-white.png';
 
 export default class GameRooms extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Channels',
+    //title: 'Channels',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,
+    headerTitle: (
+      <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
+          <Image
+              source={navLogo}
+              style={{width:110, height:30}}
+          />
+      </View>
+  ),
 });
 
 
@@ -33,7 +42,6 @@ export default class GameRooms extends Component {
     this.type = nfl_week[0];
     this.week = nfl_week[1];
     this.year = nfl_week[2];
-    console.log(this.week)
     this.gamesRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}`)
     this.state = {
       loading: true,
@@ -83,42 +91,84 @@ export default class GameRooms extends Component {
           else if (quarter == 4) {
             var quarter_text = '4th Quarter'
           }
+          var clock = child.val().Live.Clock;
+          if (quarter_text === '4th Quarter' && clock === ':00') {
+            gamesFB.push({
+              Active: true,
+              Final: true,
+              AwayAlias: child.val().AwayTeam.Alias,
+              HomeAlias: child.val().HomeTeam.Alias,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: child.val().Live.Clock,
+              QuarterText: quarter_text,
+              key: child.key,
+  
+              PBP: child.val().PBP,
+              AwayWins: child.val().AwayTeam.Wins,
+              AwayLosses: child.val().AwayTeam.Losses,
+              AwayTies: child.val().AwayTeam.Ties,
+              HomeWins: child.val().HomeTeam.Wins,
+              HomeLosses: child.val().HomeTeam.Losses,
+              HomeTies: child.val().HomeTeam.Ties,
+              Quarter1Home: child.val().Live.Quarter1.Home,
+              Quarter2Home: child.val().Live.Quarter2.Home,
+              Quarter3Home: child.val().Live.Quarter3.Home,
+              Quarter4Home: child.val().Live.Quarter4.Home,
+              Quarter1Away: child.val().Live.Quarter1.Away,
+              Quarter2Away: child.val().Live.Quarter2.Away,
+              Quarter3Away: child.val().Live.Quarter3.Away,
+              Quarter4Away: child.val().Live.Quarter4.Away,
+              MoneyLineAway: child.val().Odds.MoneyLineAway,
+              MoneyLineHome: child.val().Odds.MoneyLineHome,
+              SpreadAway: child.val().Odds.SpreadAway,
+              SpreadHome: child.val().Odds.SpreadHome,
+              TotalHome: child.val().Odds.TotalHome,
+              TotalAway: child.val().Odds.TotalAway,
+              
+  
+  
+            });
+          }
+          else {
+            gamesFB.push({
+              Active: true,
+              Final: false,
+              AwayAlias: child.val().AwayTeam.Alias,
+              HomeAlias: child.val().HomeTeam.Alias,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: child.val().Live.Clock,
+              QuarterText: quarter_text,
+              key: child.key,
+  
+              PBP: child.val().PBP,
+              AwayWins: child.val().AwayTeam.Wins,
+              AwayLosses: child.val().AwayTeam.Losses,
+              AwayTies: child.val().AwayTeam.Ties,
+              HomeWins: child.val().HomeTeam.Wins,
+              HomeLosses: child.val().HomeTeam.Losses,
+              HomeTies: child.val().HomeTeam.Ties,
+              Quarter1Home: child.val().Live.Quarter1.Home,
+              Quarter2Home: child.val().Live.Quarter2.Home,
+              Quarter3Home: child.val().Live.Quarter3.Home,
+              Quarter4Home: child.val().Live.Quarter4.Home,
+              Quarter1Away: child.val().Live.Quarter1.Away,
+              Quarter2Away: child.val().Live.Quarter2.Away,
+              Quarter3Away: child.val().Live.Quarter3.Away,
+              Quarter4Away: child.val().Live.Quarter4.Away,
+              MoneyLineAway: child.val().Odds.MoneyLineAway,
+              MoneyLineHome: child.val().Odds.MoneyLineHome,
+              SpreadAway: child.val().Odds.SpreadAway,
+              SpreadHome: child.val().Odds.SpreadHome,
+              TotalHome: child.val().Odds.TotalHome,
+              TotalAway: child.val().Odds.TotalAway,
+              
+  
+  
+            });
+          }
           
-          gamesFB.push({
-            Active: true,
-            AwayAlias: child.val().AwayTeam.Alias,
-            HomeAlias: child.val().HomeTeam.Alias,
-            HomeTotal: child.val().Live.Total.HomeTotal,
-            AwayTotal: child.val().Live.Total.AwayTotal,
-            Clock: child.val().Live.Clock,
-            QuarterText: quarter_text,
-            key: child.key,
-
-            PBP: child.val().PBP,
-            AwayWins: child.val().AwayTeam.Wins,
-            AwayLosses: child.val().AwayTeam.Losses,
-            AwayTies: child.val().AwayTeam.Ties,
-            HomeWins: child.val().HomeTeam.Wins,
-            HomeLosses: child.val().HomeTeam.Losses,
-            HomeTies: child.val().HomeTeam.Ties,
-            Quarter1Home: child.val().Live.Quarter1.Home,
-            Quarter2Home: child.val().Live.Quarter2.Home,
-            Quarter3Home: child.val().Live.Quarter3.Home,
-            Quarter4Home: child.val().Live.Quarter4.Home,
-            Quarter1Away: child.val().Live.Quarter1.Away,
-            Quarter2Away: child.val().Live.Quarter2.Away,
-            Quarter3Away: child.val().Live.Quarter3.Away,
-            Quarter4Away: child.val().Live.Quarter4.Away,
-            MoneyLineAway: child.val().Odds.MoneyLineAway,
-            MoneyLineHome: child.val().Odds.MoneyLineHome,
-            SpreadAway: child.val().Odds.SpreadAway,
-            SpreadHome: child.val().Odds.SpreadHome,
-            TotalHome: child.val().Odds.TotalHome,
-            TotalAway: child.val().Odds.TotalAway,
-            
-
-
-          });
         }
         else if (typeof odds_check !== 'undefined' ) { 
           const gameTime = child.val().Schedule.GameTime;
@@ -127,6 +177,7 @@ export default class GameRooms extends Component {
           
           gamesFB.push({
             Active: false,
+            Final: false,
             AwayAlias: child.val().AwayTeam.Alias,
             HomeAlias: child.val().HomeTeam.Alias,
             AwayWins: child.val().AwayTeam.Wins,
@@ -154,6 +205,7 @@ export default class GameRooms extends Component {
           
           gamesFB.push({
             Active: false,
+            Final: false,
             AwayAlias: child.val().AwayTeam.Alias,
             HomeAlias: child.val().HomeTeam.Alias,
             AwayWins: child.val().AwayTeam.Wins,
@@ -190,7 +242,8 @@ export default class GameRooms extends Component {
         TotalHome: room.TotalHome,
         TotalAway: room.TotalAway,
         PBP: room.PBP,
-        is_live: true,
+        is_live: room.Active,
+        is_final: room.Final,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -219,7 +272,8 @@ export default class GameRooms extends Component {
     else {
       this.props.navigation.navigate('HomeNav', 
       {
-        is_live: false,
+        is_live: room.Active,
+        is_final: room.Final,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
@@ -250,7 +304,15 @@ export default class GameRooms extends Component {
         underlayColor="#fff"
         onPress={() => this.openMessages(item)}
       >
-        {item.Active ? 
+        {item.Active ? item.Final ?
+          <View style={RowStyles.chatTeamRow}>
+            <TeamIcon name={item.AwayAlias}/>
+            <Text>{item.AwayTotal}</Text>
+            <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+            <Text>{item.HomeTotal}</Text>
+            <TeamIcon name={item.HomeAlias} />
+          </View>
+          :
           <View style={RowStyles.chatTeamRow}>
             <TeamIcon name={item.AwayAlias}/>
             <Text>{item.AwayTotal}</Text>

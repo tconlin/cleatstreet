@@ -9,9 +9,7 @@ import {
 import NavStyles from '../../constants/AppStyles';
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
-
-
-const TeamNames = require('../../utils/teamName')
+const TeamNames = require('../../utils/TeamName')
 
 
 export default class Boxscore extends Component {
@@ -33,6 +31,7 @@ export default class Boxscore extends Component {
     this.Clock = this.props.navigation.state.params.Clock;
     this.QuarterText = this.props.navigation.state.params.QuarterText;
     this.is_live = this.props.navigation.state.params.is_live;
+    this.is_final = this.props.navigation.state.params.is_final;
     this.AwayWins = this.props.navigation.state.params.AwayWins;
     this.AwayLosses = this.props.navigation.state.params.AwayLosses;
     this.AwayTies = this.props.navigation.state.params.AwayTies;
@@ -108,14 +107,26 @@ export default class Boxscore extends Component {
 
   render() {
     if(this.is_live) {
-      header = 
-      <View style={RowStyles.chatTeamRow}>
-        <TeamIcon name={this.AwayTeam}/>
-        <Text>{this.AwayTotal}</Text>
-        <GameDate time={this.Clock} date={this.QuarterText}/>
-        <Text>{this.HomeTotal}</Text>
-        <TeamIcon name={this.HomeTeam} />
-      </View>; 
+      if(this.is_final) {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <Text style={{fontSize: 11, fontWeight:'800'}}>FINAL</Text>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
+      else {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <GameDate time={this.Clock} date={this.QuarterText}/>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      } 
     }
     else {
       header = 

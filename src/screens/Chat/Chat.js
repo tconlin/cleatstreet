@@ -15,7 +15,7 @@ import NavStyles from '../../constants/AppStyles';
 import { Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import emojiUtils from 'emoji-utils';
-const findDates = require('../../utils/dates')
+const findDates = require('../../utils/Dates')
 import SlackMessage from './SlackMessage';
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
@@ -47,6 +47,8 @@ export default class Chat extends Component {
     this.HomeTotal = this.props.navigation.state.params.HomeTotal;
     this.AwayTotal = this.props.navigation.state.params.AwayTotal;
     this.is_live = this.props.navigation.state.params.is_live;
+    this.is_final = this.props.navigation.state.params.is_final;
+    console.log(this.is_Final);
     this.messagesRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Messages`)
     this.state = {
       loading: true,
@@ -120,14 +122,26 @@ export default class Chat extends Component {
 
   render() {
     if(this.is_live) {
-      header = 
-      <View style={RowStyles.chatTeamRow}>
-        <TeamIcon name={this.AwayTeam}/>
-        <Text>{this.AwayTotal}</Text>
-        <GameDate time={this.Clock} date={this.QuarterText}/>
-        <Text>{this.HomeTotal}</Text>
-        <TeamIcon name={this.HomeTeam} />
-      </View>; 
+      if(this.is_final) {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
+      else {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <GameDate time={this.Clock} date={this.QuarterText}/>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
     }
     else {
       header = 

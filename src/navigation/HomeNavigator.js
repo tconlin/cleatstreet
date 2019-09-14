@@ -14,7 +14,7 @@ export default HomeNavigation = createMaterialTopTabNavigator( {
     Boxscore: {
         name: 'Boxscore',
         screen: BoxScreen,
-        navigationOptions: { title: 'Boxscore' }
+        navigationOptions: { title: 'Game' }
     },
     Betting: {
         name: 'Betting',

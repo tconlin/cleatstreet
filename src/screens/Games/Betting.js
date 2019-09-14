@@ -16,8 +16,8 @@ import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
 import RowStyles from '../../utils/styles';
 import { GameDate, TeamIcon } from '../../utils/index';
-const TeamNames = require('../../utils/teamName');
-const findDates = require('../../utils/dates');
+const TeamNames = require('../../utils/TeamName');
+const findDates = require('../../utils/Dates');
 
 
 export default class Betting extends Component {
@@ -46,6 +46,7 @@ export default class Betting extends Component {
     this.HomeTotal = this.props.navigation.state.params.HomeTotal;
     this.AwayTotal = this.props.navigation.state.params.AwayTotal;
     this.is_live = this.props.navigation.state.params.is_live;
+    this.is_final = this.props.navigation.state.params.is_final;
     this.MoneyLineAway = this.props.navigation.state.params.MoneyLineAway;
     this.MoneyLineHome = this.props.navigation.state.params.MoneyLineHome;
     this.SpreadAway = this.props.navigation.state.params.SpreadAway;
@@ -110,7 +111,7 @@ export default class Betting extends Component {
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          {avatar_null ? <Image style={styles.avatarImage} source={item.Analyst.Avatar} /> : <Image style={styles.avatarNullImage} />}
+          {avatar_null ? <Image style={styles.avatarNullImage} /> : <Image style={styles.avatarImage} source={{uri: item.Analyst.Avatar}} />}
         </TouchableHighlight>
         <TouchableHighlight
           underlayColor="#fff"
@@ -140,14 +141,26 @@ export default class Betting extends Component {
 
   render() {
     if(this.is_live) {
-      header = 
-      <View style={RowStyles.chatTeamRow}>
-        <TeamIcon name={this.AwayTeam}/>
-        <Text>{this.AwayTotal}</Text>
-        <GameDate time={this.Clock} date={this.QuarterText}/>
-        <Text>{this.HomeTotal}</Text>
-        <TeamIcon name={this.HomeTeam} />
-      </View>; 
+      if(this.is_final) {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
+      else {
+        header = 
+        <View style={RowStyles.chatTeamRow}>
+          <TeamIcon name={this.AwayTeam}/>
+          <Text>{this.AwayTotal}</Text>
+          <GameDate time={this.Clock} date={this.QuarterText}/>
+          <Text>{this.HomeTotal}</Text>
+          <TeamIcon name={this.HomeTeam} />
+        </View>;
+      }
     }
     else {
       header = 
@@ -249,7 +262,7 @@ export default class Betting extends Component {
               </View>
               <View style={styles.ColumnItem3}>
                 <View style={styles.rowContainer2}>
-                  <Text style={styles.BettingHeader}>Allocation</Text>
+                  <Text style={styles.BettingHeader}>%</Text>
                 </View>
                 <FlatList
                   data={this.state.picks}
@@ -275,12 +288,12 @@ const styles = StyleSheet.create({
   },
   ColumnItem1: {
     
-    width: '50%',
+    width: '40%',
   },
   
   ColumnItem3: {
     
-    width: '25%',
+    width: '30%',
   },
   rowContainer2: {
     alignItems: 'center',
@@ -432,7 +445,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#adadad',
     margin: 10,
-    resizeMode: 'contain'
+    //resizeMode: 'contain'
   },
   avatarNullImage: {
     width: 30,
