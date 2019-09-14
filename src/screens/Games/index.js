@@ -54,18 +54,9 @@ export default class GameRooms extends Component {
     this.listenForGames(this.gamesRef);
   }
 
-  organizeGamesByActivity(a, b) {
-    const activityA = a.Active;
-    const activityB = b.Active;
 
-    let comparison = 0;
-    if (activityA === true && activityB === false) {
-      comparison = -1;
-    } else if (activityA === false && activityB === true) {
-      comparison = 1;
-    }
-
-    return comparison;
+  organizeGamesByDate(a, b) {
+    return new Date(a.GameTimeUTC) - new Date(b.GameTimeUTC);
   }
 
   listenForGames(gamesRef) {
@@ -92,6 +83,8 @@ export default class GameRooms extends Component {
             var quarter_text = '4th Quarter'
           }
           var clock = child.val().Live.Clock;
+          
+
           if (quarter_text === '4th Quarter' && clock === ':00') {
             gamesFB.push({
               Active: true,
@@ -103,7 +96,8 @@ export default class GameRooms extends Component {
               Clock: child.val().Live.Clock,
               QuarterText: quarter_text,
               key: child.key,
-  
+              GameTimeUTC: child.val().Schedule.GameTime,
+
               PBP: child.val().PBP,
               AwayWins: child.val().AwayTeam.Wins,
               AwayLosses: child.val().AwayTeam.Losses,
@@ -141,7 +135,8 @@ export default class GameRooms extends Component {
               Clock: child.val().Live.Clock,
               QuarterText: quarter_text,
               key: child.key,
-  
+              GameTimeUTC: child.val().Schedule.GameTime,
+
               PBP: child.val().PBP,
               AwayWins: child.val().AwayTeam.Wins,
               AwayLosses: child.val().AwayTeam.Losses,
@@ -183,6 +178,7 @@ export default class GameRooms extends Component {
             AwayWins: child.val().AwayTeam.Wins,
             AwayLosses: child.val().AwayTeam.Losses,
             AwayTies: child.val().AwayTeam.Ties,
+            GameTimeUTC: child.val().Schedule.GameTime,
             GameDate: gameDate_local,
             GameTime: gameTime_local,
             key: child.key,
@@ -213,6 +209,7 @@ export default class GameRooms extends Component {
             AwayTies: child.val().AwayTeam.Ties,
             GameDate: gameDate_local,
             GameTime: gameTime_local,
+            GameTimeUTC: child.val().Schedule.GameTime,
             key: child.key,
             HomeWins: child.val().HomeTeam.Wins,
             HomeLosses: child.val().HomeTeam.Losses,
@@ -220,7 +217,7 @@ export default class GameRooms extends Component {
           });
         } 
       });
-      gamesFB = gamesFB.sort(this.organizeGamesByActivity)
+      gamesFB = gamesFB.sort(this.organizeGamesByDate)
       this.setState({ games: gamesFB, loading: false })
     });
   
