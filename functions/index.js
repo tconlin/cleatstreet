@@ -382,7 +382,7 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
