@@ -21,7 +21,11 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
+<<<<<<< HEAD
                 if( status === 'inprogress'){
+=======
+                if(status === 'inprogress'){
+>>>>>>> 0afcdcb85e8299507e01bc93adb9a37e2f71c69d
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -73,7 +77,16 @@ const nfl_updateOdds = async (url, year, type, week) => {
                         var spread_current_away = parseInt(spread_current_away);
                     }
                      /* eslint-disable no-redeclare */
+                    //  favorite should get positive number 
+                    //  fix: home is always favored below
 
+                    var spread_current_home = consensus_lines[2].spread;
+                    var spread_current_away = parseFloat(consensus_lines[2].spread) * -1.0;
+                     /* eslint-disable no-redeclare */
+                    if((spread_current_away % 1) === 0.0 ) {
+                        var spread_current_away = parseInt(spread_current_away);
+                    }
+                     /* eslint-disable no-redeclare */
                     var total_current_home = consensus_lines[4].total;
                     var total_current_away = consensus_lines[4].total;
 
@@ -387,7 +400,7 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
@@ -413,7 +426,7 @@ exports.updateScore_Sunday = functions.pubsub.schedule('*/10 00-02,11-23 * * 7')
 });
 
 
-exports.updateScore_Monday = functions.pubsub.schedule('*/3 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Monday = functions.pubsub.schedule('*/10 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
