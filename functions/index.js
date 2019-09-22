@@ -21,7 +21,7 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
-                if( status === 'inprogress' || status === 'created' || status === 'complete'){
+                if( status === 'inprogress' || status === 'complete'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -63,6 +63,8 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     var consensus_lines = events[indx_ev].consensus.lines;
                     var moneyline_current_home = consensus_lines[0].outcomes[0].odds;
                     var moneyline_current_away = consensus_lines[0].outcomes[1].odds;
+                    
+                    
                     //  favorite should get positive number 
                     //  fix: home is always favored below
 
@@ -73,8 +75,7 @@ const nfl_updateOdds = async (url, year, type, week) => {
                         var spread_current_away = parseInt(spread_current_away);
                     }
                      /* eslint-disable no-redeclare */
-                    //  favorite should get positive number 
-                    //  fix: home is always favored below
+
 
                     var total_current_home = consensus_lines[4].total;
                     var total_current_away = consensus_lines[4].total;
@@ -102,19 +103,20 @@ const nfl_updateOdds = async (url, year, type, week) => {
 const nfl_updatePBP = async (url, curr_id, year, type, week) => {
     try {
         let res = await request(url, {json: true});
-        
         const quarters = res.quarters;
         for (var indx_qtr in quarters) {
             if (quarters.hasOwnProperty(indx_qtr)) {
                 const pbp = quarters[indx_qtr].pbp;
                 const number = quarters[indx_qtr].number;
+                console.log('quarter', indx_qtr)
                 for (var indx_p in pbp) {
                     if (pbp.hasOwnProperty(indx_p)) {
-                        const driveType = pbp[indx_p].event;
+                        const driveType = pbp[indx_p].type;
+
                         if (driveType === 'event') {
                             const ev_id = pbp[indx_p].id
                             admin.database()
-                            .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${ev_id}`)
+                            .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}`)
                             .set({
                                 Type: 'event',
                                 Summary: pbp[indx_p].summary,
@@ -122,21 +124,51 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                             })
                         }
                         else if (driveType === 'drive') {
+
                             const driveEvents = pbp[indx_p].actions;
                             const ev_id = pbp[indx_p].id;
+
                             for (var indx_drEv in driveEvents) {
+                                console.log('drive event', indx_drEv)
                                 if (driveEvents.hasOwnProperty(indx_drEv)) {
                                     const dr_id = driveEvents[indx_drEv].id;
-                                    admin.database()
-                                    .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${ev_id}/${dr_id}`)
-                                    .set ({
-                                        Summary: driveEvents[indx_drEv].summary,
-                                        PlayType: driveEvents[indx_drEv].play_type,
-                                        YardLine: driveEvents[indx_drEv].yard_line,
-                                        Side: driveEvents[indx_drEv].side,
-                                        Down: driveEvents[indx_drEv].down,
-                                        YFD: driveEvents[indx_drEv].yfd,
-                                    })
+                                    const summary = driveEvents[indx_drEv].summary;
+                                    const playType = driveEvents[indx_drEv].play_type;
+                                    const yardLine = driveEvents[indx_drEv].yard_line;
+                                    const side = driveEvents[indx_drEv].side;
+                                    const down = driveEvents[indx_drEv].down;
+                                    const yfd = driveEvents[indx_drEv].yfd;
+                                    
+                                    if (typeof playType !== 'undefined' && 
+                                        typeof summary !== 'undefined' && 
+                                        typeof yardLine !== 'undefined' && 
+                                        typeof side !== 'undefined' &&
+                                        typeof down !== 'undefined' &&
+                                        typeof yfd !== 'undefined'){
+                                        admin.database()
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}/${dr_id}`)
+                                        .set ({
+                                            Summary: summary,
+                                            PlayType: playType,
+                                            YardLine: yardLine,
+                                            Side: side,
+                                            Down: down,
+                                            YFD: yfd
+                                        })
+                                    }
+                                    else if(typeof playType !== 'undefined' &&
+                                            typeof summary !== 'undefined' && 
+                                            typeof yardLine !== 'undefined' && 
+                                            typeof side !== 'undefined') {
+                                        admin.database()
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}/${dr_id}`)
+                                        .set ({
+                                            Summary: summary,
+                                            PlayType: playType,
+                                            YardLine: yardLine,
+                                            Side: side
+                                        })
+                                    }
                                 }
                             }    
                         }
@@ -381,9 +413,23 @@ const nfl_LiveGameData = async () => {
                 console.log('boxscore api hit');
                 console.log(away + ' vs  ' + home);
                 const box_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/boxscore.json?api_key=${SP_API_KEY}`;
+        
+                let liveData = await nfl_updateBoxScore(box_url, curr_id, year, type, week);
+            }
+        }
+    }
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable no-await-in-loop */
+    for (var indx_ids in gameIDs ) {
+        if (gameIDs.hasOwnProperty(indx_ids)) {
+            if (gameIDs[indx_ids].Active) {
+                var away = gameIDs[indx_ids].AwayAlias;
+                var home = gameIDs[indx_ids].HomeAlias;
+                var curr_id = gameIDs[indx_ids].Id;
+                console.log('pbp api hit');
+                console.log(away + ' vs  ' + home);
                 const pbp_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/pbp.json?api_key=${SP_API_KEY}`;
                 
-                let liveData = await nfl_updateBoxScore(box_url, curr_id, year, type, week);
                 let updatePBP = await nfl_updatePBP(pbp_url, curr_id, year, type, week);
             }
         }

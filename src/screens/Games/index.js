@@ -58,6 +58,15 @@ export default class GameRooms extends Component {
   organizeGamesByDate(a, b) {
     return new Date(a.GameTimeUTC) - new Date(b.GameTimeUTC);
   }
+  organizeGamesByActivity(a, b) {
+    let comparison = 0;
+    if (a.Active !== true &&  b.Active === true) {
+      comparison = 1;
+    } else if (a.Active === true && b.Active !== true) {
+      comparison = -1;
+    }
+    return comparison;
+  }
 
   listenForGames(gamesRef) {
     
@@ -87,7 +96,7 @@ export default class GameRooms extends Component {
 
           if (quarter_text === '4th Quarter' && clock === ':00') {
             gamesFB.push({
-              Active: true,
+              Active: false,
               Final: true,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,
@@ -218,6 +227,7 @@ export default class GameRooms extends Component {
         } 
       });
       gamesFB = gamesFB.sort(this.organizeGamesByDate)
+      gamesFB = gamesFB.sort(this.organizeGamesByActivity)
       this.setState({ games: gamesFB, loading: false })
     });
   
@@ -295,35 +305,40 @@ export default class GameRooms extends Component {
   }
 
   renderRow(item) {
+
+    if(item.Active === false && item.Final === true) {
+      timer = <View style={RowStyles.chatTeamRow}>
+      <TeamIcon name={item.AwayAlias}/>
+      <Text>{item.AwayTotal}</Text>
+      <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+      <Text>{item.HomeTotal}</Text>
+      <TeamIcon name={item.HomeAlias} />
+      </View>;
+    }
+    else if (item.Active === false && item.Final === false) {
+      timer = <View style={RowStyles.chatTeamRow}>
+      <TeamIcon name={item.AwayAlias}/>
+      <GameDate time={item.GameTime} date={item.GameDate}/>
+      <TeamIcon name={item.HomeAlias} />
+      </View>;
+    }
+    else if (item.Active === true && item.Final === false) {
+      timer = <View style={RowStyles.chatTeamRow}>
+      <TeamIcon name={item.AwayAlias}/>
+      <Text>{item.AwayTotal}</Text>
+      <GameDate time={item.Clock} date={item.QuarterText}/>
+      <Text>{item.HomeTotal}</Text>
+      <TeamIcon name={item.HomeAlias} />
+      </View>;
+    }
+
     return (
       <TouchableHighlight 
         style={styles.roomLi}
         underlayColor="#fff"
         onPress={() => this.openMessages(item)}
       >
-        {item.Active ? item.Final ?
-          <View style={RowStyles.chatTeamRow}>
-            <TeamIcon name={item.AwayAlias}/>
-            <Text>{item.AwayTotal}</Text>
-            <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
-            <Text>{item.HomeTotal}</Text>
-            <TeamIcon name={item.HomeAlias} />
-          </View>
-          :
-          <View style={RowStyles.chatTeamRow}>
-            <TeamIcon name={item.AwayAlias}/>
-            <Text>{item.AwayTotal}</Text>
-            <GameDate time={item.Clock} date={item.QuarterText}/>
-            <Text>{item.HomeTotal}</Text>
-            <TeamIcon name={item.HomeAlias} />
-          </View>
-          :
-          <View style={RowStyles.chatTeamRow}>
-            <TeamIcon name={item.AwayAlias}/>
-            <GameDate time={item.GameTime} date={item.GameDate}/>
-            <TeamIcon name={item.HomeAlias} />
-          </View>  
-        }
+        {timer}
       </TouchableHighlight>
     ); 
   }

@@ -5,8 +5,6 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.3):
     - BoringSSL-GRPC/Interface (= 0.0.3)
   - BoringSSL-GRPC/Interface (0.0.3)
-  - Crashlytics (3.13.2):
-    - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
   - Firebase/Auth (6.3.0):
     - Firebase/CoreOnly
@@ -219,7 +217,6 @@ PODS:
   - yoga (0.59.9.React)
 
 DEPENDENCIES:
-  - Crashlytics (~> 3.13.2)
   - Fabric (~> 1.10.2)
   - Firebase/Auth (~> 6.3.0)
   - Firebase/Core (~> 6.3.0)
@@ -251,7 +248,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BoringSSL-GRPC
-    - Crashlytics
     - Fabric
     - Firebase
     - FirebaseABTesting
@@ -295,7 +291,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
-  Crashlytics: 611738c7847f8291a1a51084e35987b86ba6b3ee
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 8432d732974498afd5987e9001a05f90f1a3d625
   FirebaseABTesting: a32c488eb75089a61eb3d86db061dfb909d765db
@@ -329,6 +324,6 @@ SPEC CHECKSUMS:
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
   yoga: 03ff42a6f223fb88deeaed60249020d80c3091ee
 
-PODFILE CHECKSUM: 55120903a3149a6d2e7302132b9a2d57fd60f354
+PODFILE CHECKSUM: 313ae070193d019a48341894da2f5014280eb9c2
 
 COCOAPODS: 1.7.3
