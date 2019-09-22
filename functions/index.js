@@ -23,7 +23,7 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
-                if(status === 'created' || status === 'inprogress' || status === 'complete' || status === 'closed'){
+                if(status === 'inprogress'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -66,9 +66,16 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     var moneyline_current_home = consensus_lines[0].outcomes[0].odds;
                     var moneyline_current_away = consensus_lines[0].outcomes[1].odds;
 
-                    var spread_current_home = consensus_lines[2].spread;
-                    var spread_current_away = parseInt(consensus_lines[2].spread) * -1;
+                    //  favorite should get positive number 
+                    //  fix: home is always favored below
 
+                    var spread_current_home = consensus_lines[2].spread;
+                    var spread_current_away = parseFloat(consensus_lines[2].spread) * -1.0;
+                     /* eslint-disable no-redeclare */
+                    if((spread_current_away % 1) === 0.0 ) {
+                        var spread_current_away = parseInt(spread_current_away);
+                    }
+                     /* eslint-disable no-redeclare */
                     var total_current_home = consensus_lines[4].total;
                     var total_current_away = consensus_lines[4].total;
 
@@ -387,33 +394,33 @@ exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/Ne
     return null;
 });
 
-exports.updateScore_Thurs = functions.pubsub.schedule('* 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('*/10 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateThurs = functions.pubsub.schedule('* 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateThurs = functions.pubsub.schedule('*/10 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Saturday = functions.pubsub.schedule('* 11 * * 6').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Saturday = functions.pubsub.schedule('*/10 11 * * 6').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Sunday = functions.pubsub.schedule('* 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Sunday = functions.pubsub.schedule('*/10 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
 
-exports.updateScore_Monday = functions.pubsub.schedule('* 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Monday = functions.pubsub.schedule('*/10 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateMonday = functions.pubsub.schedule('*/10 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
