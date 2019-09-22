@@ -63,9 +63,16 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     var consensus_lines = events[indx_ev].consensus.lines;
                     var moneyline_current_home = consensus_lines[0].outcomes[0].odds;
                     var moneyline_current_away = consensus_lines[0].outcomes[1].odds;
+                    //  favorite should get positive number 
+                    //  fix: home is always favored below
 
                     var spread_current_home = consensus_lines[2].spread;
-                    var spread_current_away = parseInt(consensus_lines[2].spread) * -1;
+                    var spread_current_away = parseFloat(consensus_lines[2].spread) * -1.0;
+                     /* eslint-disable no-redeclare */
+                    if((spread_current_away % 1) === 0.0 ) {
+                        var spread_current_away = parseInt(spread_current_away);
+                    }
+                     /* eslint-disable no-redeclare */
 
                     var total_current_home = consensus_lines[4].total;
                     var total_current_away = consensus_lines[4].total;
