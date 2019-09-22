@@ -8,8 +8,6 @@ let gcs = new Storage ({
   projectId
 });
 const spawn = require('child-process-promise').spawn;
-const sharp = require('sharp');
-const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const request = require('request-promise');
@@ -23,7 +21,7 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
-                if(status === 'created' || status === 'inprogress' || status === 'complete' || status === 'closed'){
+                if( status === 'inprogress'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -234,7 +232,6 @@ const nfl_loadWeeklyInfo = async (gameIDs, url, year, type, week) => {
                                     var teams = divs[indx_divs].teams
                                     for (var indx_teams in teams ) {
                                         if (confs.hasOwnProperty(indx_confs)) {    
-                                            console.log(gameIDs[indx_ids].HomeAlias);
                                             if( gameIDs[indx_ids].HomeAlias === teams[indx_teams].id) {
                                                 var HomeAlias = teams[indx_teams].id;
                                                 var HomeWins = teams[indx_teams].overall.wins;
@@ -333,7 +330,6 @@ const nfl_LiveGameData = async () => {
     var type = nfl_week[0];
     var week = nfl_week[1];
     var year = nfl_week[2];
-    
     var SP_API_KEY = functions.config().sportradar_nfl.key;
     const schedule_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/schedule.json?api_key=${SP_API_KEY}`;
     
@@ -346,6 +342,8 @@ const nfl_LiveGameData = async () => {
                 var away = gameIDs[indx_ids].AwayAlias;
                 var home = gameIDs[indx_ids].HomeAlias;
                 var curr_id = gameIDs[indx_ids].Id;
+                console.log('boxscore api hit');
+                console.log(away + ' vs  ' + home);
                 const box_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/boxscore.json?api_key=${SP_API_KEY}`;
                 
                 let liveData = await nfl_updateBoxScore(box_url, curr_id, year, type, week);
@@ -387,33 +385,33 @@ exports.updateOdds = functions.pubsub.schedule('every 30 minutes').timeZone('Ame
     return null;
 });
 
-exports.updateScore_Thurs = functions.pubsub.schedule('* 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('*/10 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateThurs = functions.pubsub.schedule('* 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateThurs = functions.pubsub.schedule('*/10 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Saturday = functions.pubsub.schedule('* 11 * * 6').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Saturday = functions.pubsub.schedule('*/10 11 * * 6').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Sunday = functions.pubsub.schedule('* 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Sunday = functions.pubsub.schedule('*/10 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
 
-exports.updateScore_Monday = functions.pubsub.schedule('* 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Monday = functions.pubsub.schedule('*/3 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateMonday = functions.pubsub.schedule('*/10 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
