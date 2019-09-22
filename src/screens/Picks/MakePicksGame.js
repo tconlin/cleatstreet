@@ -70,8 +70,8 @@ export default class MakePicksGame extends Component {
           AwayMoneyLine: this.AwayTeam + '  ' + dataSnapshot.val().MoneyLineAway,
           HomeSpread: this.HomeTeam + '  ' + dataSnapshot.val().SpreadHome,
           AwaySpread: this.AwayTeam + '  ' + dataSnapshot.val().SpreadAway,
-          HomeTotal: dataSnapshot.val().TotalHome,
-          AwayTotal: dataSnapshot.val().TotalAway,
+          HomeTotal: 'O ' + dataSnapshot.val().TotalHome,
+          AwayTotal: 'U ' + dataSnapshot.val().TotalAway,
         })
         
         this.setState({ loading: false });
@@ -143,7 +143,7 @@ export default class MakePicksGame extends Component {
               <Picker.Item label={this.state.AwayMoneyLine} value={this.state.AwayMoneyLine} />
               <Picker.Item label={this.state.HomeSpread} value={this.state.HomeSpread} />
               <Picker.Item label={this.state.AwaySpread} value={this.state.AwaySpread} />
-              <Picker.Item label={this.state.HomeTotal} value={this.state.HomeTotal} />
+              <Picker.Item label={this.state.HomeTotal} value= {this.state.HomeTotal} />
               <Picker.Item label={this.state.AwayTotal} value={this.state.AwayTotal} />
             </Picker> 
             <View style={styles.Header}>

@@ -130,6 +130,13 @@ export default class Betting extends Component {
       </View>
     ); 
   }
+  renderSpread(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingNum}>{item.Allocation}</Text>
+      </View>
+    ); 
+  }
   renderAllocation(item, index) {
     return (
       <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>

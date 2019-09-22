@@ -151,6 +151,13 @@ export default class Picks extends Component {
       </View>
     ); 
   }
+  renderSpread(item, index) {
+    return (
+      <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
+          <Text style={styles.BettingEntry}>{item.Bet}</Text>
+      </View>
+    ); 
+  }
   renderAllocation(item, index) {
     return (
       <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>

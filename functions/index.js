@@ -21,11 +21,7 @@ const nfl_getGameIDs_helper = async (url) => {
         for (var i in games) {
             if (games.hasOwnProperty(i)) {
                 var status = games[i].status;
-<<<<<<< HEAD
-                if( status === 'inprogress'){
-=======
-                if(status === 'inprogress'){
->>>>>>> 0afcdcb85e8299507e01bc93adb9a37e2f71c69d
+                if( status === 'inprogress' || status === 'created' || status === 'complete'){
                     gameIDs.push({
                         Id: games[i].id,
                         AwayAlias: games[i].away,
@@ -80,13 +76,6 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     //  favorite should get positive number 
                     //  fix: home is always favored below
 
-                    var spread_current_home = consensus_lines[2].spread;
-                    var spread_current_away = parseFloat(consensus_lines[2].spread) * -1.0;
-                     /* eslint-disable no-redeclare */
-                    if((spread_current_away % 1) === 0.0 ) {
-                        var spread_current_away = parseInt(spread_current_away);
-                    }
-                     /* eslint-disable no-redeclare */
                     var total_current_home = consensus_lines[4].total;
                     var total_current_away = consensus_lines[4].total;
 
@@ -110,6 +99,58 @@ const nfl_updateOdds = async (url, year, type, week) => {
     }
 }
 
+const nfl_updatePBP = async (url, curr_id, year, type, week) => {
+    try {
+        let res = await request(url, {json: true});
+        
+        const quarters = res.quarters;
+        for (var indx_qtr in quarters) {
+            if (quarters.hasOwnProperty(indx_qtr)) {
+                const pbp = quarters[indx_qtr].pbp;
+                const number = quarters[indx_qtr].number;
+                for (var indx_p in pbp) {
+                    if (pbp.hasOwnProperty(indx_p)) {
+                        const driveType = pbp[indx_p].event;
+                        if (driveType === 'event') {
+                            const ev_id = pbp[indx_p].id
+                            admin.database()
+                            .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${ev_id}`)
+                            .set({
+                                Type: 'event',
+                                Summary: pbp[indx_p].summary,
+                                EventType: pbp[indx_p].event_type
+                            })
+                        }
+                        else if (driveType === 'drive') {
+                            const driveEvents = pbp[indx_p].actions;
+                            const ev_id = pbp[indx_p].id;
+                            for (var indx_drEv in driveEvents) {
+                                if (driveEvents.hasOwnProperty(indx_drEv)) {
+                                    const dr_id = driveEvents[indx_drEv].id;
+                                    admin.database()
+                                    .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${ev_id}/${dr_id}`)
+                                    .set ({
+                                        Summary: driveEvents[indx_drEv].summary,
+                                        PlayType: driveEvents[indx_drEv].play_type,
+                                        YardLine: driveEvents[indx_drEv].yard_line,
+                                        Side: driveEvents[indx_drEv].side,
+                                        Down: driveEvents[indx_drEv].down,
+                                        YFD: driveEvents[indx_drEv].yfd,
+                                    })
+                                }
+                            }    
+                        }
+                    }
+                }
+            }  
+        }
+    }
+    catch(error) {
+        console.error(error)
+    }
+}
+
+
 
 const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
     try {
@@ -118,8 +159,7 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
         const quarter = res.quarter;
         const home_scoring = res.home_team.scoring;
         const away_scoring = res.away_team.scoring;
-
-
+        console.log(clock);
         const home_total = res.home_team.points;
         const away_total = res.away_team.points;
         
@@ -178,30 +218,6 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
         }
         /* eslint-disable no-redeclare */
 
-        const drives = res.scoring_drives;
-        for (var indx_dr in drives) {
-            if (drives.hasOwnProperty(indx_dr)) {
-                const events = drives[indx_dr].scores;
-                const sequence = drives[indx_dr].sequence;
-                admin.database()
-                .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${sequence}/`).once("value", snapshot => {
-                    if (!snapshot.exists()){
-                        for ( var indx_ev in events) {
-                            if (events.hasOwnProperty(indx_ev)) {
-                                admin.database()
-                                .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${sequence}`)
-                                .push({
-                                    Quarter: events[indx_ev].quarter,
-                                    Time: events[indx_ev].clock,
-                                    Team: events[indx_ev].team,
-                                    Summary: events[indx_ev].summary
-                                })
-                            }
-                        }
-                     }
-                 });
-            }  
-        }
         admin.database()
         .ref(`NFL/${year}/${type}/${week}/${curr_id}/Live`)
         .set({
@@ -365,8 +381,10 @@ const nfl_LiveGameData = async () => {
                 console.log('boxscore api hit');
                 console.log(away + ' vs  ' + home);
                 const box_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/boxscore.json?api_key=${SP_API_KEY}`;
+                const pbp_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/pbp.json?api_key=${SP_API_KEY}`;
                 
                 let liveData = await nfl_updateBoxScore(box_url, curr_id, year, type, week);
+                let updatePBP = await nfl_updatePBP(pbp_url, curr_id, year, type, week);
             }
         }
     }
@@ -420,7 +438,7 @@ exports.updateScore_Saturday = functions.pubsub.schedule('*/10 11 * * 6').timeZo
     return null;
 });
 
-exports.updateScore_Sunday = functions.pubsub.schedule('*/10 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Sunday = functions.pubsub.schedule('*/3 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
