@@ -156,10 +156,6 @@ export default class Rooms extends Component {
         roomName: name, 
         homeTeam: room.HomeAlias,
         awayTeam: room.AwayAlias,
-        Clock: room.Clock,
-        QuarterText: room.QuarterText,
-        HomeTotal: room.HomeTotal,
-        AwayTotal: room.AwayTotal,
 
       });
     }

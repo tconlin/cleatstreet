@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Keyboard,
   Alert,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import NavStyles from '../../constants/AppStyles'
@@ -38,7 +39,8 @@ export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     const { currentUser } = firebase.auth()
-    this.analystRef = firebase.database().ref(`/Analysts/Bios/${currentUser.uid}`);
+    this.analystBioRef = firebase.database().ref(`/Analysts/Bios/${currentUser.uid}`);
+    this.analystRef = firebase.database().ref(`/Analysts/Verified`)
     this.state = {
       uploading: false,
       progress: 0,
@@ -55,36 +57,31 @@ export default class Settings extends React.Component {
     }
   }
 
-  onSelect= data => {
-    console.log('here')
+  /*onSelect= data => {
     this.setState(data);
-  }
-
-  /*componentDidUpdate() {
-    const { currentUser } = firebase.auth();
-    this.setState( {
-      avatar: currentUser.photoURL,
-      email: currentUser.email,
-      displayName: currentUser.displayName
-    })
   }*/
+
 
   componentDidMount() {
     const { currentUser } = firebase.auth();
     var currentUserEmail = firebase.auth().currentUser.email;
-    var domain = currentUserEmail.replace(/.*@/, "");
-
-    if (domain === 'cleat-street.com') {
-      this.setState({ currentUserAnalyst: true });
-      this.analystRef.on('value', (dataSnapshot) => {
-        console.log('here')
-        if(dataSnapshot.exists()) {
-          dataSnapshot.forEach((child) => {
-            this.setState({bio: child.val()})
+    this.analystRef.on('value', (dataSnapshot) => {
+      dataSnapshot.forEach((child) => {
+        var email = child.val();
+        
+        if (email === currentUserEmail) {
+          this.setState({currentUserAnalyst: true });
+          this.analystBioRef.on('value', (dataSnapshot) => {
+            if(dataSnapshot.exists()) {
+              dataSnapshot.forEach((child) => {
+                this.setState({bio: child.val()})
+              });
+            }
           });
         }
       });
-    }
+    });
+    
     this.setState( {
       avatar: currentUser.photoURL,
       email: currentUser.email,
@@ -92,7 +89,27 @@ export default class Settings extends React.Component {
     })
   }
 
-
+  checkVerified(analystRef, currentUserEmail) {
+    analystRef.on('value', (dataSnapshot) => {
+      this.setState({ loading: true });
+      dataSnapshot.forEach((child) => {
+        var email = child.val();
+        
+        console.log(email)
+        if (email === currentUserEmail) {
+          this.state.currentUserAnalyst = true
+          this.analystBioRef.on('value', (dataSnapshot) => {
+            if(dataSnapshot.exists()) {
+              dataSnapshot.forEach((child) => {
+                this.setState({bio: child.val()})
+              });
+            }
+          });
+        }
+      });
+    });
+    this.setState({ loading: false });
+  }
 
   onShare = async () => {
     try {
@@ -142,7 +159,6 @@ export default class Settings extends React.Component {
 
 	render() {
     const { uploading, currentUser } = this.state;
-
 
     if(this.state.currentUserAnalyst) {
       if(this.state.bio === null || this.state.bio === '') {
@@ -197,73 +213,74 @@ export default class Settings extends React.Component {
           </View>
         </TouchableOpacity>;
     }
-
-		return (
-      <ScrollView>
-        <View style={styles.pageContainer}>
-          <View style={styles.heroContainer}>
-            {profilePic}
-            <View style={{ flex: 1 }}>
-              <Text style={styles.heroTitle}>{this.state.displayName}</Text>
-              <Text style={styles.heroSubtitle}>{this.state.email}</Text>
+    
+      return (
+        <ScrollView>
+          <View style={styles.pageContainer}>
+            <View style={styles.heroContainer}>
+              {profilePic}
+              <View style={{ flex: 1 }}>
+                <Text style={styles.heroTitle}>{this.state.displayName}</Text>
+                <Text style={styles.heroSubtitle}>{this.state.email}</Text>
+              </View>
             </View>
-          </View>
-          {AnalystInput}
-          <View style={styles.BottomContainer}>
-          <TouchableOpacity
-            style={styles.bottomItem}
-            onPress={this.onShare}
-          >
-            <View style={styles.bottomItemContainer}>
-              
-              <Text style={styles.bottomText}>Share Cleat Street With Friends</Text>
-              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bottomItem}
-            onPress={() => this.props.navigation.navigate('Account')}
-          >
-            <View style={styles.bottomItemContainer}>
-              
-              <Text style={styles.bottomText}>Change Account Info</Text>
-              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
-            </View >
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bottomItem}
-            onPress={() => this.props.navigation.navigate('Terms')}
-          >
-            <View style={styles.bottomItemContainer}>
-              
-              <Text style={styles.bottomText}>Terms and Conditions</Text>
-              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
-            </View >
-          </TouchableOpacity>
-          <TouchableOpacity
+            {AnalystInput}
+            <View style={styles.BottomContainer}>
+            <TouchableOpacity
               style={styles.bottomItem}
-                onPress={() => this.props.navigation.navigate('PP')}
-                >
-            <View style={styles.bottomItemContainer}>
-              <Text style={styles.bottomText}>Privacy Policy</Text>
-              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bottomItem}
-            onPress={() => this.props.navigation.navigate('Contact')}
+              onPress={this.onShare}
             >
-            <View style={styles.bottomItemContainer}>
-              <Text style={styles.bottomText}>Contact Us</Text>
-              <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              <View style={styles.bottomItemContainer}>
+                
+                <Text style={styles.bottomText}>Share Cleat Street With Friends</Text>
+                <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomItem}
+              onPress={() => this.props.navigation.navigate('Account')}
+            >
+              <View style={styles.bottomItemContainer}>
+                
+                <Text style={styles.bottomText}>Change Account Info</Text>
+                <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              </View >
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomItem}
+              onPress={() => this.props.navigation.navigate('Terms')}
+            >
+              <View style={styles.bottomItemContainer}>
+                
+                <Text style={styles.bottomText}>Terms and Conditions</Text>
+                <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              </View >
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.bottomItem}
+                  onPress={() => this.props.navigation.navigate('PP')}
+                  >
+              <View style={styles.bottomItemContainer}>
+                <Text style={styles.bottomText}>Privacy Policy</Text>
+                <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomItem}
+              onPress={() => this.props.navigation.navigate('Contact')}
+              >
+              <View style={styles.bottomItemContainer}>
+                <Text style={styles.bottomText}>Contact Us</Text>
+                <Image style={styles.arrow} source={require('../../images/icons/arrow.png')}/>
+              </View>
+            </TouchableOpacity>
             </View>
-          </TouchableOpacity>
           </View>
-        </View>
-        </ScrollView>
-       
-		)
-	}
+          </ScrollView>
+        
+      )
+    }
+	
 }
 
 

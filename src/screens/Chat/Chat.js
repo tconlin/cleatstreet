@@ -42,25 +42,64 @@ export default class Chat extends Component {
     this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
-    this.Clock = this.props.navigation.state.params.Clock;
-    this.QuarterText = this.props.navigation.state.params.QuarterText;
-    this.HomeTotal = this.props.navigation.state.params.HomeTotal;
-    this.AwayTotal = this.props.navigation.state.params.AwayTotal;
+    
     this.is_live = this.props.navigation.state.params.is_live;
     this.is_final = this.props.navigation.state.params.is_final;
-    console.log(this.is_Final);
     this.messagesRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Messages`)
+    this.roomsRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}`)
+
     this.state = {
       loading: true,
       user: '',
-      messages: []
+      messages: [],
+      HomeTotal: '',
+      AwayTotal: '',
+      GameQuarter: '',
+      GameClock: ''
     }
   }
 
   componentDidMount() {
     this.setState({ user: firebase.auth().currentUser });
     this.listenForMessages(this.messagesRef);
+    this.listenForScore(this.roomsRef);
   }
+
+  listenForScore(roomsRef) {
+    roomsRef.on('value', (dataSnapshot) => {
+      this.setState({ loading: true });
+      dataSnapshot.forEach((child) => {
+        
+        var live_check = child.key;
+        if (live_check === 'Live' ){
+          const quarter = child.val().Quarter
+          if (quarter == 1) {
+            var quarter_text = '1st Quarter'
+          }
+          else if (quarter == 2) {
+            var quarter_text = '2nd Quarter'
+          }
+          else if (quarter == 3) {
+            var quarter_text = '3rd Quarter'
+          }
+          else if (quarter == 4) {
+            var quarter_text = '4th Quarter'
+          }
+          this.setState({ 
+            HomeTotal: child.val().Total.HomeTotal,
+            AwayTotal: child.val().Total.AwayTotal,
+            GameQuarter: quarter_text,
+            GameClock: child.val().Clock,
+          })
+        }
+      });  
+      this.setState({ loading: false })
+    });
+    
+ 
+  }
+
+
 
   listenForMessages(messagesRef) {
     messagesRef.on('value', (dataSnapshot) => {
@@ -78,10 +117,7 @@ export default class Chat extends Component {
         }), ...messagesFB];
       });
       this.setState({ messages: messagesFB });
-      //this.setState(previousState => ({
-      //  messages: GiftedChat.
-      //  messages: GiftedChat.append(previousState.messages, messagesFB),
-      //}));
+
     });
   }
 
@@ -126,9 +162,9 @@ export default class Chat extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
           <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
       }
@@ -136,9 +172,9 @@ export default class Chat extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
-          <GameDate time={this.Clock} date={this.QuarterText}/>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
+          <GameDate time={this.state.GameClock} date={this.state.GameQuarter}/>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
       }

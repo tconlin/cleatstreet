@@ -6,10 +6,12 @@ import {
   StyleSheet,
   ScrollView
 } from 'react-native';
+import firebase from 'react-native-firebase';
 import NavStyles from '../../constants/AppStyles';
 import RowStyles from '../../utils/styles'
 import { GameDate, TeamIcon } from '../../utils/index';
 const TeamNames = require('../../utils/TeamName')
+const findDates = require('../../utils/Dates')
 
 
 export default class Boxscore extends Component {
@@ -22,14 +24,22 @@ export default class Boxscore extends Component {
 
   constructor(props) {
     super(props);
+    var nfl_week = findDates.findNFLWeek_2019()
+    this.type = nfl_week[0];
+    this.week = nfl_week[1];
+    this.year = nfl_week[2];
     this.PBP = this.props.navigation.state.params.PBP;
     this.roomKey = this.props.navigation.state.params.roomKey;
+    this.roomsRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}`)
+    this.PBPRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/PBP2`)
     this.GameTime = this.props.navigation.state.params.GameTime;
     this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
-    this.Clock = this.props.navigation.state.params.Clock;
-    this.QuarterText = this.props.navigation.state.params.QuarterText;
+    
+    //this.Clock = this.props.navigation.state.params.Clock;
+    //this.QuarterText = this.props.navigation.state.params.QuarterText;
+    
     this.is_live = this.props.navigation.state.params.is_live;
     this.is_final = this.props.navigation.state.params.is_final;
     this.AwayWins = this.props.navigation.state.params.AwayWins;
@@ -38,7 +48,8 @@ export default class Boxscore extends Component {
     this.HomeWins = this.props.navigation.state.params.HomeWins;
     this.HomeLosses = this.props.navigation.state.params.HomeLosses;
     this.HomeTies = this.props.navigation.state.params.HomeTies;
-    this.Quarter1Home = this.props.navigation.state.params.Quarter1Home;
+    
+    /*this.Quarter1Home = this.props.navigation.state.params.Quarter1Home;
     this.Quarter2Home = this.props.navigation.state.params.Quarter2Home;
     this.Quarter3Home = this.props.navigation.state.params.Quarter3Home;
     this.Quarter4Home = this.props.navigation.state.params.Quarter4Home;
@@ -47,20 +58,150 @@ export default class Boxscore extends Component {
     this.Quarter2Away = this.props.navigation.state.params.Quarter2Away;
     this.Quarter3Away = this.props.navigation.state.params.Quarter3Away;
     this.Quarter4Away = this.props.navigation.state.params.Quarter4Away;
-    this.AwayTotal = this.props.navigation.state.params.AwayTotal;
+    this.AwayTotal = this.props.navigation.state.params.AwayTotal;*/
+    
     this.HomeName = TeamNames.convertAlias(this.HomeTeam);
     this.AwayName = TeamNames.convertAlias(this.AwayTeam);
     this.state = {
       loading: true,
       user: '',
-      pbp: []
+      pbp: [],
+      Quarter1Home: '',
+      Quarter2Home: '',
+      Quarter3Home: '',
+      Quarter4Home: '',
+      Quarter1Away: '',
+      Quarter2Away: '',
+      Quarter3Away: '',
+      Quarter4Away: '',
+      AwayTotal: '',
+      HomeTotal: '',
+      GameQuarter: '',
+      GameClock: ''
     }
   }
 
 
   componentDidMount() {
     this.parsePBP(this.PBP);
+    this.getLiveData(this.roomsRef);
+    this.getPBP(this.PBPRef);
   }
+
+
+  getLiveData(roomsRef) {
+    
+    this.setState({ loading: true });
+    roomsRef.on('value', (dataSnapshot) => {
+      dataSnapshot.forEach((child) => {
+        var key = child.key;
+        if (key === 'Live' ){
+          const quarter = child.val().Quarter
+          
+          if (quarter == 1) {
+            var quarter_text = '1st Quarter'
+          }
+          else if (quarter == 2) {
+            var quarter_text = '2nd Quarter'
+          }
+          else if (quarter == 3) {
+            var quarter_text = '3rd Quarter'
+          }
+          else if (quarter == 4) {
+            var quarter_text = '4th Quarter'
+          }
+          this.setState({
+            Quarter1Away: child.val().Quarter1.Away,
+            Quarter2Away: child.val().Quarter2.Away,
+            Quarter3Away: child.val().Quarter3.Away,
+            Quarter4Away: child.val().Quarter4.Away,
+            Quarter1Home: child.val().Quarter1.Home,
+            Quarter2Home: child.val().Quarter2.Home,
+            Quarter3Home: child.val().Quarter3.Home,
+            Quarter4Home: child.val().Quarter4.Home,
+            HomeTotal: child.val().Total.HomeTotal,
+            AwayTotal: child.val().Total.AwayTotal,
+            GameQuarter: quarter_text,
+            GameClock: child.val().Clock,
+          })
+        }
+      });
+      this.setState({ loading: false }); 
+    });
+  }
+
+
+  getPBP(PBPRef) {
+    var pbp_arr = [];
+    //this.setState({ loading: true });
+    PBPRef.on('value', (dataSnapshot) => {
+      dataSnapshot.forEach((child) => {
+        var key = child.key;
+        
+        for (var obj in child.val()) {
+          driveRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/PBP2/${key}/${obj}`)
+          driveRef.on('value', (dataSnapshot) => {
+            dataSnapshot.forEach((child) => {  
+              const summary = child.val().Summary
+              const playType = child.val().PlayType;
+              const yardLine = child.val().YardLine;
+              const side = child.val().Side;
+              const down = child.val().Down;
+              const yfd = child.val().YFD;
+              const time = child.val().Clock
+              const driveStart = child.val().DriveStart
+              const driveTeam = child.val().DriveTeam
+              if (typeof driveStart !== 'undefined' &&
+                  typeof driveTeam !== 'undefined' && 
+                  typeof playType !== 'undefined' && 
+                  typeof summary !== 'undefined' && 
+                  typeof yardLine !== 'undefined' && 
+                  typeof side !== 'undefined' &&
+                  typeof down !== 'undefined' &&
+                  typeof yfd !== 'undefined' &&
+                  typeof time !== 'undefined'){
+                    pbp_arr.push({
+                      Quarter: key,
+                      DriveStart: driveStart,
+                      DriveTeam: driveTeam,
+                      YFD: yfd,
+                      Down: down,
+                      side: side,
+                      YardLine: yardLine,
+                      PlayType: playType,
+                      Summary: summary,
+                      Team: driveTeam,
+                      Start: driveStart,
+                      Time: time,
+                    })
+              }
+              else if(  typeof driveStart !== 'undefined' &&
+                        typeof driveTeam !== 'undefined' && 
+                        typeof summary !== 'undefined' && 
+                        typeof time !== 'undefined' ) {
+                          pbp_arr.push({
+                            Quarter: obj,
+                            DriveStart: driveStart,
+                            DriveTeam: driveTeam,
+                            Summary: summary,
+                            Time: time,
+                          })
+              }
+            });
+          });
+
+        }
+        
+      });
+      
+       
+    
+    });
+    console.log(pbp_arr)
+    this.setState({ pbp: pbp_arr });
+  }
+
+
 
   parsePBP(PBP) {
     var pbp_arr = [];
@@ -82,8 +223,8 @@ export default class Boxscore extends Component {
   }
 
   renderPBP(item) {
+    console.log(item)
     const quarter = item.Quarter;
-
     if (quarter == 1) {
       var quarter_text = '1st Quarter'
     }
@@ -97,9 +238,10 @@ export default class Boxscore extends Component {
       var quarter_text = '4th Quarter'
     }
     //{ backgroundColor: index % 2 === 0 ? '#e6e6e6' : '#fff'
+    //<Text style={styles.PBPText1}>{item.Time} - {item.Team}</Text>
     return (
       <View style={{backgroundColor: '#fff', textAlign: "left" }}>
-        <Text style={styles.PBPText1}>{quarter_text} -- {item.Time} {item.Team}</Text>
+        
         <Text style={styles.PBPText2}>{item.Summary}</Text>
       </View>
     ); 
@@ -111,9 +253,9 @@ export default class Boxscore extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
-          <Text style={{fontSize: 11, fontWeight:'800'}}>FINAL</Text>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
+          <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
       }
@@ -121,12 +263,12 @@ export default class Boxscore extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
-          <GameDate time={this.Clock} date={this.QuarterText}/>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
+          <GameDate time={this.state.GameClock} date={this.state.GameQuarter}/>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
-      } 
+      }
     }
     else {
       header = 
@@ -137,6 +279,8 @@ export default class Boxscore extends Component {
       </View>;
         
     }
+    /*{this.is_live ?  : <Text style={styles.PBPText1}>Game not active.</Text>}*/
+    console.log(this.state.pbp)
     return (
       <View style={styles.headerContainer}>
         <View style={styles.chatHeader}>
@@ -164,10 +308,10 @@ export default class Boxscore extends Component {
                     <Text style={styles.BoxScoreHeader}>1</Text>
                   </View>
                   <View style={styles.BoxScoreEntry}>
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter1Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter1Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                 </View>
                 <View>
@@ -175,10 +319,10 @@ export default class Boxscore extends Component {
                     <Text style={styles.BoxScoreHeader}>2</Text>
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter2Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter2Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                 
                 </View>
@@ -187,10 +331,10 @@ export default class Boxscore extends Component {
                     <Text style={styles.BoxScoreHeader}>3</Text>
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter3Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter3Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                     
                 </View>
@@ -199,10 +343,10 @@ export default class Boxscore extends Component {
                     <Text style={styles.BoxScoreHeader}>4</Text>
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter4Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                   <View style={styles.BoxScoreEntry}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.Quarter4Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                     
                 </View>
@@ -211,10 +355,10 @@ export default class Boxscore extends Component {
                     <Text style={styles.BoxScoreHeader}>Final</Text>
                   </View>
                   <View style={styles.BoxScoreEntry2}  >
-                  {this.is_live ? <Text style={styles.BoxScoreNum}>{this.HomeTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                  {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.HomeTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                   <View style={styles.BoxScoreEntry2}  >
-                  {this.is_live ? <Text style={styles.BoxScoreNum}>{this.AwayTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                  {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.AwayTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                   </View>
                     
                 </View>
@@ -224,15 +368,14 @@ export default class Boxscore extends Component {
             <View style={styles.PBPHeader}>
               <Text style={styles.PBPHeaderText}>Play-by-Play</Text>
             </View>
-            {this.is_live ?
+            
             <FlatList
               data={this.state.pbp}
-              keyExtractor={(item, index) => index.toString()}
               renderItem={({item}) => (this.renderPBP(item))}
             />
-            :
-            <Text style={styles.PBPText1}>Game not active.</Text>
-            }
+            
+            
+            
           </View>
           </View>
         </ScrollView>

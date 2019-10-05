@@ -35,38 +35,56 @@ export default class Betting extends Component {
     this.week = nfl_week[1];
     this.year = nfl_week[2];
     this.roomKey = this.props.navigation.state.params.roomKey;
-    this.picksRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Picks`)
-    
-    this.GameTime = this.props.navigation.state.params.GameTime;
-    this.GameDate = this.props.navigation.state.params.GameDate;
+    this.picksRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/Picks`);
+    this.roomsRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}`);
+    this.is_live = this.props.navigation.state.params.is_live;
+    this.is_final = this.props.navigation.state.params.is_final;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
-    this.Clock = this.props.navigation.state.params.Clock;
+    this.HomeName = TeamNames.convertAlias(this.HomeTeam);
+    this.AwayName = TeamNames.convertAlias(this.AwayTeam);
+    this.GameTime = this.props.navigation.state.params.GameTime;
+    this.GameDate = this.props.navigation.state.params.GameDate;
+    
+    
+    /*this.Clock = this.props.navigation.state.params.Clock;
     this.QuarterText = this.props.navigation.state.params.QuarterText;
     this.HomeTotal = this.props.navigation.state.params.HomeTotal;
     this.AwayTotal = this.props.navigation.state.params.AwayTotal;
-    this.is_live = this.props.navigation.state.params.is_live;
-    this.is_final = this.props.navigation.state.params.is_final;
+    
     this.MoneyLineAway = this.props.navigation.state.params.MoneyLineAway;
     this.MoneyLineHome = this.props.navigation.state.params.MoneyLineHome;
     this.SpreadAway = this.props.navigation.state.params.SpreadAway;
     this.SpreadHome = this.props.navigation.state.params.SpreadHome;
     this.TotalAway = this.props.navigation.state.params.TotalAway;
-    this.TotalHome = this.props.navigation.state.params.TotalHome;
-    this.HomeName = TeamNames.convertAlias(this.HomeTeam);
-    this.AwayName = TeamNames.convertAlias(this.AwayTeam);
+    this.TotalHome = this.props.navigation.state.params.TotalHome;*/
+    
+    
+    
+    
     this.state = {
       loading: true,
       user: '',
-      picks: []
+      picks: [],
+      MoneyLineAway: '',
+      MoneyLineHome: '',
+      SpreadAway: '',
+      SpreadHome: '',
+      TotalAway: '',
+      TotalHome: '',
+      Clock: '',
+      Quarter: '',
+      HomeTotal: '',
+      AwayTotal: '',
+
     }
   }
 
   componentDidMount() {
     this.setState({ user: firebase.auth().currentUser });
     this.getPicks(this.picksRef);
+    this.getLiveData(this.roomsRef);
   }
-
 
   getPicks(picksRef) {
     this.setState({ loading: true });
@@ -87,6 +105,53 @@ export default class Betting extends Component {
     });
   }
 
+
+
+  getLiveData(roomsRef) {
+    this.setState({ loading: true });
+    roomsRef.on('value', (dataSnapshot) => {
+      dataSnapshot.forEach((child) => {
+        var key = child.key;
+        if (key === 'Live' ){
+          
+          const quarter = child.val().Quarter
+          console.log(quarter)
+          if (quarter == 1) {
+            var quarter_text = '1st Quarter'
+          }
+          else if (quarter == 2) {
+            var quarter_text = '2nd Quarter'
+          }
+          else if (quarter == 3) {
+            var quarter_text = '3rd Quarter'
+          }
+          else if (quarter == 4) {
+            var quarter_text = '4th Quarter'
+          }
+          this.setState({ 
+            HomeTotal: child.val().Total.HomeTotal,
+            AwayTotal: child.val().Total.AwayTotal,
+            GameQuarter: quarter_text,
+            GameClock: child.val().Clock,
+          })
+        }
+        else if (key == 'Odds') {
+          this.setState({ 
+            MoneyLineAway: child.val().MoneyLineAway,
+            MoneyLineHome: child.val().MoneyLineHome,
+            SpreadAway: child.val().SpreadAway,
+            SpreadHome: child.val().SpreadHome,
+            TotalAway: child.val().TotalAway,
+            TotalHome: child.val().TotalHome,
+          })
+        }
+        
+      });
+      this.setState({ loading: false }); 
+    
+    });
+  }
+
   openAnalystBio(Analyst) {
     this.props.navigation.navigate('AnalystBio', 
     {
@@ -104,7 +169,6 @@ export default class Betting extends Component {
     else {
       var avatar_null = false;
     }
-    console.log(avatar_null)
     return ( 
       <View style={[{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#fff' }, styles.rowContainer]}>
         <TouchableHighlight
@@ -152,9 +216,9 @@ export default class Betting extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
           <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
       }
@@ -162,9 +226,9 @@ export default class Betting extends Component {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.AwayTotal}</Text>
-          <GameDate time={this.Clock} date={this.QuarterText}/>
-          <Text>{this.HomeTotal}</Text>
+          <Text>{this.state.AwayTotal}</Text>
+          <GameDate time={this.state.GameClock} date={this.state.GameQuarter}/>
+          <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
       }
@@ -175,9 +239,77 @@ export default class Betting extends Component {
         <TeamIcon name={this.AwayTeam}/>
         <GameDate time={this.GameTime} date={this.GameDate}/>
         <TeamIcon name={this.HomeTeam} />
-      </View>;
-        
+      </View>;    
     }
+    if (this.state.picks.length > 0) {
+      picks = 
+      <View style={styles.container2}>
+        <View style={styles.Header}>
+            <Text style={styles.HeaderText}>Our Picks</Text>
+        </View>
+        <View style={styles.RowStyle}>
+          <View style={styles.ColumnItem1}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>Analyst</Text>
+            </View>
+            <FlatList
+              data={this.state.picks}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (this.renderAnalyst(item, index))}
+            />
+          </View>
+          <View style={styles.ColumnItem3}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>Bet</Text>
+            </View>
+            <FlatList
+              data={this.state.picks}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (this.renderBet(item, index))}
+            />
+          </View>
+          <View style={styles.ColumnItem3}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>%</Text>
+            </View>
+            <FlatList
+              data={this.state.picks}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (this.renderAllocation(item, index))}
+            />
+          </View>
+        </View>
+      </View>;
+    }
+    else {
+      picks =
+      <View style={styles.container2}>
+        <View style={styles.Header}>
+            <Text style={styles.HeaderText}>Our Picks</Text>
+        </View>
+        <View style={styles.RowStyle}>
+          <View style={styles.ColumnItem1}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>Analyst</Text>
+            </View>
+          </View>
+          <View style={styles.ColumnItem3}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>Bet</Text>
+            </View>
+          </View>
+          <View style={styles.ColumnItem3}>
+            <View style={styles.rowContainer2}>
+              <Text style={styles.BettingHeader}>%</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.EmptyTextBox}>
+          <Text style={styles.EmptyTextStyle}>No Picks Yet</Text>
+        </View>
+      </View>;
+    }
+
     return (
       <View style={styles.headerContainer}>
         <View style={styles.chatHeader}>
@@ -207,10 +339,10 @@ export default class Betting extends Component {
                     <Text style={styles.BettingHeader}>Spread</Text>
                   </View>
                   <View style={styles.BettingEntry}>
-                    <Text style={styles.BettingNum}>{this.SpreadHome}</Text>
+                    <Text style={styles.BettingNum}>{this.state.SpreadHome}</Text>
                   </View>
                   <View style={styles.BettingEntry}  >
-                    <Text style={styles.BettingNum}>{this.SpreadAway}</Text>
+                    <Text style={styles.BettingNum}>{this.state.SpreadAway}</Text>
                   </View>
                 </View>
                 <View>
@@ -218,10 +350,10 @@ export default class Betting extends Component {
                     <Text style={styles.BettingHeader}>Moneyline</Text>
                   </View>
                   <View style={styles.BettingEntry}  >
-                    <Text style={styles.BettingNum}>{this.MoneyLineHome}</Text>
+                    <Text style={styles.BettingNum}>{this.state.MoneyLineHome}</Text>
                   </View>
                   <View style={styles.BettingEntry}  >
-                    <Text style={styles.BettingNum}>{this.MoneyLineAway}</Text>
+                    <Text style={styles.BettingNum}>{this.state.MoneyLineAway}</Text>
                   </View>
                 
                 </View>
@@ -230,10 +362,10 @@ export default class Betting extends Component {
                     <Text style={styles.BettingHeader}>O/U</Text>
                   </View>
                   <View style={styles.BettingEntry}  >
-                    <Text style={styles.BettingNum}>{this.TotalHome}</Text>
+                    <Text style={styles.BettingNum}>{this.state.TotalHome}</Text>
                   </View>
                   <View style={styles.BettingEntry}  >
-                    <Text style={styles.BettingNum}>{this.TotalAway}</Text>
+                    <Text style={styles.BettingNum}>{this.state.TotalAway}</Text>
                   </View>
                     
                 </View>
@@ -241,46 +373,9 @@ export default class Betting extends Component {
         
           
           </View>
-          <View style={styles.container2}>
-            <View style={styles.Header}>
-                <Text style={styles.HeaderText}>Our Picks</Text>
-              </View>
-              <View style={styles.RowStyle}>
-            <View style={styles.ColumnItem1}>
-              <View style={styles.rowContainer2}>
-                <Text style={styles.BettingHeader}>Analyst</Text>
-              </View>
-              
-              <FlatList
-                data={this.state.picks}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item, index}) => (this.renderAnalyst(item, index))}
-              />
-            </View>
-              <View style={styles.ColumnItem3}>
-                <View style={styles.rowContainer2}>
-                  <Text style={styles.BettingHeader}>Bet</Text>
-                </View>
-                <FlatList
-                  data={this.state.picks}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item, index}) => (this.renderBet(item, index))}
-                />
-              </View>
-              <View style={styles.ColumnItem3}>
-                <View style={styles.rowContainer2}>
-                  <Text style={styles.BettingHeader}>%</Text>
-                </View>
-                <FlatList
-                  data={this.state.picks}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item, index}) => (this.renderAllocation(item, index))}
-                />
-              </View>
-            </View>
-               
-            
-          </View>
+          
+            {picks}
+          
         </ScrollView>
       </View>
     );
@@ -289,27 +384,33 @@ export default class Betting extends Component {
 
 
 const styles = StyleSheet.create({
+  EmptyTextBox: {
+    flex: 1,
+    paddingTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  EmptyTextStyle: {
+    fontWeight: '800',
+    fontSize: 13,
+    color: 'darkgrey'
+  },
   RowStyle: {
     flexDirection: 'row',
     justifyContent: 'space-around',   
   },
   ColumnItem1: {
-    
     width: '40%',
   },
-  
   ColumnItem3: {
-    
     width: '30%',
   },
   rowContainer2: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 10
-    
   },
   rowContainer: {
-
     flex: 1,
     flexDirection: 'row',
     height: 50,

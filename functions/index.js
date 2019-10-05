@@ -28,7 +28,7 @@ const nfl_getGameIDs_helper = async (url) => {
                         HomeAlias: games[i].home,
                         Scheduled: games[i].scheduled,
                         Active: true,
-                        Status: 'active'
+                        Status: games[i].status
                     })
                 }
                 else {
@@ -114,64 +114,74 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                         const driveType = pbp[indx_p].type;
 
                         if (driveType === 'event') {
-                            const ev_id = pbp[indx_p].id
+                            /*const ev_id = pbp[indx_p].id
                             admin.database()
-                            .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}`)
+                            .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${ev_id}`)
                             .set({
                                 Type: 'event',
                                 Summary: pbp[indx_p].summary,
                                 EventType: pbp[indx_p].event_type
-                            })
+                            })*/
                         }
                         else if (driveType === 'drive') {
 
                             const driveEvents = pbp[indx_p].actions;
-                            const ev_id = pbp[indx_p].id;
-
+                            const drive_start = pbp[indx_p].clock;
+                            const drive_team = pbp[indx_p].team;
+                            const drive_id = drive_start + '-' + drive_team
                             for (var indx_drEv in driveEvents) {
-                                console.log('drive event', indx_drEv)
                                 if (driveEvents.hasOwnProperty(indx_drEv)) {
-                                    const dr_id = driveEvents[indx_drEv].id;
                                     const summary = driveEvents[indx_drEv].summary;
                                     const playType = driveEvents[indx_drEv].play_type;
                                     const yardLine = driveEvents[indx_drEv].yard_line;
                                     const side = driveEvents[indx_drEv].side;
                                     const down = driveEvents[indx_drEv].down;
                                     const yfd = driveEvents[indx_drEv].yfd;
+                                    const time = driveEvents[indx_drEv].clock
                                     
                                     if (typeof playType !== 'undefined' && 
                                         typeof summary !== 'undefined' && 
                                         typeof yardLine !== 'undefined' && 
                                         typeof side !== 'undefined' &&
                                         typeof down !== 'undefined' &&
-                                        typeof yfd !== 'undefined'){
+                                        typeof yfd !== 'undefined' &&
+                                        typeof time !== 'undefined'){
                                         admin.database()
-                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}/${dr_id}`)
-                                        .set ({
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${drive_id}`)
+                                        .push({
+                                            DriveTeam: drive_team,
+                                            DriveStart: drive_start,
                                             Summary: summary,
                                             PlayType: playType,
                                             YardLine: yardLine,
                                             Side: side,
                                             Down: down,
-                                            YFD: yfd
+                                            YFD: yfd,
+                                            Time: time
                                         })
                                     }
-                                    else if(typeof playType !== 'undefined' &&
-                                            typeof summary !== 'undefined' && 
-                                            typeof yardLine !== 'undefined' && 
-                                            typeof side !== 'undefined') {
+                                    else if( typeof summary !== 'undefined' && typeof time !== 'undefined' ) {
                                         admin.database()
-                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP2/${number}/${ev_id}/${dr_id}`)
-                                        .set ({
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}${drive_id}`)
+                                        .push({
+                                            DriveTeam: drive_team,
+                                            DriveStart: drive_start,
+                                            Time: time,
                                             Summary: summary,
-                                            PlayType: playType,
-                                            YardLine: yardLine,
-                                            Side: side
+                                            
                                         })
                                     }
                                 }
                             }    
                         }
+
+
+
+
+
+
+
+
                     }
                 }
             }  
@@ -352,10 +362,12 @@ const nfl_loadWeeklyInfo = async (gameIDs, url, year, type, week) => {
             }
             if (week > 1) {
                 const gameTime = gameIDs[indx_ids].Scheduled;
+                const status = gameIDs[indx_ids].Status;
                 admin.database()
                 .ref(`NFL/${year}/${type}/${week}/${curr_id}/`)
                 .set({ 
                     Schedule: {
+                        Status: status,
                         GameTime: gameTime
                     },
                     HomeTeam: {
@@ -410,8 +422,7 @@ const nfl_LiveGameData = async () => {
                 var away = gameIDs[indx_ids].AwayAlias;
                 var home = gameIDs[indx_ids].HomeAlias;
                 var curr_id = gameIDs[indx_ids].Id;
-                console.log('boxscore api hit');
-                console.log(away + ' vs  ' + home);
+
                 const box_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/boxscore.json?api_key=${SP_API_KEY}`;
         
                 let liveData = await nfl_updateBoxScore(box_url, curr_id, year, type, week);
@@ -426,8 +437,7 @@ const nfl_LiveGameData = async () => {
                 var away = gameIDs[indx_ids].AwayAlias;
                 var home = gameIDs[indx_ids].HomeAlias;
                 var curr_id = gameIDs[indx_ids].Id;
-                console.log('pbp api hit');
-                console.log(away + ' vs  ' + home);
+                
                 const pbp_url = `https://api.sportradar.us/nfl-p1/${year}/${type}/${week}/${away}/${home}/pbp.json?api_key=${SP_API_KEY}`;
                 
                 let updatePBP = await nfl_updatePBP(pbp_url, curr_id, year, type, week);
@@ -464,38 +474,38 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('every 2 hours').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
 
-exports.updateScore_Thurs = functions.pubsub.schedule('*/10 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('*/5 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateThurs = functions.pubsub.schedule('*/10 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateThurs = functions.pubsub.schedule('*/5 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Saturday = functions.pubsub.schedule('*/10 11 * * 6').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Saturday = functions.pubsub.schedule('*/5 11 * * 6').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Sunday = functions.pubsub.schedule('*/3 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Sunday = functions.pubsub.schedule('*/5 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
 
-exports.updateScore_Monday = functions.pubsub.schedule('*/10 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Monday = functions.pubsub.schedule('*/5 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateMonday = functions.pubsub.schedule('*/10 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateMonday = functions.pubsub.schedule('*/5 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });

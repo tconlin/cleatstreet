@@ -45,6 +45,7 @@ export default class Picks extends Component {
     this.week = nfl_week[1];
     this.year = nfl_week[2];
     this.roomsRef = firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}`)
+    this.analystRef = firebase.database().ref(`/Analysts/Verified`)
     this.state = {
       loading: true,
       currentUserAnalyst: false,
@@ -55,14 +56,22 @@ export default class Picks extends Component {
   
   componentDidMount() {
     var currentUserEmail = firebase.auth().currentUser.email
-    var domain = currentUserEmail.replace(/.*@/, "");
-  
-    if (domain === 'cleat-street.com') {
-      this.setState({ currentUserAnalyst: true });
-    }
+    this.checkVerified(this.analystRef, currentUserEmail);
     this.getPicks(this.roomsRef);
   }
 
+  checkVerified(analystRef, currentUserEmail) {
+    analystRef.on('value', (dataSnapshot) => {
+      this.setState({ loading: true });
+      dataSnapshot.forEach((child) => {
+        var email = child.val();
+        if (email === currentUserEmail) {
+          this.state.currentUserAnalyst = true
+        }
+      });
+    });
+    this.setState({ loading: false });
+  }
 
   getPicks(roomsRef) {
     roomsRef.on('value', (dataSnapshot) => {
@@ -76,7 +85,7 @@ export default class Picks extends Component {
           var picks = child.val().Picks;
           for (var indx_pk in picks) {
             if (picks.hasOwnProperty(indx_pk)) {
-              console.log(picks[indx_pk].Analyst.Avatar)
+              //console.log(picks[indx_pk].Analyst.Avatar)
               picksFB.push({
                 HomeTeam: homeTeam,
                 AwayTeam: awayTeam,
@@ -97,7 +106,6 @@ export default class Picks extends Component {
   }
 
   openAnalystBio(Analyst) {
-    console.log(Analyst)
     this.props.navigation.navigate('AnalystBio', 
     {
       AnalystId: Analyst.Id,
@@ -115,8 +123,8 @@ export default class Picks extends Component {
     else {
       var avatar_null = false;
     }
-    console.log(avatar_null)
-    console.log(item.Analyst.Avatar)
+    //console.log(avatar_null)
+    //console.log(item.Analyst.Avatar)
     return ( 
       <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
         <TouchableHighlight
@@ -177,7 +185,7 @@ export default class Picks extends Component {
       </TouchableOpacity>; 
     }
     else {
-      AnalystButton = <View></View>;
+      AnalystButton = null;
     }
 
     if(this.state.loading) {
@@ -186,6 +194,46 @@ export default class Picks extends Component {
           <ActivityIndicator/>
         </View>
       );
+    }
+    else if (this.state.picks.length < 1) {
+      return (
+        <View style={styles.container}>
+
+          <View style={styles.RowStyle}>
+            <View style={styles.ColumnItem1}>
+              <View style={styles.rowContainer2}>
+                <Text style={styles.BettingHeader}>Analyst</Text>
+              </View>
+              
+              
+            </View>
+            <View style={styles.ColumnItem2}>
+              <View style={styles.rowContainer2}>
+                <Text style={styles.BettingHeader}>Game</Text>
+              </View>
+              
+            </View>
+              <View style={styles.ColumnItem3}>
+                <View style={styles.rowContainer2}>
+                  <Text style={styles.BettingHeader}>Bet</Text>
+                </View>
+                
+              </View>
+              <View style={styles.ColumnItem3}>
+                <View style={styles.rowContainer2}>
+                  <Text style={styles.BettingHeader}>%</Text>
+                </View>
+                
+              </View>
+            </View>
+            <View style={styles.EmptyTextBox}>
+              <Text style={styles.EmptyTextStyle}>No Picks Yet</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+            {AnalystButton}
+          </View>
+        </View>
+      )
     }
     else {
       return (
@@ -239,15 +287,22 @@ export default class Picks extends Component {
           </View>
           </ScrollView>
         </View>
-    
       );
-  
     }
   }
 }
 
-
 const styles = StyleSheet.create({
+  EmptyTextBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  EmptyTextStyle: {
+    fontWeight: '800',
+    fontSize: 13,
+    color: 'darkgrey'
+  },
   RowStyle: {
     flexDirection: 'row',
     justifyContent: 'space-around',   

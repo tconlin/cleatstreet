@@ -21,7 +21,6 @@ import navLogo from '../../images/icons/CS-logo-white.png';
 
 export default class GameRooms extends Component {
   static navigationOptions = ({ navigation }) => ({
-    //title: 'Channels',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,
@@ -100,20 +99,26 @@ export default class GameRooms extends Component {
               Final: true,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,
-              HomeTotal: child.val().Live.Total.HomeTotal,
-              AwayTotal: child.val().Live.Total.AwayTotal,
-              Clock: child.val().Live.Clock,
-              QuarterText: quarter_text,
+              
               key: child.key,
               GameTimeUTC: child.val().Schedule.GameTime,
-
-              PBP: child.val().PBP,
+              
+              
               AwayWins: child.val().AwayTeam.Wins,
               AwayLosses: child.val().AwayTeam.Losses,
               AwayTies: child.val().AwayTeam.Ties,
               HomeWins: child.val().HomeTeam.Wins,
               HomeLosses: child.val().HomeTeam.Losses,
               HomeTies: child.val().HomeTeam.Ties,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: child.val().Live.Clock,
+              QuarterText: quarter_text,
+              /*
+              PBP: child.val().PBP,
+              
+              
+              
               Quarter1Home: child.val().Live.Quarter1.Home,
               Quarter2Home: child.val().Live.Quarter2.Home,
               Quarter3Home: child.val().Live.Quarter3.Home,
@@ -122,13 +127,14 @@ export default class GameRooms extends Component {
               Quarter2Away: child.val().Live.Quarter2.Away,
               Quarter3Away: child.val().Live.Quarter3.Away,
               Quarter4Away: child.val().Live.Quarter4.Away,
+              
               MoneyLineAway: child.val().Odds.MoneyLineAway,
               MoneyLineHome: child.val().Odds.MoneyLineHome,
               SpreadAway: child.val().Odds.SpreadAway,
               SpreadHome: child.val().Odds.SpreadHome,
               TotalHome: child.val().Odds.TotalHome,
               TotalAway: child.val().Odds.TotalAway,
-              
+              */
   
   
             });
@@ -139,20 +145,26 @@ export default class GameRooms extends Component {
               Final: false,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,
-              HomeTotal: child.val().Live.Total.HomeTotal,
-              AwayTotal: child.val().Live.Total.AwayTotal,
-              Clock: child.val().Live.Clock,
-              QuarterText: quarter_text,
+              
               key: child.key,
               GameTimeUTC: child.val().Schedule.GameTime,
 
-              PBP: child.val().PBP,
+              
               AwayWins: child.val().AwayTeam.Wins,
               AwayLosses: child.val().AwayTeam.Losses,
               AwayTies: child.val().AwayTeam.Ties,
               HomeWins: child.val().HomeTeam.Wins,
               HomeLosses: child.val().HomeTeam.Losses,
               HomeTies: child.val().HomeTeam.Ties,
+              HomeTotal: child.val().Live.Total.HomeTotal,
+              AwayTotal: child.val().Live.Total.AwayTotal,
+              Clock: child.val().Live.Clock,
+              QuarterText: quarter_text,
+              /*
+              PBP: child.val().PBP,
+              
+              
+              
               Quarter1Home: child.val().Live.Quarter1.Home,
               Quarter2Home: child.val().Live.Quarter2.Home,
               Quarter3Home: child.val().Live.Quarter3.Home,
@@ -161,6 +173,7 @@ export default class GameRooms extends Component {
               Quarter2Away: child.val().Live.Quarter2.Away,
               Quarter3Away: child.val().Live.Quarter3.Away,
               Quarter4Away: child.val().Live.Quarter4.Away,
+              
               MoneyLineAway: child.val().Odds.MoneyLineAway,
               MoneyLineHome: child.val().Odds.MoneyLineHome,
               SpreadAway: child.val().Odds.SpreadAway,
@@ -168,7 +181,7 @@ export default class GameRooms extends Component {
               TotalHome: child.val().Odds.TotalHome,
               TotalAway: child.val().Odds.TotalAway,
               
-  
+              */
   
             });
           }
@@ -187,20 +200,22 @@ export default class GameRooms extends Component {
             AwayWins: child.val().AwayTeam.Wins,
             AwayLosses: child.val().AwayTeam.Losses,
             AwayTies: child.val().AwayTeam.Ties,
+            HomeWins: child.val().HomeTeam.Wins,
+            HomeLosses: child.val().HomeTeam.Losses,
+            HomeTies: child.val().HomeTeam.Ties,
             GameTimeUTC: child.val().Schedule.GameTime,
             GameDate: gameDate_local,
             GameTime: gameTime_local,
             key: child.key,
             
-            HomeWins: child.val().HomeTeam.Wins,
-            HomeLosses: child.val().HomeTeam.Losses,
-            HomeTies: child.val().HomeTeam.Ties,
-            MoneyLineAway: child.val().Odds.MoneyLineAway,
+            
+            
+            /*MoneyLineAway: child.val().Odds.MoneyLineAway,
             MoneyLineHome: child.val().Odds.MoneyLineHome,
             SpreadAway: child.val().Odds.SpreadAway,
             SpreadHome: child.val().Odds.SpreadHome,
             TotalHome: child.val().Odds.TotalHome,
-            TotalAway: child.val().Odds.TotalAway,   
+            TotalAway: child.val().Odds.TotalAway,  */
           });
         }
         else {
@@ -216,13 +231,15 @@ export default class GameRooms extends Component {
             AwayWins: child.val().AwayTeam.Wins,
             AwayLosses: child.val().AwayTeam.Losses,
             AwayTies: child.val().AwayTeam.Ties,
+            HomeWins: child.val().HomeTeam.Wins,
+            HomeLosses: child.val().HomeTeam.Losses,
+            HomeTies: child.val().HomeTeam.Ties,
+
             GameDate: gameDate_local,
             GameTime: gameTime_local,
             GameTimeUTC: child.val().Schedule.GameTime,
             key: child.key,
-            HomeWins: child.val().HomeTeam.Wins,
-            HomeLosses: child.val().HomeTeam.Losses,
-            HomeTies: child.val().HomeTeam.Ties,
+            
           });
         } 
       });
@@ -242,27 +259,34 @@ export default class GameRooms extends Component {
     if (room.Active) {
       this.props.navigation.navigate('HomeNav', 
       {
-        MoneyLineAway: room.MoneyLineAway,
+        /*MoneyLineAway: room.MoneyLineAway,
         MoneyLineHome: room.MoneyLineHome,
         SpreadAway: room.SpreadAway,
         SpreadHome: room.SpreadHome,
         TotalHome: room.TotalHome,
         TotalAway: room.TotalAway,
         PBP: room.PBP,
+        
+        */
+        
+        
+        
         is_live: room.Active,
         is_final: room.Final,
         roomKey: room.key, 
         roomName: name, 
         homeTeam: room.HomeAlias,
         awayTeam: room.AwayAlias,
-        Clock: room.Clock,
-        QuarterText: room.QuarterText,
         AwayWins: room.AwayWins,
         AwayLosses: room.AwayLosses,
         AwayTies: room.AwayTies,
         HomeWins: room.HomeWins,
         HomeLosses: room.HomeLosses,
         HomeTies: room.HomeTies,
+        
+        /*Clock: room.Clock,
+        QuarterText: room.QuarterText,
+        
         Quarter1Home: room.Quarter1Home,
         Quarter2Home: room.Quarter2Home,
         Quarter3Home: room.Quarter3Home,
@@ -272,7 +296,7 @@ export default class GameRooms extends Component {
         Quarter2Away: room.Quarter2Away,
         Quarter3Away: room.Quarter3Away,
         Quarter4Away: room.Quarter4Away,
-        AwayTotal: room.AwayTotal,
+        AwayTotal: room.AwayTotal,*/
         
       });
     }
@@ -293,12 +317,13 @@ export default class GameRooms extends Component {
         HomeWins: room.HomeWins,
         HomeLosses: room.HomeLosses,
         HomeTies: room.HomeTies,
-        MoneyLineAway: room.MoneyLineAway,
+        
+        /*MoneyLineAway: room.MoneyLineAway,
         MoneyLineHome: room.MoneyLineHome,
         SpreadAway: room.SpreadAway,
         SpreadHome: room.SpreadHome,
         TotalHome: room.TotalHome,
-        TotalAway: room.TotalAway,
+        TotalAway: room.TotalAway,*/
 
       });
     }
