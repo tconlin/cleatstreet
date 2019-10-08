@@ -5,7 +5,6 @@ import android.support.multidex.MultiDexApplication;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import io.github.mazurco066.RNSettingsPagePackage;
 import com.imagepicker.ImagePickerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -49,7 +48,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         new MainReactPackage(),
             new VectorIconsPackage(),
             new SplashScreenReactPackage(),
-            new RNSettingsPagePackage(),
             new ImagePickerPackage(),
             new RNGestureHandlerPackage(),
             new RNFirebasePackage(),

@@ -58,13 +58,12 @@ export default class Boxscore extends Component {
 
 
   render() {
-    if(this.AnalystAvatar  === null || this.AnalystAvatar === '') {
+    if( typeof this.AnalystAvatar === 'undefined') {
       var avatar_null = true;
     }
     else {
       var avatar_null = false;
     }
-    console.log(this.AnalystAvatar)
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -77,10 +76,10 @@ export default class Boxscore extends Component {
         <ScrollView>
         <View style={styles.pageContainer}>
           <View style={styles.heroContainer}>
-          {avatar_null ? <Image style={styles.avatarNullImage} /> : <Image style={styles.avatarImage} source={{uri: this.AnalystAvatar}} />}
+          {avatar_null ? <Text></Text> : <Image style={styles.avatarImage} source={{uri: this.AnalystAvatar}} />}
             <View style={{ flex: 1 }}>
               <Text style={styles.heroTitle}>{this.AnalystName}</Text>
-              
+
             </View>
           </View>
           <View style={styles.mainContainer}> 
@@ -118,6 +117,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     color: 'black',
     fontSize: 16,
+    paddingLeft: 20
   },
   heroSubtitle: {
     color: '#999',

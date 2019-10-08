@@ -54,12 +54,12 @@ export default class GameRooms extends Component {
   }
 
 
-  organizeGamesByDate(a, b) {
+  organizeGamesByDate(a, b) {   
     return new Date(a.GameTimeUTC) - new Date(b.GameTimeUTC);
   }
   organizeGamesByActivity(a, b) {
     let comparison = 0;
-    if (a.Active !== true &&  b.Active === true) {
+    if (a.Active !== true && b.Active === true) {
       comparison = 1;
     } else if (a.Active === true && b.Active !== true) {
       comparison = -1;
@@ -378,6 +378,7 @@ export default class GameRooms extends Component {
         </View>
       );
     }
+    
     else {
       return (
         <View style={styles.roomsContainer}>

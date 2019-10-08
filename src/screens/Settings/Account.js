@@ -54,10 +54,7 @@ export default class Settings extends React.Component {
     }
   }
 
-  onSelect= data => {
-    console.log('here')
-    this.setState(data);
-  }
+
 
 
   componentDidMount() {

@@ -136,8 +136,6 @@ export default class Rooms extends Component {
       roomsFB = roomsFB.sort(this.organizeGamesByActivity)
       this.setState({ rooms: roomsFB, loading: false })
     });
-    
- 
   }
 
   
@@ -176,6 +174,7 @@ export default class Rooms extends Component {
   }
 
   renderRow(item) {
+    console.log(item)
     return (
       <TouchableHighlight 
         style={styles.roomLi}
@@ -202,6 +201,7 @@ export default class Rooms extends Component {
   }
 
   render() {
+    console.log(this.state.rooms)
     return (
       <View style={styles.roomsContainer}>
         <View style={styles.roomsListContainer}>

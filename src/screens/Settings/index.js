@@ -57,9 +57,6 @@ export default class Settings extends React.Component {
     }
   }
 
-  /*onSelect= data => {
-    this.setState(data);
-  }*/
 
 
   componentDidMount() {
@@ -118,7 +115,8 @@ export default class Settings extends React.Component {
           'Check out Cleat Street in the iOS App Store! \
           Never pay for picks again.\
           Hear from expert analysts, follow the games,\
-          and chat with other bettors. Completely free.'
+          and chat with other bettors. Completely free.',
+        url: 'https://www.cleat-street.com'
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

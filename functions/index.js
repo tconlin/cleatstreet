@@ -128,7 +128,8 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                             const driveEvents = pbp[indx_p].actions;
                             const drive_start = pbp[indx_p].clock;
                             const drive_team = pbp[indx_p].team;
-                            const drive_id = drive_start + '-' + drive_team
+                            const drive_id = pbp[indx_p].id
+                            
                             for (var indx_drEv in driveEvents) {
                                 if (driveEvents.hasOwnProperty(indx_drEv)) {
                                     const summary = driveEvents[indx_drEv].summary;
@@ -137,7 +138,9 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                                     const side = driveEvents[indx_drEv].side;
                                     const down = driveEvents[indx_drEv].down;
                                     const yfd = driveEvents[indx_drEv].yfd;
-                                    const time = driveEvents[indx_drEv].clock
+                                    const time = driveEvents[indx_drEv].clock;
+                                    const id = driveEvents[indx_drEv].id;
+                                    
                                     
                                     if (typeof playType !== 'undefined' && 
                                         typeof summary !== 'undefined' && 
@@ -145,10 +148,15 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                                         typeof side !== 'undefined' &&
                                         typeof down !== 'undefined' &&
                                         typeof yfd !== 'undefined' &&
-                                        typeof time !== 'undefined'){
+                                        typeof time !== 'undefined' &&
+                                        typeof id !== 'undefined' &&
+                                        typeof number !== 'undefined'){
                                         admin.database()
-                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}/${drive_id}`)
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP`)
                                         .push({
+                                            Key: id,
+                                            Quarter: number,
+                                            DriveId: drive_id,
                                             DriveTeam: drive_team,
                                             DriveStart: drive_start,
                                             Summary: summary,
@@ -157,17 +165,57 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                                             Side: side,
                                             Down: down,
                                             YFD: yfd,
-                                            Time: time
+                                            Clock: time,
+                                            
+                                            
                                         })
                                     }
-                                    else if( typeof summary !== 'undefined' && typeof time !== 'undefined' ) {
+
+                                    else if (   typeof playType !== 'undefined' && 
+                                                typeof summary !== 'undefined' && 
+                                                typeof yardLine !== 'undefined' && 
+                                                typeof side !== 'undefined' &&
+                                                typeof down !== 'undefined' &&
+                                                typeof yfd !== 'undefined' &&
+                                                typeof time !== 'undefined' &&
+                                                typeof id !== 'undefined' &&
+                                                typeof number !== 'undefined'){
+                                                admin.database()
+                                                .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP`)
+                                                .push({
+                                                    Key: id,
+                                                    Quarter: number,
+                                                    DriveId: drive_id,
+                                                    DriveTeam: drive_team,
+                                                    DriveStart: drive_start,
+                                                    Summary: summary,
+                                                    PlayType: playType,
+                                                    YardLine: yardLine,
+                                                    Side: side,
+                                                    Down: down,
+                                                    YFD: yfd,
+                                                    Clock: time,
+                                                    Score: false
+                                                })
+                                    }
+                                    else if(    typeof drive_team !== 'undefined' &&
+                                                typeof drive_id !== 'undefined' &&
+                                                typeof drive_start !== 'undefined' &&
+                                                typeof id !== 'undefined' &&
+                                                typeof summary !== 'undefined' && 
+                                                typeof time !== 'undefined' &&
+                                                typeof number !== 'undefined' ) {
                                         admin.database()
-                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP/${number}${drive_id}`)
+                                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/PBP`)
                                         .push({
+                                            Key: id,
+                                            Quarter: number,
+                                            DriveId: drive_id,
                                             DriveTeam: drive_team,
                                             DriveStart: drive_start,
-                                            Time: time,
+                                            Clock: time,
                                             Summary: summary,
+                                            Score: false,
                                             
                                         })
                                     }
@@ -474,10 +522,10 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 2 hours').timeZone('America/New_York').onRun((context) => {
+/*exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
-});
+});*/
 
 exports.updateScore_Thurs = functions.pubsub.schedule('*/5 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
@@ -500,12 +548,12 @@ exports.updateScore_Sunday = functions.pubsub.schedule('*/5 00-02,11-23 * * 7').
 });
 
 
-exports.updateScore_Monday = functions.pubsub.schedule('*/5 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Monday = functions.pubsub.schedule('* 00-02,17-23 * * 1').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateMonday = functions.pubsub.schedule('*/5 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });

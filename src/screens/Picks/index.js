@@ -117,21 +117,21 @@ export default class Picks extends Component {
 
 
   renderAnalyst(item, index) {
-    if(item.Analyst.Avatar === null || item.Analyst.Avatar === '') {
+    if( typeof item.Analyst.Avatar === 'undefined') {
       var avatar_null = true;
     }
     else {
       var avatar_null = false;
     }
-    //console.log(avatar_null)
-    //console.log(item.Analyst.Avatar)
+    console.log(avatar_null)
+    console.log(item.Analyst.Avatar)
     return ( 
       <View style={[{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#fff' }, styles.rowContainer]}>
         <TouchableHighlight
           underlayColor="#fff"
           onPress={() => this.openAnalystBio(item.Analyst)}
         >
-          {avatar_null ? <Image style={styles.avatarNullImage} /> : <Image style={styles.avatarImage} source={{uri: item.Analyst.Avatar}} />}
+          {avatar_null ? <Text></Text> : <Image style={styles.avatarImage} source={{uri: item.Analyst.Avatar}} />}
         </TouchableHighlight>
         <TouchableHighlight
           underlayColor="#fff"

@@ -54,7 +54,6 @@
 		8AEB10120B9847F8905B7DA1 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97DD56AE46E45398AF70E2E /* libRNFirebase.a */; };
 		8BD4267C83F040D7AAD4894A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97A43FB45AB64945A2C49635 /* Ionicons.ttf */; };
 		A044ADDE52294EC0AD76B6F9 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C664750F9CE4D25B8C0C5BE /* AntDesign.ttf */; };
-		A3DBFC4FC3C6467F9C5C2A4E /* libRNSettingsPage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF1CB512ED8649A7A7AC450A /* libRNSettingsPage.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		ADDA258B0C3DE0261C60A364 /* libPods-CleatStreet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11B23455DE3C4D5673E7318E /* libPods-CleatStreet-tvOSTests.a */; };
 		B24CE6A88C7345B293FDC307 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E314DD7501446C4B8A0BB2F /* FontAwesome5_Solid.ttf */; };
@@ -108,13 +107,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = CleatStreet;
-		};
-		06B927AF231E07EB006C2FC5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 99E1E079512A49D8B7D60067 /* RNSettingsPage.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNSettingsPage;
 		};
 		06B927BA231E101F006C2FC5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -418,7 +410,6 @@
 		8F117FEC50E14FC989279308 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		93686D955ED141D9BCA493BF /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		97A43FB45AB64945A2C49635 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		99E1E079512A49D8B7D60067 /* RNSettingsPage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSettingsPage.xcodeproj; path = "../node_modules/react-native-settings-page/ios/RNSettingsPage.xcodeproj"; sourceTree = "<group>"; };
 		9F08FA0CA4F342E48FC6887D /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B2121FE3F0701D7C33F213D3 /* Pods-CleatStreet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleatStreet.release.xcconfig"; path = "Pods/Target Support Files/Pods-CleatStreet/Pods-CleatStreet.release.xcconfig"; sourceTree = "<group>"; };
@@ -430,7 +421,6 @@
 		E66D11DF67444BF7A5936D6A /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EF1CB512ED8649A7A7AC450A /* libRNSettingsPage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSettingsPage.a; sourceTree = "<group>"; };
 		F2C89EE2F4607D097253AE26 /* Pods-CleatStreet-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleatStreet-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CleatStreet-tvOSTests/Pods-CleatStreet-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		F5CAC6E3892A4BFFAA4BD597 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -465,7 +455,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				66F583A38C047519D1E18159 /* libPods-CleatStreet.a in Frameworks */,
 				8AEB10120B9847F8905B7DA1 /* libRNFirebase.a in Frameworks */,
-				A3DBFC4FC3C6467F9C5C2A4E /* libRNSettingsPage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,14 +546,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		06B927AC231E07EB006C2FC5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				06B927B0231E07EB006C2FC5 /* libRNSettingsPage.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		06B927B6231E101E006C2FC5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -650,7 +631,6 @@
 			isa = PBXGroup;
 			children = (
 				C97DD56AE46E45398AF70E2E /* libRNFirebase.a */,
-				EF1CB512ED8649A7A7AC450A /* libRNSettingsPage.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -736,7 +716,6 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				8C34C759D8274A5CB8F8E751 /* RNFirebase.xcodeproj */,
-				99E1E079512A49D8B7D60067 /* RNSettingsPage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -974,10 +953,6 @@
 					ProductGroup = 06B927B6231E101E006C2FC5 /* Products */;
 					ProjectRef = 06B927B5231E101E006C2FC5 /* RNGestureHandler.xcodeproj */;
 				},
-				{
-					ProductGroup = 06B927AC231E07EB006C2FC5 /* Products */;
-					ProjectRef = 99E1E079512A49D8B7D60067 /* RNSettingsPage.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1023,13 +998,6 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06B927B0231E07EB006C2FC5 /* libRNSettingsPage.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNSettingsPage.a;
-			remoteRef = 06B927AF231E07EB006C2FC5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		06B927BB231E101F006C2FC5 /* libRNGestureHandler.a */ = {
@@ -1520,7 +1488,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = CleatStreetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1549,7 +1516,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = CleatStreetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1581,7 +1547,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = CleatStreet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1607,7 +1572,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = CleatStreet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1638,7 +1602,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = "CleatStreet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1675,7 +1638,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = "CleatStreet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1711,7 +1673,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = "CleatStreet-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1747,7 +1708,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
-					"$(SRCROOT)/../node_modules/react-native-settings-page/ios",
 				);
 				INFOPLIST_FILE = "CleatStreet-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

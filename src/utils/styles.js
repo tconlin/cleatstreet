@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { relative } from 'path';
 
 const fontSize = 17;
 
