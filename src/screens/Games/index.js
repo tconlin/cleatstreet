@@ -162,9 +162,6 @@ export default class GameRooms extends Component {
               QuarterText: quarter_text,
               /*
               PBP: child.val().PBP,
-              
-              
-              
               Quarter1Home: child.val().Live.Quarter1.Home,
               Quarter2Home: child.val().Live.Quarter2.Home,
               Quarter3Home: child.val().Live.Quarter3.Home,
@@ -207,7 +204,6 @@ export default class GameRooms extends Component {
             GameDate: gameDate_local,
             GameTime: gameTime_local,
             key: child.key,
-            
             
             
             /*MoneyLineAway: child.val().Odds.MoneyLineAway,

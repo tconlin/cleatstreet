@@ -187,15 +187,8 @@ export default class Picks extends Component {
     else {
       AnalystButton = null;
     }
-
-    if(this.state.loading) {
-      return(
-        <View style={{flex: 1, padding: 20}}>
-          <ActivityIndicator/>
-        </View>
-      );
-    }
-    else if (this.state.picks.length < 1) {
+    
+    if (this.state.picks.length < 1) {
       return (
         <View style={styles.container}>
 
