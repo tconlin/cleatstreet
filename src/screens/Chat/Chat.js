@@ -117,7 +117,6 @@ export default class Chat extends Component {
         }), ...messagesFB];
       });
       this.setState({ messages: messagesFB });
-
     });
   }
 

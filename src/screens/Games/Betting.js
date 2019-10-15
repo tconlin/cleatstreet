@@ -113,9 +113,7 @@ export default class Betting extends Component {
       dataSnapshot.forEach((child) => {
         var key = child.key;
         if (key === 'Live' ){
-          
           const quarter = child.val().Quarter
-          console.log(quarter)
           if (quarter == 1) {
             var quarter_text = '1st Quarter'
           }

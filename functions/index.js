@@ -124,7 +124,8 @@ const nfl_updatePBP = async (url, curr_id, year, type, week) => {
                         if (pbp.hasOwnProperty(indx_p)) {
                             const driveType = pbp[indx_p].type;
                             if (driveType === 'drive') {
-                                const drive_id = pbp[indx_p].id
+                                const drive_id = pbp[indx_p].id;
+                                const drive_start = pbp[indx_p].clock;
                                 const drive_team = pbp[indx_p].team;
                                 if (drive_start < currentTime) {
                                     driveStart = drive_start;
@@ -288,7 +289,7 @@ const nfl_updateBoxScore = async (url, curr_id, year, type, week) => {
         const quarter = res.quarter;
         const home_scoring = res.home_team.scoring;
         const away_scoring = res.away_team.scoring;
-        console.log(clock);
+        
         const home_total = res.home_team.points;
         const away_total = res.away_team.points;
         
@@ -561,27 +562,27 @@ const nfl_OddsData = async () => {
 
 
 
-/*exports.updateOdds = functions.pubsub.schedule('0 2 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('every 6 hours').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
-});*/
+});
 
-exports.updateScore_Thurs = functions.pubsub.schedule('*/5 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('* 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_LateThurs = functions.pubsub.schedule('*/5 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_LateThurs = functions.pubsub.schedule('* 00-02 * * 5').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Saturday = functions.pubsub.schedule('*/5 11 * * 6').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Saturday = functions.pubsub.schedule('* 11 * * 6').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
 
-exports.updateScore_Sunday = functions.pubsub.schedule('*/5 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Sunday = functions.pubsub.schedule('* 00-02,11-23 * * 7').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });

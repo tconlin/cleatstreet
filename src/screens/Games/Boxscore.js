@@ -93,6 +93,7 @@ export default class Boxscore extends Component {
     if(this.is_live) {
       this.getLiveData(this.roomsRef);
       this.getPBP(this.driveRef);
+      
     }
     else {
       this.setState({ loading: false })
@@ -146,26 +147,30 @@ export default class Boxscore extends Component {
 
   getPBP(driveRefTest) {
     this.setState({ loading: true });
-    driveRefTest.on('value', (dataSnapshot) => {
-      var pbp_arr = [];
+    driveRefTest.once('value', (dataSnapshot) => {
+      let currentDriveTeam = '';
+      let currentQuarter = '';
+      let currentDriveId = '';
+
       dataSnapshot.forEach((child) => {
           if (child.key === 'currentDriveId') {
-            this.setState({ CurrentDriveId: child.val() });
+            currentDriveId = child.val();
           }
           else if (child.key === 'currentQuarter') {
-            this.setState({ CurrentQuarter: child.val() })
+            currentQuarter = child.val();
           }
           else if (child.key === 'currentTeam') {
-            this.setState({ CurrentDriveTeam: child.val() });
+            currentDriveTeam = child.val();
           }
       });
-      this.doPBP(this.state.CurrentDriveId, this.state.CurrentQuarter)
+      //this.setState({CurrentDriveId: currentDriveId, CurrentQuater: currentQuarter, CurrentDriveTeam: currentDriveTeam})
+      this.doPBP(currentDriveId, currentQuarter, currentDriveTeam)
     });
+    
   }
 
-  doPBP(id, quarter) {  
-    if(typeof id !== 'undefined' && typeof quarter !== 'undefined') {
-      //firebase.database().ref(`/NFL/${this.year}/${this.type}/5/36f8ff56-8f54-4026-b4bd-a58ce4c23f08/PBP2/${quarter}/${id}`).orderByChild('Sequence')
+  doPBP(id, quarter, curr_team) {  
+    if(typeof id !== 'undefined' && typeof quarter !== 'undefined' && id !== '' && quarter !== '') {
       firebase.database().ref(`/NFL/${this.year}/${this.type}/${this.week}/${this.roomKey}/PBP/${quarter}/${id}`).orderByChild('Sequence')
       .on('value', (dataSnapshot) => {
         var pbp_arr = [];
@@ -229,8 +234,7 @@ export default class Boxscore extends Component {
                       })
                   }
         });
-        this.setState({ pbp: pbp_arr.reverse() });
-        this.setState({ loading: false });
+        this.setState({ pbp: pbp_arr.reverse(), loading: false, CurrentDriveTeam: curr_team});
       });
     }
   }
@@ -261,6 +265,7 @@ export default class Boxscore extends Component {
 
 
   render() {
+    
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -384,15 +389,12 @@ export default class Boxscore extends Component {
               <View style={styles.PBPContainer}>
               <View style={styles.PBPHeader}>
                 <Text style={styles.PBPHeaderText}>{TeamNames.convertAlias(this.state.CurrentDriveTeam)} Driving...</Text>
-              
               </View>
-              
                 <FlatList
                 data={this.state.pbp}
                 keyExtractor={item => item.Key}
                 renderItem={({item}) => (this.renderCurrPBP(item))}
                 />
-            
             </View>
               : <View></View> }
             
