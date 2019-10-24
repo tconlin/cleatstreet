@@ -45,7 +45,9 @@ export default class MakePicks extends Component {
     this.listenForGames(this.gamesRef);
   }
 
-
+  organizeGamesByDate(a, b) {   
+    return new Date(a.GameTimeUTC) - new Date(b.GameTimeUTC);
+  }
 
   listenForGames(gamesRef) {
     gamesRef.on('value', (dataSnapshot) => {
@@ -68,8 +70,9 @@ export default class MakePicks extends Component {
           }); 
         }
         
-      });  
-      this.setState({ games: gamesFB, loading: false })
+      });
+      gamesFB = gamesFB.sort(this.organizeGamesByDate);
+      this.setState({ games: gamesFB, loading: false });
     });
     
  
@@ -88,7 +91,6 @@ export default class MakePicks extends Component {
         roomName: name, 
         homeTeam: game.HomeAlias,
         awayTeam: game.AwayAlias,
-
     });
   }
 

@@ -92,7 +92,7 @@ export default class Rooms extends Component {
           var clock = child.val().Live.Clock;
           if (quarter_text === '4th Quarter' && clock === ':00') {
             roomsFB.push({
-              Active: true,
+              Active: false,
               Final: true,
               AwayAlias: child.val().AwayTeam.Alias,
               HomeAlias: child.val().HomeTeam.Alias,

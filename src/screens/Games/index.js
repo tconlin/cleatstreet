@@ -239,9 +239,9 @@ export default class GameRooms extends Component {
           });
         } 
       });
-      gamesFB = gamesFB.sort(this.organizeGamesByDate)
-      gamesFB = gamesFB.sort(this.organizeGamesByActivity)
-      this.setState({ games: gamesFB, loading: false })
+      gamesFB = gamesFB.sort(this.organizeGamesByDate);
+      gamesFB = gamesFB.sort(this.organizeGamesByActivity);
+      this.setState({ games: gamesFB, loading: false });
     });
   
   }

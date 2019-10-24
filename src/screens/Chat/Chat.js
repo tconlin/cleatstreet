@@ -156,18 +156,17 @@ export default class Chat extends Component {
 
 
   render() {
-    if(this.is_live) {
-      if(this.is_final) {
-        header = 
-        <View style={RowStyles.chatTeamRow}>
-          <TeamIcon name={this.AwayTeam}/>
-          <Text>{this.state.AwayTotal}</Text>
-          <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
-          <Text>{this.state.HomeTotal}</Text>
-          <TeamIcon name={this.HomeTeam} />
-        </View>;
-      }
-      else {
+    if(this.is_final) {
+      header = 
+      <View style={RowStyles.chatTeamRow}>
+        <TeamIcon name={this.AwayTeam}/>
+        <Text>{this.state.AwayTotal}</Text>
+        <Text style={{fontSize: 11, fontWeight: '800'}}>FINAL</Text>
+        <Text>{this.state.HomeTotal}</Text>
+        <TeamIcon name={this.HomeTeam} />
+      </View>;
+    }
+    else if(this.is_live) {
         header = 
         <View style={RowStyles.chatTeamRow}>
           <TeamIcon name={this.AwayTeam}/>
@@ -176,7 +175,6 @@ export default class Chat extends Component {
           <Text>{this.state.HomeTotal}</Text>
           <TeamIcon name={this.HomeTeam} />
         </View>;
-      }
     }
     else {
       header = 
@@ -184,8 +182,7 @@ export default class Chat extends Component {
         <TeamIcon name={this.AwayTeam}/>
         <GameDate time={this.GameTime} date={this.GameDate}/>
         <TeamIcon name={this.HomeTeam} />
-      </View>;
-        
+      </View>;   
     }
 
     

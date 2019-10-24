@@ -55,42 +55,103 @@ const nfl_updateOdds = async (url, year, type, week) => {
     try {
         let res = await request(url, {json: true});
         var events = res.sport_events;
+        
         for (var indx_ev in events) {
             if (events.hasOwnProperty(indx_ev)) {
                 var sport_type = events[indx_ev].tournament.uuids;
+                console.log(sport_type)
+                console.log(events[indx_ev].competitors[0].name)
                 if(sport_type === 'NFL') {
                     var curr_id = events[indx_ev].uuids;
                     var consensus_lines = events[indx_ev].consensus.lines;
-                    var moneyline_current_home = consensus_lines[0].outcomes[0].odds;
-                    var moneyline_current_away = consensus_lines[0].outcomes[1].odds;
-                    
-                    
-                    //  favorite should get positive number 
-                    //  fix: home is always favored below
-
-                    var spread_current_home = consensus_lines[2].spread;
-                    var spread_current_away = parseFloat(consensus_lines[2].spread) * -1.0;
-                     /* eslint-disable no-redeclare */
-                    if((spread_current_away % 1) === 0.0 ) {
-                        var spread_current_away = parseInt(spread_current_away);
+                    for (var indx_ln in consensus_lines) {
+                        if (consensus_lines.hasOwnProperty(indx_ln)) {
+                            var line_name = consensus_lines[indx_ln].name;
+                            if (line_name === 'spread_current') {
+                                var the_spread = consensus_lines[indx_ln].spread;
+                            }
+                            else if (line_name === 'moneyline_current') {
+                                var moneyline_current_home = consensus_lines[indx_ln].outcomes[0].odds;
+                                var moneyline_current_away = consensus_lines[indx_ln].outcomes[1].odds;
+                            }
+                            else if (line_name === 'total_current') {
+                                var total_current_home = consensus_lines[indx_ln].total;
+                                var total_current_away = consensus_lines[indx_ln].total;
+                            }
+                        }
                     }
                      /* eslint-disable no-redeclare */
-
-
-                    var total_current_home = consensus_lines[4].total;
-                    var total_current_away = consensus_lines[4].total;
-
-                    admin.database()
-                    .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
-                    .set({ 
-                        MoneyLineHome: moneyline_current_home,
-                        MoneyLineAway: moneyline_current_away,
-                        SpreadHome: spread_current_home,
-                        SpreadAway: spread_current_away,
-                        TotalHome: total_current_home,
-                        TotalAway: total_current_away
-                    })
-
+                    if (typeof moneyline_current_home === 'undefined' && typeof moneyline_current_away === 'undefined' &&
+                        typeof total_current_home === 'undefined' && typeof total_current_away === 'undefined' &&
+                        typeof the_spread === 'undefined' && typeof the_spread === 'undefined' ) {
+                        admin.database()
+                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
+                        .set({ 
+                            MoneyLineHome: 0,
+                            MoneyLineAway: 0,
+                            SpreadHome: 0,
+                            SpreadAway: 0,
+                            TotalHome: 0,
+                            TotalAway: 0
+                        })
+                    }
+                    else if (typeof moneyline_current_home === 'undefined' && typeof moneyline_current_away === 'undefined' &&
+                        typeof total_current_home === 'undefined' && typeof total_current_away === 'undefined' &&
+                        typeof the_spread !== 'undefined' && typeof the_spread !== 'undefined' ) {
+                        admin.database()
+                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
+                        .set({ 
+                            MoneyLineHome: 0,
+                            MoneyLineAway: 0,
+                            SpreadHome: the_spread,
+                            SpreadAway: the_spread,
+                            TotalHome: 0,
+                            TotalAway: 0
+                        })
+                    }
+                    else if (typeof moneyline_current_home !== 'undefined' && typeof moneyline_current_away !== 'undefined' &&
+                             typeof total_current_home === 'undefined' && typeof total_current_away === 'undefined') {
+                        if ( moneyline_current_away < moneyline_current_home ) {
+                            var spread_current_home = parseFloat(the_spread) * 1.0;
+                            var spread_current_away = parseFloat(the_spread) * -1.0;
+                        }
+                        else if ( moneyline_current_home < moneyline_current_away ) {
+                            var spread_current_home = parseFloat(the_spread) * -1.0;
+                            var spread_current_away = parseFloat(the_spread) * 1.0;
+                        }
+                        admin.database()
+                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
+                        .set({ 
+                            MoneyLineHome: moneyline_current_home,
+                            MoneyLineAway: moneyline_current_away,
+                            SpreadHome: spread_current_home,
+                            SpreadAway: spread_current_away,
+                            TotalHome: 0,
+                            TotalAway: 0
+                        })
+                    }
+                    else if (typeof moneyline_current_home !== 'undefined' && typeof moneyline_current_away !== 'undefined' &&
+                             typeof total_current_home !== 'undefined' && typeof total_current_away !== 'undefined') {
+                        if ( moneyline_current_away < moneyline_current_home ) {
+                            var spread_current_home = parseFloat(the_spread) * 1.0;
+                            var spread_current_away = parseFloat(the_spread) * -1.0;
+                        }
+                        else if ( moneyline_current_home < moneyline_current_away ) {
+                            var spread_current_home = parseFloat(the_spread) * -1.0;
+                            var spread_current_away = parseFloat(the_spread) * 1.0;
+                        }
+                        admin.database()
+                        .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
+                        .set({ 
+                            MoneyLineHome: moneyline_current_home,
+                            MoneyLineAway: moneyline_current_away,
+                            SpreadHome: spread_current_home,
+                            SpreadAway: spread_current_away,
+                            TotalHome: total_current_home,
+                            TotalAway: total_current_away
+                        })
+                    }
+                     /* eslint-disable no-redeclare */
                 }
             }
         }

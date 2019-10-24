@@ -16,11 +16,8 @@ import { GameDate, TeamIcon } from '../../utils/index';
 import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
-const TeamNames = require('../../utils/TeamName')
-const findDates = require('../../utils/Dates')
-
-
-
+const TeamNames = require('../../utils/TeamName');
+const findDates = require('../../utils/Dates');
 
 
 export default class Boxscore extends Component {
@@ -88,12 +85,12 @@ export default class Boxscore extends Component {
       multipleSelect: false,
     }
   }
-  
+
   componentDidMount() {
+    this.getLiveData(this.roomsRef);
+    
     if(this.is_live) {
-      this.getLiveData(this.roomsRef);
       this.getPBP(this.driveRef);
-      
     }
     else {
       this.setState({ loading: false })
