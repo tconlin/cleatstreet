@@ -24,7 +24,6 @@ import navLogo from '../../images/icons/CS-logo-white.png';
 
 export default class Picks extends Component {
   static navigationOptions = ({ navigation }) => ({
-    //title: 'Picks',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,

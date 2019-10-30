@@ -45,7 +45,7 @@ export default class Boxscore extends Component {
     this.GameDate = this.props.navigation.state.params.GameDate;
     this.HomeTeam = this.props.navigation.state.params.homeTeam;
     this.AwayTeam = this.props.navigation.state.params.awayTeam;
-    
+    this.score_status = false;
     this.is_live = this.props.navigation.state.params.is_live;
     this.is_final = this.props.navigation.state.params.is_final;
     this.AwayWins = this.props.navigation.state.params.AwayWins;
@@ -137,7 +137,6 @@ export default class Boxscore extends Component {
         }
       });
       this.setState({ loading: false });
-      
     });
   }
 
@@ -262,7 +261,9 @@ export default class Boxscore extends Component {
 
 
   render() {
-    
+    if(this.is_live === false && this.is_final === true) {
+      this.score_status = true;
+    }
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -327,10 +328,10 @@ export default class Boxscore extends Component {
                       <Text style={styles.BoxScoreHeader}>1</Text>
                     </View>
                     <View style={styles.BoxScoreEntry}>
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter1Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                   </View>
                   <View>
@@ -338,10 +339,10 @@ export default class Boxscore extends Component {
                       <Text style={styles.BoxScoreHeader}>2</Text>
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter2Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                   
                   </View>
@@ -350,10 +351,10 @@ export default class Boxscore extends Component {
                       <Text style={styles.BoxScoreHeader}>3</Text>
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter3Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                       
                   </View>
@@ -362,10 +363,10 @@ export default class Boxscore extends Component {
                       <Text style={styles.BoxScoreHeader}>4</Text>
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Home}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                     <View style={styles.BoxScoreEntry}  >
-                      {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                      {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.Quarter4Away}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                       
                   </View>
@@ -374,10 +375,10 @@ export default class Boxscore extends Component {
                       <Text style={styles.BoxScoreHeader}>Final</Text>
                     </View>
                     <View style={styles.BoxScoreEntry2}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.HomeTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.HomeTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                     <View style={styles.BoxScoreEntry2}  >
-                    {this.is_live ? <Text style={styles.BoxScoreNum}>{this.state.AwayTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
+                    {this.score_status ? <Text style={styles.BoxScoreNum}>{this.state.AwayTotal}</Text> : <Text style={styles.BoxScoreNum}>0</Text>}
                     </View>
                       
                   </View>

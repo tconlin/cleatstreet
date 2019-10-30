@@ -20,7 +20,6 @@ import navLogo from '../../images/icons/CS-logo-white.png';
 
 export default class Rooms extends Component {
   static navigationOptions = ({ navigation }) => ({
-    //title: 'Channels',
     headerStyle: { backgroundColor: NavStyles.colors.background },
     headerTitleStyle: { color: NavStyles.colors.headerText },
     headerTintColor: NavStyles.colors.headerTint,
@@ -51,20 +50,6 @@ export default class Rooms extends Component {
 
   componentDidMount() {
     this.listenForRooms(this.roomsRef);
-  }
-
-  organizeGamesByActivity(a, b) {
-    const activityA = a.Active;
-    const activityB = b.Active;
-
-    let comparison = 0;
-    if (activityA === true && activityB === false) {
-      comparison = -1;
-    } else if (activityA === false && activityB === true) {
-      comparison = 1;
-    }
-
-    return comparison;
   }
 
   listenForRooms(roomsRef) {
@@ -133,7 +118,6 @@ export default class Rooms extends Component {
         }
         
       });  
-      roomsFB = roomsFB.sort(this.organizeGamesByActivity)
       this.setState({ rooms: roomsFB, loading: false })
     });
   }
@@ -174,14 +158,16 @@ export default class Rooms extends Component {
   }
 
   renderRow(item) {
-    console.log(item)
+    if(item.Active == false && item.Final == true) {
+      var score_status = true;
+    }
     return (
       <TouchableHighlight 
         style={styles.roomLi}
         underlayColor='#fff'
         onPress={() => this.openMessages(item)}
       >
-        {item.Active ? 
+        {score_status ? 
           <View style={RowStyles.teamRow}>
             <TeamIcon name={item.AwayAlias}/>
             <Text>{item.AwayTotal}</Text>
@@ -201,7 +187,6 @@ export default class Rooms extends Component {
   }
 
   render() {
-    console.log(this.state.rooms)
     return (
       <View style={styles.roomsContainer}>
         <View style={styles.roomsListContainer}>

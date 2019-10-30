@@ -1,4 +1,4 @@
-package com.cleatstreetinc.cleatstreet;
+package com.cleatstreet.cleatstreet;
 
 import android.support.multidex.MultiDexApplication;
 

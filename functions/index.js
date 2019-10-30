@@ -59,8 +59,6 @@ const nfl_updateOdds = async (url, year, type, week) => {
         for (var indx_ev in events) {
             if (events.hasOwnProperty(indx_ev)) {
                 var sport_type = events[indx_ev].tournament.uuids;
-                console.log(sport_type)
-                console.log(events[indx_ev].competitors[0].name)
                 if(sport_type === 'NFL') {
                     var curr_id = events[indx_ev].uuids;
                     var consensus_lines = events[indx_ev].consensus.lines;
@@ -623,12 +621,8 @@ const nfl_OddsData = async () => {
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 6 hours').timeZone('America/New_York').onRun((context) => {
-    nfl_OddsData();
-    return null;
-});
 
-exports.updateScore_Thurs = functions.pubsub.schedule('* 10-23 * * 4').timeZone('America/New_York').onRun((context) => {
+exports.updateScore_Thurs = functions.pubsub.schedule('* 19-23 * * 4').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
     return null;
 });
@@ -656,6 +650,19 @@ exports.updateScore_Monday = functions.pubsub.schedule('* 00-02,17-23 * * 1').ti
 
 exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_LiveGameData();
+    return null;
+});
+
+
+
+exports.updateOdds = functions.pubsub.schedule('every 6 hours').timeZone('America/New_York').onRun((context) => {
+    nfl_OddsData();
+    return null;
+});
+
+
+exports.updateOdds = functions.pubsub.schedule('0 3 * * 2').timeZone('America/New_York').onRun((context) => {
+    nfl_OddsData();
     return null;
 });
 
