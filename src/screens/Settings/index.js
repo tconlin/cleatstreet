@@ -45,6 +45,7 @@ export default class Settings extends React.Component {
       uploading: false,
       progress: 0,
       currentUser: currentUser,
+      currentUserAnalyst: false,
       avatar: currentUser.photoURL,
       isCreatingAccount: false,
       isCreatingAccount1: false,
@@ -61,23 +62,7 @@ export default class Settings extends React.Component {
 
   componentDidMount() {
     const { currentUser } = firebase.auth();
-    var currentUserEmail = firebase.auth().currentUser.email;
-    this.analystRef.on('value', (dataSnapshot) => {
-      dataSnapshot.forEach((child) => {
-        var email = child.val();
-        
-        if (email === currentUserEmail) {
-          this.setState({currentUserAnalyst: true });
-          this.analystBioRef.on('value', (dataSnapshot) => {
-            if(dataSnapshot.exists()) {
-              dataSnapshot.forEach((child) => {
-                this.setState({bio: child.val()})
-              });
-            }
-          });
-        }
-      });
-    });
+    this.checkVerified(this.analystRef, this.analystBioRef);
     
     this.setState( {
       avatar: currentUser.photoURL,
@@ -86,16 +71,17 @@ export default class Settings extends React.Component {
     })
   }
 
-  checkVerified(analystRef, currentUserEmail) {
-    analystRef.on('value', (dataSnapshot) => {
-      this.setState({ loading: true });
+  checkVerified(analystRef, analystBioRef) {
+    var currentUserEmail = firebase.auth().currentUser.email;
+    analystRef.once('value', (dataSnapshot) => {
       dataSnapshot.forEach((child) => {
-        var email = child.val();
+        var verified_name = child.val().toLowerCase();
+        var domain = currentUserEmail.replace(/.*@/, "");
+        var name = currentUserEmail.replace(/@.*$/,"").toLowerCase();
         
-        console.log(email)
-        if (email === currentUserEmail) {
-          this.state.currentUserAnalyst = true
-          this.analystBioRef.on('value', (dataSnapshot) => {
+        if (domain === 'cleat-street.com' && name === verified_name) {
+          this.setState({currentUserAnalyst: true });
+          analystBioRef.once('value', (dataSnapshot) => {
             if(dataSnapshot.exists()) {
               dataSnapshot.forEach((child) => {
                 this.setState({bio: child.val()})
@@ -105,8 +91,8 @@ export default class Settings extends React.Component {
         }
       });
     });
-    this.setState({ loading: false });
   }
+
 
   onShare = async () => {
     try {
@@ -116,7 +102,7 @@ export default class Settings extends React.Component {
           Never pay for picks again.\
           Hear from expert analysts, follow the games,\
           and chat with other bettors. Completely free.',
-        url: 'https://www.cleat-street.com'
+        url: 'https://apps.apple.com/us/app/cleat-street/id1485314870'
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -144,7 +130,7 @@ export default class Settings extends React.Component {
       Alert.alert('Bio info must not be empty');
     }
     else {
-      this.analystRef.set({
+      this.analystBioRef.set({
         Bio: bio
       })
       this.setState({ isCreatingAccount3: false });

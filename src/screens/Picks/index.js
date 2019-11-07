@@ -54,22 +54,23 @@ export default class Picks extends Component {
   
   
   componentDidMount() {
-    var currentUserEmail = firebase.auth().currentUser.email
-    this.checkVerified(this.analystRef, currentUserEmail);
+    this.checkVerified(this.analystRef);
     this.getPicks(this.roomsRef);
   }
 
-  checkVerified(analystRef, currentUserEmail) {
-    analystRef.on('value', (dataSnapshot) => {
-      this.setState({ loading: true });
+  checkVerified(analystRef) {
+    var currentUserEmail = firebase.auth().currentUser.email;
+    analystRef.once('value', (dataSnapshot) => {
       dataSnapshot.forEach((child) => {
-        var email = child.val();
-        if (email === currentUserEmail) {
-          this.state.currentUserAnalyst = true
+        var verified_name = child.val().toLowerCase();
+        var domain = currentUserEmail.replace(/.*@/, "");
+        var name = currentUserEmail.replace(/@.*$/,"").toLowerCase();
+        
+        if (domain === 'cleat-street.com' && name === verified_name) {
+          this.setState({currentUserAnalyst: true });
         }
       });
     });
-    this.setState({ loading: false });
   }
 
   getPicks(roomsRef) {

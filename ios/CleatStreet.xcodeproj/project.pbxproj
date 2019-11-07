@@ -16,8 +16,8 @@
 		039963B89D919933DA02DD1D /* libPods-CleatStreet-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A114661868ACFA83CCA60B3 /* libPods-CleatStreet-tvOS.a */; };
 		06B927B4231E1002006C2FC5 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06B927B3231E1002006C2FC5 /* libRNGestureHandler.a */; };
 		09AB02F9D6B64147A470A67A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2614F9EC3D134B6CBE4A8BA8 /* FontAwesome.ttf */; };
-		0E09EA6223677BF30013E769 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E09EA6123677BF30013E769 /* GoogleService-Info.plist */; };
 		0E2E7A3E2325CEA30058A3C5 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E2E7A3D2325CEA30058A3C5 /* NetworkExtension.framework */; };
+		0E3872D023738E2F00398C7C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E3872CF23738E2F00398C7C /* GoogleService-Info.plist */; };
 		11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -374,9 +374,9 @@
 		00E356F21AD99517003FC87E /* CleatStreetTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CleatStreetTests.m; sourceTree = "<group>"; };
 		06B927B3231E1002006C2FC5 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		06B927B5231E101E006C2FC5 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
-		0E09EA6123677BF30013E769 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0E2E7A3C2325CE9D0058A3C5 /* CleatStreet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CleatStreet.entitlements; path = CleatStreet/CleatStreet.entitlements; sourceTree = "<group>"; };
 		0E2E7A3D2325CEA30058A3C5 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		0E3872CF23738E2F00398C7C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		11B23455DE3C4D5673E7318E /* libPods-CleatStreet-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CleatStreet-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -591,7 +591,7 @@
 		13B07FAE1A68108700A75B9A /* CleatStreet */ = {
 			isa = PBXGroup;
 			children = (
-				0E09EA6123677BF30013E769 /* GoogleService-Info.plist */,
+				0E3872CF23738E2F00398C7C /* GoogleService-Info.plist */,
 				0E2E7A3C2325CE9D0058A3C5 /* CleatStreet.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -1271,7 +1271,7 @@
 				610EB704B29545768DA1826D /* FontAwesome5_Regular.ttf in Resources */,
 				B24CE6A88C7345B293FDC307 /* FontAwesome5_Solid.ttf in Resources */,
 				4D4FC1044C504370B972DE2A /* Fontisto.ttf in Resources */,
-				0E09EA6223677BF30013E769 /* GoogleService-Info.plist in Resources */,
+				0E3872D023738E2F00398C7C /* GoogleService-Info.plist in Resources */,
 				D843297437954624973282D5 /* Foundation.ttf in Resources */,
 				8BD4267C83F040D7AAD4894A /* Ionicons.ttf in Resources */,
 				EBEAD26EE43042EEB3D81603 /* MaterialCommunityIcons.ttf in Resources */,

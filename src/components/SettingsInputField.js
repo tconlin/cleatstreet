@@ -14,7 +14,7 @@ export default class SettingsInputField extends Component {
       <TextInput
         style={styles.inputText}
         value={this.state.text}
-        selectionColor="white"
+        selectionColor="grey"
         autoCapitalize={this.props.autoCapitalize}
         ref={ref => this.input = ref}
         autoCorrect={false}
