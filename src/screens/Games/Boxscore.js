@@ -264,6 +264,9 @@ export default class Boxscore extends Component {
     if(this.is_live === false && this.is_final === true) {
       this.score_status = true;
     }
+    else if (this.is_live === true) {
+      this.score_status = true;
+    }
     if(this.state.loading) {
       return(
         <View style={{flex: 1, padding: 20}}>
