@@ -71,6 +71,7 @@ const nfl_updateOdds = async (url, year, type, week) => {
                             else if (line_name === 'moneyline_current') {
                                 var moneyline_current_home = consensus_lines[indx_ln].outcomes[0].odds;
                                 var moneyline_current_away = consensus_lines[indx_ln].outcomes[1].odds;
+                                
                             }
                             else if (line_name === 'total_current') {
                                 var total_current_home = consensus_lines[indx_ln].total;
@@ -109,14 +110,17 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     }
                     else if (typeof moneyline_current_home !== 'undefined' && typeof moneyline_current_away !== 'undefined' &&
                              typeof total_current_home === 'undefined' && typeof total_current_away === 'undefined') {
+
+                        the_spread = Math.abs(parseFloat(the_spread))
                         if ( moneyline_current_away < moneyline_current_home ) {
-                            var spread_current_home = parseFloat(the_spread) * 1.0;
-                            var spread_current_away = parseFloat(the_spread) * -1.0;
+                            var spread_current_home = the_spread * -1.0;
+                            var spread_current_away = '+' + (the_spread * 1.0);
                         }
                         else if ( moneyline_current_home < moneyline_current_away ) {
-                            var spread_current_home = parseFloat(the_spread) * -1.0;
-                            var spread_current_away = parseFloat(the_spread) * 1.0;
+                            var spread_current_home = '+' + (the_spread * 1.0);
+                            var spread_current_away = the_spread * -1.0;
                         }
+
                         admin.database()
                         .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
                         .set({ 
@@ -130,14 +134,18 @@ const nfl_updateOdds = async (url, year, type, week) => {
                     }
                     else if (typeof moneyline_current_home !== 'undefined' && typeof moneyline_current_away !== 'undefined' &&
                              typeof total_current_home !== 'undefined' && typeof total_current_away !== 'undefined') {
+
+                        the_spread = Math.abs(parseFloat(the_spread))
+                        
                         if ( moneyline_current_away < moneyline_current_home ) {
-                            var spread_current_home = parseFloat(the_spread) * 1.0;
-                            var spread_current_away = parseFloat(the_spread) * -1.0;
+                            var spread_current_home = the_spread * -1.0;
+                            var spread_current_away = '+' + (the_spread * 1.0);
                         }
                         else if ( moneyline_current_home < moneyline_current_away ) {
-                            var spread_current_home = parseFloat(the_spread) * -1.0;
-                            var spread_current_away = parseFloat(the_spread) * 1.0;
+                            var spread_current_home = '+' + (the_spread * 1.0);
+                            var spread_current_away = the_spread * -1.0;
                         }
+
                         admin.database()
                         .ref(`NFL/${year}/${type}/${week}/${curr_id}/Odds`)
                         .set({ 
@@ -655,13 +663,13 @@ exports.updateScore_LateMonday = functions.pubsub.schedule('* 00-02 * * 2').time
 
 
 
-exports.updateOdds = functions.pubsub.schedule('every 6 hours').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds = functions.pubsub.schedule('every 3 hours').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
 
 
-exports.updateOdds = functions.pubsub.schedule('0 3 * * 2').timeZone('America/New_York').onRun((context) => {
+exports.updateOdds2 = functions.pubsub.schedule('0 3 * * 2').timeZone('America/New_York').onRun((context) => {
     nfl_OddsData();
     return null;
 });
